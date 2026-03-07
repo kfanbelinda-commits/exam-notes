@@ -198,6 +198,9 @@
     <div class="nav-tab" onclick="switchTab('exam0')">
       <span class="tab-num c4">📝</span> 模拟试卷
     </div>
+    <div class="nav-tab" onclick="switchTab('glossary')">
+      <span class="tab-num c4">📖</span> 概念速查
+    </div>
   </div>
 </div>
 
@@ -230,7 +233,12 @@
       <div class="home-card hc4" onclick="switchTab('exam0')">
         <div class="hc-num">📝</div>
         <div class="hc-title">模拟试卷</div>
-        <div class="hc-desc">计量经济学 · 时间序列 · 面板数据<br>10道大题 · 点击展开答案<br>含知识点定位表</div>
+        <div class="hc-desc">计量经济学 · 时间序列 · 面板数据<br>16道大题 · 点击展开答案</div>
+      </div>
+      <div class="home-card hc1" onclick="switchTab('glossary')" style="grid-column: 1 / -1;">
+        <div class="hc-num">📖</div>
+        <div class="hc-title">概念速查</div>
+        <div class="hc-desc">六大板块：序列性质 · 分析工具 · 模型族 · 模型评价 · 检验方法 · 回归方法 &nbsp;|&nbsp; 缩写 · 公式 · 一句话解释</div>
       </div>
     </div>
   </div>
@@ -2188,6 +2196,106 @@
 
   </div>
 
+
+  <!-- 概念速查 -->
+  <div id="tab-glossary" class="tab-content">
+
+<h2 style="background:none;color:#607D8B;border-left:4px solid #607D8B;padding:4px 0 4px 14px;margin:20px 0 16px 0;">概念速查手册</h2>
+<p style="color:#888;font-size:12px;margin-bottom:20px;">缩写 · 全称 · 公式 · 一句话解释 &nbsp;|&nbsp; 知识线中的术语可链接到此页</p>
+
+<!-- ===== 板块一 ===== -->
+<h3 id="sec-序列性质">板块一：序列的性质（这个序列长什么样？）</h3>
+
+<table>
+  <tr><th style="width:80px;">概念</th><th style="width:130px;">英文</th><th style="width:220px;">符号 / 公式</th><th>一句话</th></tr>
+  <tr id="def-白噪声"><td class="left"><b>白噪声</b></td><td class="left">White Noise</td><td class="left">E(εₜ)=μ, Var(εₜ)=σ², Cov(εₜ,εₛ)=0</td><td class="left">同均值+同方差+无自相关，完全随机不可预测</td></tr>
+  <tr id="def-宽平稳"><td class="left"><b>宽平稳</b></td><td class="left">Weak Stationarity</td><td class="left">E(Yₜ)=μ, γₖ=γ(k) 只依赖滞后期数</td><td class="left">均值常数+协方差只和间隔有关（允许自相关存在）</td></tr>
+  <tr id="def-严格平稳"><td class="left"><b>严格平稳</b></td><td class="left">Strict Stationarity</td><td class="left">联合概率密度在每个时点完全一样</td><td class="left">每个时间点概率分布完全相同（实际很难达到）</td></tr>
+  <tr id="def-单位根"><td class="left"><b>单位根</b></td><td class="left">Unit Root</td><td class="left">特征方程存在模长|L|=1的解</td><td class="left">冲击永不衰减，φ=1是平稳与不平稳的分界线</td></tr>
+  <tr id="def-随机游走"><td class="left"><b>随机游走</b></td><td class="left">Random Walk</td><td class="left">Yₜ = Yₜ₋₁ + εₜ</td><td class="left">单位根最简单形式，Var(Yₜ)=tσ²随时间增大</td></tr>
+  <tr id="def-单整"><td class="left"><b>d阶单整</b></td><td class="left">I(d)</td><td class="left">经d次差分后变平稳</td><td class="left">差分d次才能消除累积漂移</td></tr>
+  <tr id="def-协整"><td class="left"><b>协整</b></td><td class="left">Cointegration</td><td class="left">两个I(1)序列线性组合为I(0)</td><td class="left">各自不平稳，但长期有均衡关系</td></tr>
+</table>
+
+<!-- ===== 板块二 ===== -->
+<h3 id="sec-分析工具">板块二：分析工具（怎么看这个序列有什么特征？）</h3>
+
+<table>
+  <tr><th style="width:60px;">缩写</th><th style="width:160px;">全称</th><th style="width:200px;">公式</th><th>一句话</th></tr>
+  <tr id="def-自协方差"><td class="left"><b>γₖ</b></td><td class="left">自协方差</td><td class="left">Cov(Yₜ, Yₜ₋ₖ)</td><td class="left">自己和滞后k期之间的协方差，性质 γₖ = γ₋ₖ</td></tr>
+  <tr id="def-ACF"><td class="left"><b>ACF</b></td><td class="left">自相关函数<br>Auto-Correlation Function</td><td class="left">ρₖ = γₖ / γ₀</td><td class="left">总相关（含中间传导），两段等长子序列的相关性</td></tr>
+  <tr id="def-PACF"><td class="left"><b>PACF</b></td><td class="left">偏自相关函数<br>Partial ACF</td><td class="left">AR(p)中的系数 φₖ</td><td class="left">直接相关（剔除中间项），点到点的净相关</td></tr>
+  <tr id="def-方差"><td class="left"><b>Var</b></td><td class="left">方差 Variance</td><td class="left">Var(X) = E[(X−μ)²]</td><td class="left">自身波动的程度，越大越不稳定</td></tr>
+  <tr id="def-协方差"><td class="left"><b>Cov</b></td><td class="left">协方差 Covariance</td><td class="left">Cov(X,Y) = E[(X−μₓ)(Y−μᵧ)]</td><td class="left">两个变量的共同变动，正=同向，负=反向，0=无关</td></tr>
+  <tr id="def-相关系数"><td class="left"><b>ρ</b></td><td class="left">相关系数 Correlation</td><td class="left">ρ = Cov(X,Y) / (σₓ·σᵧ)</td><td class="left">协方差归一化到[-1,1]，消除量纲差异后的相关度</td></tr>
+  <tr id="def-标准差"><td class="left"><b>σ</b></td><td class="left">标准差 Std. Deviation</td><td class="left">σ = √Var(X)</td><td class="left">方差开根号，恢复到原数据的单位</td></tr>
+  <tr id="def-IRF"><td class="left"><b>IRF</b></td><td class="left">脉冲响应函数</td><td class="left">VAR配套工具</td><td class="left">给系统一个单位冲击后，各变量随时间的响应路径</td></tr>
+  <tr id="def-FEVD"><td class="left"><b>FEVD</b></td><td class="left">预测误差方差分解</td><td class="left">VAR配套工具</td><td class="left">各变量预测误差中，有多少比例来自自身 vs 其他变量的冲击</td></tr>
+</table>
+
+<!-- ===== 板块三 ===== -->
+<h3 id="sec-模型族">板块三：模型族（用什么模型去拟合？）</h3>
+
+<table>
+  <tr><th style="width:90px;">缩写</th><th style="width:140px;">全称</th><th style="width:230px;">公式</th><th>一句话</th></tr>
+  <tr id="def-AR"><td class="left"><b>AR(p)</b></td><td class="left">Auto-Regressive</td><td class="left">Yₜ = c + φ₁Yₜ₋₁ + … + φₚYₜ₋ₚ + εₜ</td><td class="left">用过去p期的自己预测现在</td></tr>
+  <tr id="def-MA"><td class="left"><b>MA(q)</b></td><td class="left">Moving Average</td><td class="left">Yₜ = μ + εₜ + θ₁εₜ₋₁ + … + θqεₜ₋q</td><td class="left">用过去q期的白噪声预测现在，一定平稳</td></tr>
+  <tr id="def-ARMA"><td class="left"><b>ARMA(p,q)</b></td><td class="left">AR + MA</td><td class="left">AR部分 + MA部分</td><td class="left">同时受历史值和历史噪声影响</td></tr>
+  <tr id="def-ARIMA"><td class="left"><b>ARIMA(p,d,q)</b></td><td class="left">AR Integrated MA</td><td class="left">先做d阶差分，再建ARMA</td><td class="left">非平稳序列的处理方式</td></tr>
+  <tr id="def-VAR"><td class="left"><b>VAR</b></td><td class="left">Vector AR</td><td class="left">Yₜ = c + A₁Yₜ₋₁ + … + AₚYₜ₋ₚ + uₜ</td><td class="left">AR的多变量版本，多个序列互相影响</td></tr>
+  <tr id="def-ECM"><td class="left"><b>ECM</b></td><td class="left">Error Correction Model</td><td class="left">ΔYₜ = α·ûₜ₋₁ + 短期项 + vₜ</td><td class="left">有协整时的短期调整机制，α&lt;0为纠偏</td></tr>
+  <tr id="def-条件方差"><td class="left"><b>σ²ₜ</b></td><td class="left">条件方差</td><td class="left">Var(εₜ | 过去信息)</td><td class="left">方差不再是常数，随时间变化——ARCH/GARCH建模对象</td></tr>
+  <tr id="def-ARCH"><td class="left"><b>ARCH(q)</b></td><td class="left">Autoregressive Conditional Heteroscedasticity</td><td class="left">σ²ₜ = α₀ + α₁ε²ₜ₋₁ + … + αqε²ₜ₋q</td><td class="left">用历史残差平方预测当前方差</td></tr>
+  <tr id="def-GARCH"><td class="left"><b>GARCH(p,q)</b></td><td class="left">Generalized ARCH</td><td class="left">σ²ₜ = ω + αε²ₜ₋₁ + βσ²ₜ₋₁</td><td class="left">ARCH + 方差自身滞后项，ARMA用在方差上</td></tr>
+</table>
+
+<!-- ===== 板块四 ===== -->
+<h3 id="sec-模型评价">板块四：模型评价（模型好不好？）</h3>
+
+<table>
+  <tr><th style="width:70px;">缩写</th><th style="width:130px;">全称</th><th style="width:220px;">公式</th><th>一句话</th></tr>
+  <tr id="def-TSS"><td class="left"><b>TSS</b></td><td class="left">Total Sum of Squares</td><td class="left">Σ(Yᵢ − Ȳ)²</td><td class="left">Y的总变动（离差平方和）</td></tr>
+  <tr id="def-ESS"><td class="left"><b>ESS</b></td><td class="left">Explained SS</td><td class="left">Σ(Ŷᵢ − Ȳ)²</td><td class="left">模型解释的变动（回归平方和），越大越好</td></tr>
+  <tr id="def-RSS"><td class="left"><b>RSS</b></td><td class="left">Residual SS</td><td class="left">Σ(Yᵢ − Ŷᵢ)²</td><td class="left">模型没解释的变动（残差平方和），越小越好</td></tr>
+  <tr id="def-R2"><td class="left"><b>R²</b></td><td class="left">拟合优度</td><td class="left">ESS/TSS = 1 − RSS/TSS</td><td class="left">模型解释了多少比例的总变动，∈[0,1]</td></tr>
+  <tr id="def-AdjR2"><td class="left"><b>Adj-R²</b></td><td class="left">调整R²</td><td class="left">1−[RSS/(n−k−1)] / [TSS/(n−1)]</td><td class="left">惩罚多余变量，加无用变量可能下降</td></tr>
+  <tr id="def-AIC"><td class="left"><b>AIC</b></td><td class="left">Akaike信息准则</td><td class="left">ln(σ̂²) + 2k/n</td><td class="left">越小越好，平衡拟合度和复杂度</td></tr>
+  <tr id="def-BIC"><td class="left"><b>BIC</b></td><td class="left">Bayesian信息准则</td><td class="left">ln(σ̂²) + k·ln(n)/n</td><td class="left">越小越好，比AIC惩罚更重，倾向简洁</td></tr>
+</table>
+
+<!-- ===== 板块五 ===== -->
+<h3 id="sec-检验方法">板块五：检验方法（怎么判断序列/模型的性质？）</h3>
+
+<table>
+  <tr><th style="width:70px;">缩写</th><th style="width:130px;">全称</th><th style="width:180px;">检验什么</th><th>H₀</th></tr>
+  <tr id="def-DF"><td class="left"><b>DF</b></td><td class="left">Dickey-Fuller</td><td class="left">AR(1)平稳性</td><td class="left">存在单位根（不平稳）</td></tr>
+  <tr id="def-ADF"><td class="left"><b>ADF</b></td><td class="left">Augmented DF</td><td class="left">AR(p)平稳性</td><td class="left">存在单位根（不平稳）</td></tr>
+  <tr id="def-DW"><td class="left"><b>DW</b></td><td class="left">Durbin-Watson</td><td class="left">残差一阶自相关</td><td class="left">无自相关</td></tr>
+  <tr id="def-LM"><td class="left"><b>LM</b></td><td class="left">Lagrange Multiplier</td><td class="left">残差自相关 / ARCH效应</td><td class="left">无自相关 / 无ARCH效应</td></tr>
+  <tr id="def-BP"><td class="left"><b>BP</b></td><td class="left">Box-Pierce</td><td class="left">残差白噪声</td><td class="left">是白噪声</td></tr>
+  <tr id="def-LB"><td class="left"><b>LB</b></td><td class="left">Ljung-Box</td><td class="left">残差白噪声（BP改进版）</td><td class="left">是白噪声</td></tr>
+  <tr id="def-White"><td class="left"><b>White</b></td><td class="left">怀特检验</td><td class="left">异方差</td><td class="left">无异方差</td></tr>
+  <tr id="def-GQ"><td class="left"><b>GQ</b></td><td class="left">Goldfeld-Quandt</td><td class="left">异方差</td><td class="left">无异方差</td></tr>
+  <tr id="def-Hausman"><td class="left"><b>Hausman</b></td><td class="left">Hausman检验</td><td class="left">内生性 / 固定vs随机</td><td class="left">无内生性（选随机）</td></tr>
+  <tr id="def-Chow"><td class="left"><b>Chow</b></td><td class="left">Chow检验</td><td class="left">结构突变</td><td class="left">两段参数相同</td></tr>
+  <tr id="def-EG"><td class="left"><b>EG</b></td><td class="left">Engle-Granger</td><td class="left">一阶协整</td><td class="left">无协整关系</td></tr>
+  <tr id="def-Granger"><td class="left"><b>Granger</b></td><td class="left">Granger因果</td><td class="left">X能否预测Y</td><td class="left">X不是Y的Granger原因</td></tr>
+</table>
+
+<!-- ===== 板块六 ===== -->
+<h3 id="sec-回归方法">板块六：回归方法（怎么估计参数？）</h3>
+
+<table>
+  <tr><th style="width:70px;">缩写</th><th style="width:170px;">全称</th><th>一句话</th></tr>
+  <tr id="def-OLS"><td class="left"><b>OLS</b></td><td class="left">Ordinary Least Squares<br>普通最小二乘</td><td class="left">最小化残差平方和，最基础的回归</td></tr>
+  <tr id="def-WLS"><td class="left"><b>WLS</b></td><td class="left">Weighted LS 加权最小二乘</td><td class="left">修正异方差，给方差小的观测更大权重</td></tr>
+  <tr id="def-GLS"><td class="left"><b>GLS</b></td><td class="left">Generalized LS 广义最小二乘</td><td class="left">同时修正异方差+自相关</td></tr>
+  <tr id="def-2SLS"><td class="left"><b>2SLS</b></td><td class="left">Two-Stage LS 两阶段最小二乘</td><td class="left">用工具变量修正内生性</td></tr>
+  <tr id="def-MLE"><td class="left"><b>MLE</b></td><td class="left">Maximum Likelihood Estimation<br>极大似然估计</td><td class="left">找最可能产生观测数据的参数</td></tr>
+</table>
+
+  </div>
+
 </div>
 
 <!-- 返回顶部 -->
@@ -2205,7 +2313,7 @@ function switchTab(tabId) {
   
   // Activate the clicked tab
   const tabs = document.querySelectorAll('.nav-tab');
-  const tabMap = {'home': 0, 'line1': 1, 'line2': 2, 'line3': 3, 'exam0': 4};
+  const tabMap = {'home': 0, 'line1': 1, 'line2': 2, 'line3': 3, 'exam0': 4, 'glossary': 5};
   if (tabMap[tabId] !== undefined) {
     tabs[tabMap[tabId]].classList.add('active');
   }
