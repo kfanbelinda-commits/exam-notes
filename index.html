@@ -380,7 +380,7 @@
 
 <hr>
 
-<h3>1.1 残差 vs 误差——先分清这两个"差"</h3>
+<h3>1.1 残差 vs 误差——先分清这两个「差」</h3>
 
 <p>在回答"准不准"之前，先分清两个容易混的概念：</p>
 
@@ -2397,7 +2397,7 @@ function buildAllTOC() {
     headings.forEach(function(h, i) {
       if (!h.id) h.id = 'toc-' + tabId + '-' + i;
       var level = h.tagName === 'H2' ? 'toc-h2' : 'toc-h3';
-      var text = h.textContent.trim().substring(0, 28);
+      var text = h.textContent.trim().substring(0, 28).replace(/"/g, "&quot;").replace(/</g, "&lt;");
       html += '<a class="' + level + '" data-tab="' + tabId + '" data-target="' + h.id + '">' + text + '</a>';
     });
     
