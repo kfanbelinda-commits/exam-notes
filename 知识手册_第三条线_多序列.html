@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>金融计量学 · 知识手册 · 第三条线</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 13px; line-height: 1.7; color: #1a1a1a;
+    background: #fff; padding: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { font-size: 22px; text-align: center; margin-bottom: 4px; letter-spacing: 2px; }
+  .subtitle { text-align: center; color: #666; font-size: 12px; margin-bottom: 24px; }
+  h2 { font-size: 17px; color: #fff; padding: 7px 16px; margin: 28px 0 14px 0; border-radius: 4px; }
+  h2.line3 { background: #A0785A; }
+  h3 { font-size: 15px; color: #8B6F50; border-left: 4px solid #A0785A; padding-left: 10px; margin: 22px 0 8px 0; }
+  h4 { font-size: 13px; color: #333; margin: 14px 0 6px 0; padding: 4px 8px; background: #F5EDE3; border-radius: 3px; display: inline-block; }
+  p { margin: 6px 0; }
+  .bridge { color: #A0785A; font-weight: bold; margin: 12px 0 4px 0; font-size: 13px; }
+  .indent { margin-left: 20px; }
+  .explain { color: #444; font-size: 12.5px; margin: 4px 0 4px 20px; }
+  .formula {
+    background: #F5EDE3; border: 1px solid #C9A87C; border-radius: 4px;
+    padding: 8px 14px; margin: 8px 0; font-family: "Cambria Math", "STIX Two Math", "Microsoft YaHei", serif;
+    font-size: 13px; line-height: 1.8; page-break-inside: avoid;
+  }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; margin: 2px 2px; }
+  .tag-h0 { background: #F0EBD8; border: 1px solid #C0A060; }
+  .tag-warn { background: #EDD5D5; border: 1px solid #C47070; color: #A04545; }
+  .tag-ok { background: #D5E0D7; border: 1px solid #7A9E7E; color: #4A6B50; }
+  .card {
+    border: 1px solid #C9A87C; border-radius: 6px; padding: 10px 14px;
+    background: #FAFAF7; margin: 10px 0; page-break-inside: avoid;
+  }
+  .vs-row { display: flex; gap: 10px; margin: 8px 0; }
+  .vs-box { flex: 1; padding: 8px 10px; border-radius: 4px; font-size: 12px; }
+  .vs-good { background: #EBF0EC; border: 1px solid #90B094; }
+  .vs-bad { background: #F5EDED; border: 1px solid #C47070; }
+  ol, ul { margin: 4px 0 4px 24px; font-size: 12.5px; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+  th { background: #F5EDE3; font-weight: bold; }
+  td.left { text-align: left; }
+  .warn { font-size: 12px; color: #B05050; margin: 4px 0 4px 16px; font-weight: bold; }
+  .tip { font-size: 12px; color: #607D8B; margin: 4px 0 4px 16px; }
+  hr { border: none; border-top: 1px solid #E0DDD5; margin: 16px 0; }
+  .fig { text-align: center; margin: 12px 0; }
+  .fig-caption { font-size: 11px; color: #666; margin-top: 4px; }
+  @media print {
+    body { padding: 0; font-size: 12px; }
+    h2 { margin-top: 16px; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>金融计量学 · 知识手册</h1>
+<div class="subtitle">第三条线：多序列拓展 · 协整 · ECM · 格兰杰因果</div>
+
+<h2 class="line3">从第二条线到第三条线：从一个序列到两个序列</h2>
+
+<p>第二条线处理的是<b>一个</b>序列：拿到股价 → 检验平稳性 → 建AR/MA模型 → 预测未来走势。整个过程只涉及Y自己。</p>
+
+<p class="bridge">→ 但很多时候我们想研究的是两个变量之间的关系：收入影响消费吗？货币供应量影响GDP吗？</p>
+
+<p>如果两个序列都是平稳的，直接做OLS回归就行（第一条线的内容）。但金融/宏观数据大部分是<b>非平稳</b>的——GDP在涨、消费在涨、股价在涨。</p>
+
+<p class="bridge">→ 两个非平稳序列能直接回归吗？</p>
+
+<p><b>不能。</b>直接回归会产生<b>伪回归</b>——R²虚高，t检验显著，但变量之间根本没有真实关系。原因是两个序列各自有趋势（都在涨），趋势"撞"在一起造成虚假相关。</p>
+
+<p class="bridge">→ 那怎么办？有没有一种方法能区分"真的有关系"和"伪回归"？</p>
+
+<p><b>有，就是协整检验。</b></p>
+
+<!-- 总览流程 -->
+<div class="card">
+<div class="fig">
+<svg width="800" height="70" viewBox="0 0 800 70">
+  <rect x="5" y="10" width="130" height="50" rx="8" fill="#A0785A"/><text x="70" y="40" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">两个I(1)序列</text>
+  <text x="150" y="38" font-size="16" fill="#A0785A">→</text>
+  <rect x="170" y="10" width="140" height="50" rx="8" fill="#A0785A"/><text x="240" y="35" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">协整检验</text><text x="240" y="50" font-size="10" fill="#D4C0A8" text-anchor="middle">EG两步法</text>
+  <text x="325" y="38" font-size="16" fill="#A0785A">→</text>
+  <rect x="345" y="10" width="120" height="50" rx="8" fill="#7A9E7E"/><text x="405" y="40" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">有协整 ✓</text>
+  <text x="480" y="38" font-size="16" fill="#A0785A">→</text>
+  <rect x="500" y="10" width="100" height="50" rx="8" fill="#607D8B"/><text x="550" y="35" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">ECM</text><text x="550" y="50" font-size="10" fill="#C5CCD3" text-anchor="middle">短期调整</text>
+  <text x="610" y="38" font-size="12" fill="#A0785A">+</text>
+  <rect x="625" y="10" width="140" height="50" rx="8" fill="#607D8B"/><text x="695" y="35" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">格兰杰因果</text><text x="695" y="50" font-size="10" fill="#C5CCD3" text-anchor="middle">谁能预测谁？</text>
+</svg>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== 协整 ===== -->
+<h2 class="line3">1. 协整——两个非平稳序列有没有长期关系？</h2>
+
+<h3>1.1 什么是协整？</h3>
+
+<p>用一个生活化的比喻：</p>
+
+<p class="indent">想象两个喝醉的人从酒吧出来，各自走路歪歪扭扭（非平稳）。如果他们各走各的，那两人的距离会越来越远（无协整 → 伪回归）。但如果他们手拉手——虽然各自还是歪歪扭扭的，但两人之间的<b>距离始终保持在一个稳定范围内</b>，偏远了会自动拉回来。这就是协整。</p>
+
+<p class="bridge">→ 用数学说：</p>
+
+<div class="formula">
+  收入 Y 是 I(1)（非平稳，一直在涨）<br>
+  消费 X 也是 I(1)（非平稳，也在涨）<br><br>
+  但 <b>Y − βX</b>（两者的线性组合）是<b>平稳</b>的<br>
+  → 它在一个固定均值附近上下波动，偏离了会自动回来<br><br>
+  这个β就是长期均衡关系。例子：消费倾向 = 消费/收入，长期来看是稳定的。
+</div>
+
+<p><b>单整 vs 协整：</b></p>
+<div class="vs-row">
+  <div class="vs-box" style="background:#E8EDF0;border:1px solid #90B094;">
+    <b>单整</b>：针对<b>单个</b>序列<br>
+    差几次变平稳 = 几阶单整 I(d)
+  </div>
+  <div class="vs-box" style="background:#F5EDE3;border:1px solid #C9A87C;">
+    <b>协整</b>：针对<b>多个</b>序列<br>
+    各自不平稳，但线性组合平稳<br>
+    = 之间有长期均衡关系
+  </div>
+</div>
+
+<h3>1.2 怎么检验有没有协整？</h3>
+
+<p>两种方法，看变量个数选：</p>
+
+<div class="card">
+<table>
+  <tr><th>方法</th><th>适用</th><th>考试重要性</th></tr>
+  <tr><td class="left"><b>EG两步法（Engle-Granger）</b></td><td class="left">一阶协整：Y和单个X（两个变量）</td><td><span class="tag tag-warn">★ 重点必考</span></td></tr>
+  <tr><td class="left">Johansen检验（JJ）</td><td class="left">多阶协整：三个以上变量</td><td>了解名字即可</td></tr>
+</table>
+</div>
+
+<h3>1.3 EG两步法（重点展开）</h3>
+
+<p>思路非常简单：如果Y和X有协整，那它们的偏差（残差）应该是平稳的。所以：</p>
+
+<div class="card">
+<p><b>第一步：对Y和X做OLS</b> → 目的不是要回归结果，而是要拿到<b>残差</b></p>
+<div class="formula">
+  Y = β̂₀ + β̂₁X + û<br>
+  残差 û = Y − Ŷ = Y − β̂₀ − β̂₁X<br><br>
+  û 代表什么？Y和X之间的偏差——Y偏离了长期均衡关系多少
+</div>
+
+<p style="margin-top:10px;"><b>第二步：对残差 û 做ADF单位根检验</b> → 看残差平不平稳</p>
+
+<p><span class="tag tag-h0">H₀：残差不平稳（无协整）</span></p>
+<p>H₁：残差平稳（有协整）</p>
+
+<div class="vs-row">
+  <div class="vs-box vs-good">
+    <b>残差平稳 → 拒绝H₀ → 有协整 ✓</b><br>
+    Y和X的偏差会自动回归均值<br>
+    两者存在长期均衡关系
+  </div>
+  <div class="vs-box vs-bad">
+    <b>残差不平稳 → 不拒绝H₀ → 无协整</b><br>
+    Y和X的偏差越走越远<br>
+    → 伪回归，R²虚高无意义
+  </div>
+</div>
+</div>
+
+<!-- EG流程图 -->
+<div class="fig">
+<svg width="650" height="200" viewBox="0 0 650 200">
+  <!-- Step 1 -->
+  <rect x="10" y="30" width="150" height="55" rx="8" fill="#A0785A"/>
+  <text x="85" y="52" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">第一步：OLS回归</text>
+  <text x="85" y="70" font-size="10" fill="#D4C0A8" text-anchor="middle">Y = β̂₀ + β̂₁X + û</text>
+  
+  <text x="175" y="60" font-size="14" fill="#A0785A">→</text>
+  
+  <!-- 得到残差 -->
+  <rect x="195" y="35" width="100" height="45" rx="6" fill="#F5EDE3" stroke="#C9A87C"/>
+  <text x="245" y="55" font-size="11" fill="#8B6F50" text-anchor="middle" font-weight="bold">得到残差 û</text>
+  <text x="245" y="70" font-size="10" fill="#8B6F50" text-anchor="middle">û = Y − Ŷ</text>
+  
+  <text x="310" y="60" font-size="14" fill="#A0785A">→</text>
+  
+  <!-- Step 2 -->
+  <rect x="330" y="30" width="150" height="55" rx="8" fill="#A0785A"/>
+  <text x="405" y="52" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">第二步：对û做ADF</text>
+  <text x="405" y="70" font-size="10" fill="#D4C0A8" text-anchor="middle">H₀: û不平稳</text>
+  
+  <text x="495" y="60" font-size="14" fill="#A0785A">→</text>
+  
+  <!-- 分支 -->
+  <rect x="515" y="10" width="125" height="40" rx="6" fill="#7A9E7E"/>
+  <text x="577" y="25" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">拒绝 → 有协整 ✓</text>
+  <text x="577" y="42" font-size="9" fill="#fff" text-anchor="middle">长期均衡关系存在</text>
+  
+  <rect x="515" y="65" width="125" height="40" rx="6" fill="#C07060"/>
+  <text x="577" y="80" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">不拒绝 → 伪回归 ✗</text>
+  <text x="577" y="97" font-size="9" fill="#fff" text-anchor="middle">R²虚高无真实关系</text>
+  
+  <!-- 经济含义 -->
+  <rect x="10" y="120" width="630" height="65" rx="6" fill="#F5EDE3" stroke="#C9A87C"/>
+  <text x="25" y="140" font-size="12" fill="#8B6F50" font-weight="bold">经济含义举例：</text>
+  <text x="25" y="158" font-size="11" fill="#555">收入Y和消费X各自都在涨（非平稳），但消费倾向（消费/收入的比例）是稳定的。</text>
+  <text x="25" y="175" font-size="11" fill="#555">残差 û = 实际消费 − 均衡消费 → 如果û平稳，说明偏离了会自动回来 → 有协整。</text>
+</svg>
+<div class="fig-caption">图1：EG两步法流程</div>
+</div>
+
+<p class="warn">⚠ 此处ADF的临界值与普通ADF不同——残差是估计出来的（不是原始数据），标准更严格</p>
+<p class="warn">⚠ 两个I(1)变量不代表一定有协整！必须做EG检验才知道（试卷2单选Q2考过）</p>
+<p class="warn">⚠ 伪回归判断标志：R² > DW 时高度怀疑</p>
+
+<hr>
+
+<!-- ===== ECM ===== -->
+<h2 class="line3">2. ECM——偏离了长期均衡怎么调整回来？</h2>
+
+<h3>2.1 为什么需要ECM？</h3>
+
+<p>协整告诉我们Y和X<b>长期</b>存在均衡关系。但<b>短期</b>内可能会偏离——比如某个季度消费突然偏高（超出均衡水平）。</p>
+
+<p class="bridge">→ 偏离了之后怎么办？会不会一直偏下去？</p>
+
+<p>不会。协整的含义就是"偏离了会自动回来"。ECM（误差修正模型）就是描述<b>这个"回来"的过程</b>——回来多快、怎么回来。</p>
+
+<h3>2.2 ECM模型</h3>
+
+<div class="formula">
+  <b>ΔYₜ = α · ûₜ₋₁ + 短期动态项 + vₜ</b><br><br>
+  ûₜ₋₁ = Yₜ₋₁ − β̂Xₜ₋₁ → 上一期偏离长期均衡的程度（误差修正项）<br>
+  α → 调整速度（必须 &lt; 0 才能纠偏）<br>
+  短期动态项 → ΔXₜ 等（短期内X变化对Y的即时影响）<br>
+  vₜ → 随机扰动
+</div>
+
+<h4>α 为什么必须小于零？</h4>
+
+<p class="indent">假设上一期Y偏高了（ûₜ₋₁ > 0，实际消费超出均衡水平）。</p>
+<p class="indent">α < 0 → α · ûₜ₋₁ < 0 → ΔYₜ < 0 → 本期Y向下调整 → <b>往均衡方向回来</b>。</p>
+<p class="indent">反过来，上一期Y偏低了（ûₜ₋₁ < 0），α · ûₜ₋₁ > 0 → Y向上调整 → 也是往均衡方向回来。</p>
+
+<!-- ECM纠偏图 -->
+<div class="fig">
+<svg width="500" height="170" viewBox="0 0 500 170">
+  <!-- 均衡线 -->
+  <line x1="30" y1="85" x2="470" y2="85" stroke="#A0785A" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="475" y="88" font-size="10" fill="#A0785A">长期均衡</text>
+  
+  <!-- Y的实际路径 -->
+  <polyline points="40,85 80,60 120,50 160,65 200,80 240,88 280,95 320,105 360,95 400,88 440,85" fill="none" stroke="#607D8B" stroke-width="2.5"/>
+  <text x="120" y="43" font-size="10" fill="#607D8B" font-weight="bold">Y偏高了</text>
+  <text x="320" y="118" font-size="10" fill="#607D8B" font-weight="bold">Y偏低了</text>
+  
+  <!-- 向下调整箭头 -->
+  <line x1="140" y1="55" x2="180" y2="75" stroke="#B05050" stroke-width="1.5" marker-end="url(#arrowred)"/>
+  <text x="155" y="60" font-size="9" fill="#B05050">α·û &lt; 0</text>
+  <text x="155" y="72" font-size="9" fill="#B05050">往下调</text>
+  
+  <!-- 向上调整箭头 -->
+  <line x1="340" y1="108" x2="380" y2="92" stroke="#5A8060" stroke-width="1.5"/>
+  <text x="345" y="122" font-size="9" fill="#5A8060">α·û &gt; 0</text>
+  <text x="345" y="134" font-size="9" fill="#5A8060">往上调</text>
+  
+  <text x="250" y="160" font-size="11" fill="#666" text-anchor="middle">不管偏高还是偏低，α&lt;0保证Y总是往均衡方向回来</text>
+</svg>
+<div class="fig-caption">图2：ECM的纠偏机制——α&lt;0确保偏离后自动回归均衡</div>
+</div>
+
+<h3>2.3 ECM的建模步骤</h3>
+
+<div class="formula">
+  <b>第一步</b>：OLS回归 Y = β̂₀ + β̂₁X → 建立长期均衡关系<br>
+  <b>第二步</b>：用残差 û 构建误差修正方程 → 描述短期调整机制<br><br>
+  一句话：<b>EG检验告诉你"有没有长期关系"，ECM告诉你"偏离了怎么回来"</b>
+</div>
+
+<p class="warn">⚠ 必须先确认有协整（EG检验通过），才能建ECM。没有协整就建ECM没有意义。</p>
+
+<hr>
+
+<!-- ===== 格兰杰因果 ===== -->
+<h2 class="line3">3. 格兰杰因果——谁能预测谁？</h2>
+
+<h3>3.1 为什么还需要格兰杰因果？</h3>
+
+<p>协整告诉我们Y和X有长期关系，ECM告诉我们偏离了怎么调整。但还有一个问题没回答：</p>
+
+<p class="bridge">→ 到底是X引起了Y的变化，还是Y引起了X的变化？还是互相影响？</p>
+
+<p>格兰杰因果检验就是回答这个问题的。</p>
+
+<h3>3.2 格兰杰因果的核心思想</h3>
+
+<p><b>"能预测"不等于"格兰杰原因"。</b>格兰杰因果的定义比"能预测"更严格：</p>
+
+<div class="formula">
+  在<b>已经用Y自身历史</b>预测Y的基础上，再加入X的历史，如果预测变得<b>更准</b>了<br>
+  → X是Y的格兰杰原因<br><br>
+  关键词：<b>额外</b>提高预测。不是说X能预测Y就行，而是在Y已经用了自己历史的前提下，X还能<b>额外</b>帮忙。
+</div>
+
+<p class="explain">类比：你已经根据昨天的天气预报了今天的天气（Y的历史）。然后有人告诉你昨天的气压数据（X的历史）。如果加了气压后预测变准了，那气压就是天气的"格兰杰原因"。如果加了也没变准，气压就不是。</p>
+
+<h3>3.3 怎么检验？</h3>
+
+<p>构建两个方程，分别检验交叉项系数：</p>
+
+<div class="formula">
+  <b>方程1</b>（X能不能预测Y？）：Yₜ = Σαᵢ·Xₜ₋ᵢ + Σβᵢ·Yₜ₋ᵢ + μ₁ₜ<br>
+  <b>方程2</b>（Y能不能预测X？）：Xₜ = Σλᵢ·Yₜ₋ᵢ + Σδᵢ·Xₜ₋ᵢ + μ₂ₜ<br><br>
+  <b>只看交叉项</b>（α和λ），不看自身滞后项（β和δ）
+</div>
+
+<div class="card">
+<p><b>检验X是不是Y的格兰杰原因：</b></p>
+<p><span class="tag tag-h0">H₀：α₁ = α₂ = … = αₚ = 0（X的滞后项系数全为零 → X对Y没有额外预测力）</span></p>
+<p>检验方法：F检验</p>
+<div class="vs-row">
+  <div class="vs-box vs-bad"><b>拒绝H₀</b>：α ≠ 0 → X的历史值对Y有额外解释力 → <b>X是Y的格兰杰原因</b></div>
+  <div class="vs-box vs-good"><b>不拒绝H₀</b>：α = 0 → 加了X也没变准 → X不是Y的格兰杰原因</div>
+</div>
+</div>
+
+<h3>3.4 四种情况</h3>
+
+<div class="card">
+<table>
+  <tr><th>情况</th><th>条件</th><th>含义</th></tr>
+  <tr><td class="left"><b>X → Y</b></td><td>α ≠ 0，λ = 0</td><td class="left">X是Y的格兰杰原因，Y不是X的</td></tr>
+  <tr><td class="left"><b>Y → X</b></td><td>α = 0，λ ≠ 0</td><td class="left">Y是X的格兰杰原因，X不是Y的</td></tr>
+  <tr><td class="left"><b>X ↔ Y</b></td><td>α ≠ 0，λ ≠ 0</td><td class="left">互为格兰杰原因</td></tr>
+  <tr><td class="left"><b>无因果</b></td><td>α = 0，λ = 0</td><td class="left">谁也不是谁的格兰杰原因</td></tr>
+</table>
+<p class="explain">判断方法：只看<b>交叉项</b>（α和λ），不看自身滞后项（β和δ）</p>
+</div>
+
+<h3>3.5 考试实例：投资额 vs 销售额</h3>
+
+<div class="card">
+<table>
+  <tr><th>检验方向</th><th>F统计量</th><th>p值</th><th>判断</th><th>结论</th></tr>
+  <tr><td class="left">投资额 → 销售额</td><td>1.681</td><td>0.148</td><td class="left">p=0.148 > 0.05 → 率大 → 不拒绝H₀</td><td class="left">投资额<b>不是</b>销售额的格兰杰原因</td></tr>
+  <tr><td class="left">销售额 → 投资额</td><td>9.575</td><td>0.000</td><td class="left">p=0.000 < 0.05 → 率小 → 拒绝H₀</td><td class="left">销售额<b>是</b>投资额的格兰杰原因</td></tr>
+</table>
+<p style="margin-top:6px;"><b>综合结论：</b>单向格兰杰因果，方向是<b>销售额 → 投资额</b></p>
+<p class="explain">白话翻译：已知投资额自身历史，再加销售额历史，对投资额的预测变准了。但反过来，加投资额历史对销售额的预测没变准。说明是销售先动，投资跟着动。</p>
+</div>
+
+<p class="warn">⚠ 格兰杰因果是<b>统计预测关系</b>，不是真实因果！它只说明"X的历史能额外预测Y"，不说明"X导致了Y"。结论依赖模型设定（滞后阶数、有没有遗漏第三变量），换设定可能翻转。</p>
+
+<p class="warn">⚠ 每个案例必须写清三件事：H₀是什么、数字是多少（F值/p值）、白话翻译结论</p>
+
+<hr>
+
+<!-- ===== 完整流程 ===== -->
+<h2 class="line3">4. 完整流程图</h2>
+
+<div class="fig">
+<svg width="750" height="280" viewBox="0 0 750 280">
+  <!-- 起点 -->
+  <rect x="10" y="30" width="130" height="50" rx="8" fill="#A0785A"/>
+  <text x="75" y="50" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">两个I(1)序列</text>
+  <text x="75" y="68" font-size="9" fill="#D4C0A8" text-anchor="middle">各自非平稳</text>
+  
+  <line x1="140" y1="55" x2="180" y2="55" stroke="#A0785A" stroke-width="1.5"/>
+  
+  <!-- EG检验 -->
+  <rect x="180" y="20" width="160" height="70" rx="8" fill="#A0785A"/>
+  <text x="260" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">协整检验（EG）</text>
+  <text x="260" y="58" font-size="10" fill="#D4C0A8" text-anchor="middle">① OLS得残差û</text>
+  <text x="260" y="72" font-size="10" fill="#D4C0A8" text-anchor="middle">② 对û做ADF</text>
+  <text x="260" y="85" font-size="9" fill="#D4C0A8" text-anchor="middle">H₀: 无协整</text>
+  
+  <!-- 无协整 -->
+  <line x1="260" y1="90" x2="260" y2="130" stroke="#C07060" stroke-width="1.5"/>
+  <text x="270" y="115" font-size="9" fill="#C07060">不拒绝</text>
+  <rect x="190" y="130" width="140" height="45" rx="6" fill="#C07060"/>
+  <text x="260" y="150" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">伪回归 ✗</text>
+  <text x="260" y="165" font-size="9" fill="#fff" text-anchor="middle">R²虚高，结论不可信</text>
+  
+  <!-- 有协整 -->
+  <line x1="340" y1="55" x2="400" y2="55" stroke="#7A9E7E" stroke-width="1.5"/>
+  <text x="370" y="47" font-size="9" fill="#5A8060">拒绝 ✓</text>
+  
+  <rect x="400" y="25" width="120" height="60" rx="8" fill="#7A9E7E"/>
+  <text x="460" y="48" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">有协整 ✓</text>
+  <text x="460" y="65" font-size="9" fill="#fff" text-anchor="middle">长期均衡关系</text>
+  
+  <line x1="520" y1="45" x2="570" y2="45" stroke="#607D8B" stroke-width="1.5"/>
+  <line x1="520" y1="65" x2="570" y2="65" stroke="#607D8B" stroke-width="1.5"/>
+  
+  <!-- ECM -->
+  <rect x="570" y="15" width="160" height="55" rx="8" fill="#607D8B"/>
+  <text x="650" y="35" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">ECM 误差修正模型</text>
+  <text x="650" y="50" font-size="10" fill="#C5CCD3" text-anchor="middle">ΔYₜ = α·ûₜ₋₁ + ...</text>
+  <text x="650" y="63" font-size="9" fill="#C5CCD3" text-anchor="middle">α&lt;0 → 纠偏回均衡</text>
+  
+  <!-- 格兰杰 -->
+  <rect x="570" y="85" width="160" height="70" rx="8" fill="#607D8B"/>
+  <text x="650" y="105" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">格兰杰因果检验</text>
+  <text x="650" y="120" font-size="10" fill="#C5CCD3" text-anchor="middle">谁能预测谁？</text>
+  <text x="650" y="135" font-size="9" fill="#C5CCD3" text-anchor="middle">H₀: X滞后项系数=0</text>
+  <text x="650" y="148" font-size="8" fill="#C5CCD3" text-anchor="middle">⚠ 统计预测 ≠ 真实因果</text>
+
+  <!-- 联立方程补充 -->
+  <rect x="10" y="200" width="720" height="65" rx="6" fill="#F5EDE3" stroke="#C9A87C"/>
+  <text x="25" y="220" font-size="12" fill="#8B6F50" font-weight="bold">补充：联立方程中的内生/外生/先决变量</text>
+  <text x="25" y="238" font-size="11" fill="#555">内生变量：方程组中有方程解释它（出现在某个等式左边）→ 由系统内部决定 → Cov(X,U)≠0 → OLS有偏</text>
+  <text x="25" y="253" font-size="11" fill="#555">外生变量：方程组中没有方程解释它（只在右边出现）→ 由外部给定 | 先决变量：外生变量 + 内生变量的滞后项</text>
+</svg>
+<div class="fig-caption">图3：多序列分析完整流程</div>
+</div>
+
+<hr>
+
+<!-- ===== 三条线总览 ===== -->
+<h2 class="line3">附：三条线如何串联？</h2>
+
+<div class="card">
+<div class="fig">
+<svg width="800" height="220" viewBox="0 0 800 220">
+  <!-- 第一条线 -->
+  <rect x="10" y="10" width="240" height="80" rx="8" fill="#607D8B"/>
+  <text x="130" y="35" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">第一条线：OLS基础</text>
+  <text x="130" y="55" font-size="10" fill="#C5CCD3" text-anchor="middle">古典假定 → 检验违反 → 修正</text>
+  <text x="130" y="72" font-size="10" fill="#C5CCD3" text-anchor="middle">处理截面数据 / 平稳数据</text>
+  
+  <!-- 箭头+说明 -->
+  <line x1="250" y1="50" x2="300" y2="50" stroke="#999" stroke-width="1"/>
+  <text x="275" y="42" font-size="9" fill="#999" text-anchor="middle">假定④被违反</text>
+  <text x="275" y="62" font-size="9" fill="#999" text-anchor="middle">→ 利用自相关</text>
+  
+  <!-- 第二条线 -->
+  <rect x="300" y="10" width="240" height="80" rx="8" fill="#708090"/>
+  <text x="420" y="35" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">第二条线：时间序列</text>
+  <text x="420" y="55" font-size="10" fill="#C5CCD3" text-anchor="middle">平稳性→建模→白噪声→GARCH</text>
+  <text x="420" y="72" font-size="10" fill="#C5CCD3" text-anchor="middle">处理单个时间序列</text>
+  
+  <!-- 箭头+说明 -->
+  <line x1="540" y1="50" x2="590" y2="50" stroke="#999" stroke-width="1"/>
+  <text x="565" y="42" font-size="9" fill="#999" text-anchor="middle">多个序列</text>
+  <text x="565" y="62" font-size="9" fill="#999" text-anchor="middle">→ 各自非平稳</text>
+  
+  <!-- 第三条线 -->
+  <rect x="590" y="10" width="200" height="80" rx="8" fill="#A0785A"/>
+  <text x="690" y="35" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">第三条线：多序列</text>
+  <text x="690" y="55" font-size="10" fill="#D4C0A8" text-anchor="middle">协整→ECM→格兰杰</text>
+  <text x="690" y="72" font-size="10" fill="#D4C0A8" text-anchor="middle">研究序列间的关系</text>
+  
+  <!-- 底部总结 -->
+  <rect x="10" y="120" width="780" height="85" rx="8" fill="#F5F2ED" stroke="#D5D0C8"/>
+  <text x="400" y="145" font-size="13" fill="#555" text-anchor="middle" font-weight="bold">三条线的递进关系</text>
+  <text x="400" y="168" font-size="11" fill="#666" text-anchor="middle">第一条线是基础（OLS），第二条线是拓展（单个序列的时间维度），第三条线是进一步拓展（多个序列之间的关系）</text>
+  <text x="400" y="190" font-size="11" fill="#666" text-anchor="middle">每条线都在解决一个核心问题：第一条→β̂准不准？ 第二条→序列怎么预测？ 第三条→序列之间什么关系？</text>
+</svg>
+</div>
+</div>
+
+</body>
+</html>
