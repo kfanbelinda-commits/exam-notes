@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>金融计量学 · 知识手册</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 13px; line-height: 1.7; color: #1a1a1a;
+    background: #fff; padding: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { font-size: 22px; text-align: center; margin-bottom: 4px; letter-spacing: 2px; }
+  .subtitle { text-align: center; color: #666; font-size: 12px; margin-bottom: 24px; }
+  h2 { font-size: 17px; color: #fff; padding: 7px 16px; margin: 28px 0 14px 0; border-radius: 4px; }
+  h2.line1 { background: #1565C0; }
+  h3 { font-size: 15px; color: #1565C0; border-left: 4px solid #1565C0; padding-left: 10px; margin: 22px 0 8px 0; }
+  h4 { font-size: 13px; color: #333; margin: 14px 0 6px 0; padding: 4px 8px; background: #F5F5F5; border-radius: 3px; display: inline-block; }
+  p { margin: 6px 0; }
+  .lead { color: #1565C0; font-weight: bold; margin: 10px 0 4px 0; }
+  .bridge { color: #E65100; font-weight: bold; margin: 12px 0 4px 0; font-size: 13px; }
+  .indent { margin-left: 20px; }
+  .explain { color: #444; font-size: 12.5px; margin: 4px 0 4px 20px; }
+  .formula {
+    background: #F5F5F5; border: 1px solid #E0E0E0; border-radius: 4px;
+    padding: 8px 14px; margin: 8px 0; font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Microsoft YaHei", serif;
+    font-size: 13px; line-height: 1.8; page-break-inside: avoid;
+  }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; margin: 2px 2px; }
+  .tag-h0 { background: #FFF9C4; border: 1px solid #F9A825; }
+  .tag-warn { background: #FFCDD2; border: 1px solid #E53935; color: #B71C1C; }
+  .tag-ok { background: #C8E6C9; border: 1px solid #43A047; color: #1B5E20; }
+  .tag-fix { background: #BBDEFB; border: 1px solid #1E88E5; color: #0D47A1; }
+  .card {
+    border: 1px solid #ddd; border-radius: 6px; padding: 10px 14px;
+    background: #FAFAFA; margin: 10px 0; page-break-inside: avoid;
+  }
+  .card-title { font-weight: bold; font-size: 14px; color: #1565C0; margin-bottom: 6px; }
+  .vs-row { display: flex; gap: 10px; margin: 8px 0; }
+  .vs-box { flex: 1; padding: 8px 10px; border-radius: 4px; font-size: 12px; }
+  .vs-good { background: #E8F5E9; border: 1px solid #66BB6A; }
+  .vs-bad { background: #FFEBEE; border: 1px solid #EF5350; }
+  ol, ul { margin: 4px 0 4px 24px; font-size: 12.5px; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+  th { background: #f5f5f5; font-weight: bold; }
+  td.yes { color: #2E7D32; font-weight: bold; }
+  td.no { color: #C62828; font-weight: bold; }
+  td.left { text-align: left; }
+  .warn { font-size: 12px; color: #C62828; margin: 4px 0 4px 16px; font-weight: bold; }
+  .tip { font-size: 12px; color: #1565C0; margin: 4px 0 4px 16px; }
+  hr { border: none; border-top: 1px solid #E0E0E0; margin: 16px 0; }
+  .fig { text-align: center; margin: 12px 0; }
+  .fig-caption { font-size: 11px; color: #666; margin-top: 4px; }
+  @media print {
+    body { padding: 0; font-size: 12px; }
+    h2 { margin-top: 16px; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>金融计量学 · 知识手册</h1>
+<div class="subtitle">第一条线：OLS 基础 · 按逻辑链展开 · 配图可打印</div>
+
+<h2 class="line1">1. 从问题出发：计量经济学在干什么？</h2>
+
+<p>生活中我们想预测一件事——比如<b>收入增加了，储蓄会增加多少？</b></p>
+
+<p>为了回答这个问题，我们把"收入影响储蓄"写成数学关系：</p>
+
+<div class="formula">
+  <b>总体回归方程：</b>Y = β₀ + β₁X + U<br>
+  <span style="color:#666;">Y = 储蓄（想预测的）&nbsp;|&nbsp; X = 收入（原因）&nbsp;|&nbsp; β₁ = 收入每增1元，储蓄平均增多少 &nbsp;|&nbsp; U = 其他乱七八糟的影响（看不见）</span>
+</div>
+
+<p class="bridge">→ 但问题来了：β₁ 到底是多少？</p>
+
+<p>β₁ 是总体参数——我们永远不知道它的真实值（除非调查全国每一个人）。我们只有一份样本数据，只能用样本去<b>估计</b>它。估计出来的值叫 <b>β̂₁</b>（帽子 = "估计值"）。</p>
+
+<p class="bridge">→ 那怎么估计？总得有个标准吧。</p>
+
+<p>标准就是：让估计出来的回归线<b>尽可能贴近数据</b>。怎么衡量"贴近"？看每个数据点到回归线的竖直距离（残差），让这些距离的<b>平方和最小</b>。</p>
+
+<p class="explain">为什么用平方和？因为残差有正（点在线上方）有负（点在线下方），直接加会互相抵消。平方后全部变正，大的偏离被加倍惩罚。</p>
+
+<!-- OLS散点图 -->
+<div class="fig">
+<svg width="460" height="280" viewBox="0 0 460 280">
+  <!-- 坐标轴 -->
+  <line x1="50" y1="240" x2="430" y2="240" stroke="#333" stroke-width="1.5"/>
+  <line x1="50" y1="240" x2="50" y2="20" stroke="#333" stroke-width="1.5"/>
+  <text x="430" y="258" font-size="12" fill="#333">X (收入)</text>
+  <text x="12" y="20" font-size="12" fill="#333">Y (储蓄)</text>
+  
+  <!-- 回归线 -->
+  <line x1="70" y1="210" x2="410" y2="60" stroke="#1565C0" stroke-width="2.5"/>
+  <text x="390" y="50" font-size="11" fill="#1565C0" font-weight="bold">Ŷ = β̂₀ + β̂₁X</text>
+  
+  <!-- 数据点 + 残差线 -->
+  <circle cx="100" cy="175" r="4" fill="#E53935"/>
+  <line x1="100" y1="175" x2="100" y2="197" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="150" cy="160" r="4" fill="#E53935"/>
+  <line x1="150" y1="160" x2="150" y2="179" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <circle cx="200" cy="185" r="4" fill="#E53935"/>
+  <line x1="200" y1="185" x2="200" y2="161" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="250" cy="120" r="4" fill="#E53935"/>
+  <line x1="250" y1="120" x2="250" y2="143" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="300" cy="135" r="4" fill="#E53935"/>
+  <line x1="300" y1="135" x2="300" y2="124" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="350" cy="80" r="4" fill="#E53935"/>
+  <line x1="350" y1="80" x2="350" y2="106" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="390" cy="100" r="4" fill="#E53935"/>
+  <line x1="390" y1="100" x2="390" y2="91" stroke="#E53935" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- 标注残差 -->
+  <text x="255" y="134" font-size="10" fill="#E53935">eᵢ(残差)</text>
+  <text x="108" y="190" font-size="10" fill="#E53935">eⱼ</text>
+  
+  <!-- 标注 -->
+  <circle cx="250" cy="120" r="6" fill="none" stroke="#E53935" stroke-width="1.5"/>
+  <text x="260" y="118" font-size="10" fill="#333">(Xᵢ, Yᵢ) 真实点</text>
+  <circle cx="250" cy="143" r="3" fill="#1565C0"/>
+  <text x="260" y="155" font-size="10" fill="#1565C0">(Xᵢ, Ŷᵢ) 回归线上的点</text>
+</svg>
+<div class="fig-caption">图1：OLS 找到一条线，使所有红色虚线（残差）的平方和最小</div>
+</div>
+
+<div class="formula">
+  <b>最小化目标：</b>min Σ eᵢ² = min Σ [Yᵢ − (β̂₀ + β̂₁Xᵢ)]²<br><br>
+  <b>怎么求解：</b>对 β̂ 求偏导，令偏导 = 0<br>
+  → 正规方程 X'Xβ̂ = X'Y<br>
+  → 解出 <b>β̂ = (X'X)⁻¹X'Y</b>
+</div>
+
+<p class="warn">⚠ 2026年已考：写出 β̂ 的推导过程 + 证明无偏性。这是必须闭卷默写的公式。</p>
+
+<p class="bridge">→ β̂ 算出来了，但还有两个问题要回答：</p>
+<ol>
+  <li><b>β̂ 准不准？</b>（是不是在"瞄准"真值β？）→ 这取决于古典假定（第2节）</li>
+  <li><b>模型好不好？</b>（解释了多少Y的变动？）→ 这要看 R²（下面马上讲）</li>
+</ol>
+
+<hr>
+
+<h3>1.1 残差 vs 误差——先分清这两个"差"</h3>
+
+<p>在回答"准不准"之前，先分清两个容易混的概念：</p>
+
+<div class="vs-row">
+  <div class="vs-box vs-bad">
+    <b>误差 U（Error）</b><br>
+    <b>总体</b>角度，<b>不可观测</b><br>
+    Uᵢ = Yᵢ − (β₀ + β₁Xᵢ)<br>
+    真实值偏离真实回归线多少<br>
+    永远看不见（因为β₀, β₁未知）
+  </div>
+  <div class="vs-box vs-good">
+    <b>残差 e（Residual）</b><br>
+    <b>样本</b>角度，<b>可以算出</b><br>
+    eᵢ = Yᵢ − Ŷᵢ = Yᵢ − (β̂₀ + β̂₁Xᵢ)<br>
+    真实值偏离估计的回归线多少<br>
+    β̂已知，所以能算出来
+  </div>
+</div>
+
+<p class="explain">类比：误差U是"上帝知道的真实偏离"，残差e是"我们能算出的对偏离的估计"。残差是误差的估计值。</p>
+
+<p class="bridge">→ 既然误差U看不见，那我们怎么判断模型好不好？靠残差。具体来说，靠 TSS 分解和 R²。</p>
+
+<hr>
+
+<h3>1.2 模型好不好？—— TSS 分解与 R²</h3>
+
+<p>对散点图上每一个数据点 i，都可以把Y偏离均值的总距离（离差）拆成两部分：</p>
+
+<!-- TSS分解图 -->
+<div class="fig">
+<svg width="440" height="300" viewBox="0 0 440 300">
+  <!-- 坐标轴 -->
+  <line x1="60" y1="260" x2="400" y2="260" stroke="#333" stroke-width="1"/>
+  <line x1="60" y1="260" x2="60" y2="20" stroke="#333" stroke-width="1"/>
+  <text x="400" y="275" font-size="11" fill="#333">X</text>
+  <text x="25" y="20" font-size="11" fill="#333">Y</text>
+  
+  <!-- 均值线 Ȳ -->
+  <line x1="60" y1="155" x2="400" y2="155" stroke="#999" stroke-width="1" stroke-dasharray="6,3"/>
+  <text x="405" y="158" font-size="11" fill="#999">Ȳ (均值线)</text>
+  
+  <!-- 回归线 -->
+  <line x1="80" y1="220" x2="380" y2="60" stroke="#1565C0" stroke-width="2"/>
+  <text x="355" y="50" font-size="11" fill="#1565C0">回归线 Ŷ</text>
+  
+  <!-- 数据点 i -->
+  <circle cx="260" cy="80" r="5" fill="#E53935"/>
+  <text x="268" y="78" font-size="11" fill="#E53935" font-weight="bold">Yᵢ (真实值)</text>
+  
+  <!-- 回归线上的点 -->
+  <circle cx="260" cy="120" r="4" fill="#1565C0"/>
+  <text x="268" y="118" font-size="11" fill="#1565C0">Ŷᵢ (拟合值)</text>
+  
+  <!-- 均值线上的点 -->
+  <circle cx="260" cy="155" r="3" fill="#999"/>
+  
+  <!-- 三段差 -->
+  <!-- RSS: Yi - Yi_hat -->
+  <line x1="245" y1="80" x2="245" y2="120" stroke="#E53935" stroke-width="3"/>
+  <text x="195" y="104" font-size="11" fill="#E53935" font-weight="bold">RSS: Yᵢ−Ŷᵢ</text>
+  <text x="195" y="117" font-size="10" fill="#E53935">没解释的</text>
+  
+  <!-- ESS: Yi_hat - Y_bar -->
+  <line x1="250" y1="120" x2="250" y2="155" stroke="#1565C0" stroke-width="3"/>
+  <text x="268" y="142" font-size="11" fill="#1565C0" font-weight="bold">ESS: Ŷᵢ−Ȳ</text>
+  <text x="268" y="155" font-size="10" fill="#1565C0">解释了的</text>
+  
+  <!-- TSS: Yi - Y_bar -->
+  <line x1="237" y1="80" x2="237" y2="155" stroke="#FF9800" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="170" y="76" font-size="11" fill="#FF9800" font-weight="bold">TSS: Yᵢ−Ȳ</text>
+  <text x="170" y="64" font-size="10" fill="#FF9800">总变动</text>
+  
+  <!-- 大括号标注 -->
+  <text x="140" y="145" font-size="18" fill="#FF9800">｛</text>
+</svg>
+<div class="fig-caption">图2：对每个点 i，总变动（TSS）= 模型解释的（ESS）+ 模型没解释的（RSS）</div>
+</div>
+
+<div class="formula">
+  <b>对所有点取平方和 → TSS = ESS + RSS</b><br><br>
+  TSS = Σ(Yᵢ − Ȳ)² — Y 的总变动<br>
+  ESS = Σ(Ŷᵢ − Ȳ)² — 模型<b>解释了</b>的部分（回归线偏离均值线多远）<br>
+  RSS = Σ(Yᵢ − Ŷᵢ)² — 模型<b>没解释</b>的部分（数据点偏离回归线多远）
+</div>
+
+<p class="bridge">→ 那"模型好不好"就可以量化了：ESS占TSS的比例越大，模型越好。这个比例就是 R²。</p>
+
+<div class="formula">
+  <b>R² = ESS / TSS = 1 − RSS / TSS</b><br><br>
+  R² = 1：RSS = 0，所有点在回归线上 → 完美拟合（ESS = TSS，模型解释了全部变动）<br>
+  R² = 0：ESS = 0，Ŷᵢ = Ȳ，回归线退化为水平均值线 → 模型什么都没解释<br><br>
+  <b>调整 R²</b>：R² 有个缺陷——加变量必然增大（哪怕加的是无用变量）。调整R² 会惩罚无用变量，加错变量可能反而下降。<br>
+  <b>AIC / BIC</b>：另一种衡量模型好坏的指标，越小越好。BIC惩罚更重，AIC与BIC不一致时优先BIC。
+</div>
+
+<p class="bridge">→ 现在我们知道了β̂怎么算（OLS）、模型好不好怎么看（R²）。但最关键的问题还没答：β̂ 到底准不准？</p>
+<h2 class="line1">2. β̂ 准不准？—— 古典假定与高斯-马尔科夫定理</h2>
+
+<p>答案是：<b>如果古典假定全部成立，β̂就是最好的估计</b>。"最好"的意思是：在所有线性无偏估计量中，β̂的方差最小（波动最小，最精确）。</p>
+
+<p class="bridge">→ 那古典假定具体是什么？一共六条：</p>
+
+<h3>2.1 六条古典假定（简答必背）</h3>
+
+<div class="card">
+<table>
+  <tr><th>编号</th><th>假定</th><th>公式</th><th>直觉理解</th></tr>
+  <tr><td>①</td><td class="left">X 非随机</td><td>X 是确定性的</td><td class="left">完全随机的东西无法预测——你拿噪声当原因，能预测出什么？</td></tr>
+  <tr><td>②</td><td class="left">零均值</td><td>E(Uᵢ) = 0</td><td class="left">偏离有正有负，但平均为零——不系统性地偏向某一边</td></tr>
+  <tr><td>③</td><td class="left"><b>同方差</b></td><td>Var(Uᵢ) = σ²</td><td class="left">偏离的波动前后一致——不能收入低时波动小、收入高时波动大</td></tr>
+  <tr><td>④</td><td class="left"><b>无自相关</b></td><td>Cov(Uᵢ,Uⱼ)=0</td><td class="left">前一期残差不影响后一期——残差不能"手拉手"往一个方向跑</td></tr>
+  <tr><td>⑤</td><td class="left">正态分布</td><td>Uᵢ ~ N(0,σ²)</td><td class="left">大部分偏离集中在零附近，越大的偏离越少（钟形分布）</td></tr>
+  <tr><td>⑥</td><td class="left"><b>无完全共线性</b></td><td>X'X 可逆</td><td class="left">解释变量之间不能完全线性相关——否则分不清谁在起作用</td></tr>
+</table>
+</div>
+
+<p class="warn">⚠ ③同方差 + ④无自相关合称"球型扰动假设"，经常一起考，缺一不可（2010年真题考过）</p>
+
+<p class="bridge">→ 这六条全部成立时，就有了下面这个定理：</p>
+
+<h3>2.2 高斯-马尔科夫定理</h3>
+
+<p>满足六条假定 → β̂ 具有 <b>BLUE</b> 性质：</p>
+<ul>
+  <li><b>B</b>est = 最优的（方差最小）</li>
+  <li><b>L</b>inear = β̂ 是 Y 的线性函数</li>
+  <li><b>U</b>nbiased = 无偏：E[β̂] = β（反复抽样，β̂的平均值等于真值）</li>
+  <li><b>E</b>stimator = 估计量</li>
+</ul>
+<p class="explain">一句话：在所有"Y的线性函数+无偏"的估计量中，OLS的β̂方差最小。没有比它更精确的了。</p>
+
+<h4>无偏性证明（2026已考）</h4>
+<div class="formula">
+  β̂ = (X'X)⁻¹X'Y<br>
+  → 代入 Y = Xβ + U<br>
+  → β̂ = (X'X)⁻¹X'(Xβ + U) = β + (X'X)⁻¹X'U<br>
+  → 取期望：E[β̂|X] = β + (X'X)⁻¹X' · <b>E[U|X]</b><br>
+  → 关键一步：假定②要求 E[U|X] = 0<br>
+  → 所以 E[β̂|X] = β &nbsp; ✓（无偏）
+</div>
+
+<p><b>大样本额外获得的性质：一致性</b> — n→∞ 时 β̂→β（样本量越大，估计越准）</p>
+
+<p class="bridge">→ 但现实中，六条假定几乎不可能全部满足。违反了某条假定 → BLUE 就不再成立 → β̂ 可能不准了。怎么办？</p>
+<p class="bridge">→ 分两步：<b>先检验</b>（有没有违反？）→ <b>再修正</b>（违反了怎么补救？）</p>
+
+<h2 class="line1">3. 假定被违反了——检验、后果、修正</h2>
+
+<p>OLS估计完β̂之后，要做一轮<b>"体检"</b>：逐项检查六条假定有没有被违反。发现问题 → 修正 → 修正后才能放心下结论。</p>
+
+<p class="tip">💡 下面按<b>假定③④⑥+外生性</b>展开（假定①②⑤在实践中较少单独检验，但简答题要能写出来）。</p>
+
+<hr>
+
+<!-- ===== 3.1 异方差 ===== -->
+<h3>3.1 假定③被违反 → 异方差</h3>
+
+<h4>什么是异方差？</h4>
+<p>假定③要求残差方差恒定（Var(Uᵢ) = σ²）。如果方差随X变化——比如收入越高，消费的波动越大——就叫异方差。</p>
+
+<!-- 异方差对比图 -->
+<div class="fig">
+<svg width="560" height="180" viewBox="0 0 560 180">
+  <!-- 左图：同方差 -->
+  <rect x="0" y="0" width="260" height="175" fill="#E8F5E9" rx="6"/>
+  <text x="130" y="20" font-size="12" fill="#2E7D32" text-anchor="middle" font-weight="bold">✓ 同方差：残差上下等宽</text>
+  <line x1="30" y1="90" x2="240" y2="90" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+  <!-- 均匀散点 -->
+  <circle cx="50" cy="75" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="60" cy="105" r="3" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="80" cy="80" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="90" cy="100" r="3" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="110" cy="78" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="120" cy="102" r="3" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="140" cy="82" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="150" cy="98" r="3" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="170" cy="76" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="180" cy="104" r="3" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="200" cy="84" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="210" cy="96" r="3" fill="#2E7D32" opacity="0.6"/>
+  <circle cx="230" cy="80" r="3" fill="#2E7D32" opacity="0.6"/><circle cx="235" cy="100" r="3" fill="#2E7D32" opacity="0.6"/>
+  <text x="130" y="165" font-size="11" fill="#666" text-anchor="middle">波动幅度前后一致</text>
+  
+  <!-- 右图：异方差 -->
+  <rect x="290" y="0" width="260" height="175" fill="#FFEBEE" rx="6"/>
+  <text x="420" y="20" font-size="12" fill="#C62828" text-anchor="middle" font-weight="bold">✗ 异方差：残差呈"喇叭口"</text>
+  <line x1="320" y1="90" x2="530" y2="90" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+  <!-- 喇叭散点 -->
+  <circle cx="335" cy="87" r="3" fill="#C62828" opacity="0.6"/><circle cx="340" cy="93" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="355" cy="84" r="3" fill="#C62828" opacity="0.6"/><circle cx="360" cy="96" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="380" cy="78" r="3" fill="#C62828" opacity="0.6"/><circle cx="385" cy="102" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="405" cy="72" r="3" fill="#C62828" opacity="0.6"/><circle cx="410" cy="108" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="430" cy="62" r="3" fill="#C62828" opacity="0.6"/><circle cx="435" cy="118" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="460" cy="50" r="3" fill="#C62828" opacity="0.6"/><circle cx="465" cy="130" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="490" cy="40" r="3" fill="#C62828" opacity="0.6"/><circle cx="500" cy="140" r="3" fill="#C62828" opacity="0.6"/>
+  <circle cx="515" cy="35" r="3" fill="#C62828" opacity="0.6"/><circle cx="520" cy="150" r="3" fill="#C62828" opacity="0.6"/>
+  <text x="420" y="165" font-size="11" fill="#666" text-anchor="middle">X越大，波动越大（喇叭口）</text>
+</svg>
+<div class="fig-caption">图3：同方差 vs 异方差的残差散点图对比</div>
+</div>
+
+<p class="bridge">→ 怎么判断有没有异方差？除了直接看图，还有4种统计检验：</p>
+
+<h4>异方差检验（5种方法）</h4>
+<div class="card">
+<table>
+  <tr><th>#</th><th>方法</th><th>做法</th><th>特点</th></tr>
+  <tr><td>①</td><td class="left">散点图</td><td class="left">画残差²对X的图，看有没有喇叭口</td><td class="left">最直观，但不严格</td></tr>
+  <tr><td>②</td><td class="left">GQ检验</td><td class="left">按X排序分两段，比较两段RSS → F检验</td><td class="left">适用递增/递减型<br><span class="tag tag-warn">⚠ GQ是异方差检验，不是自相关！</span></td></tr>
+  <tr><td>③</td><td class="left"><b>White检验 ★</b></td><td class="left">残差²对X及其交叉项、平方项做辅助回归 → nR²~χ²</td><td class="left"><b>最通用</b>，不需假设形式</td></tr>
+  <tr><td>④</td><td class="left">Glejser检验</td><td class="left">|残差|对X回归</td><td class="left">可推断异方差函数形式</td></tr>
+  <tr><td>⑤</td><td class="left">BP检验</td><td class="left">残差²对X回归 → nR²~χ²</td><td class="left">比White简洁（不加交叉项）</td></tr>
+</table>
+<p style="margin-top:8px;"><span class="tag tag-h0">H₀：不存在异方差（同方差）</span> → 拒绝H₀ = 有异方差 = 需要修正</p>
+</div>
+
+<p class="bridge">→ White检验为什么这么做？思路是：</p>
+
+<p class="indent">如果同方差成立，残差²应该是随机的，跟X没关系。所以把残差²当Y，X及其平方项、交叉项当解释变量做辅助回归。如果这个辅助回归的R²很大，说明残差²<b>能被X解释</b>——方差跟着X变——异方差。</p>
+
+<p class="warn">⚠ 读表时看 <b>Obs*R-squared 那行</b>的 Probability，不看 F-statistic 那行（避免临界值附近两行结论不一致）</p>
+
+<p class="bridge">→ 如果发现了异方差，有什么后果？怎么修正？</p>
+
+<h4>后果</h4>
+<p>OLS 仍然<b>无偏且一致</b>（β̂还是在瞄准真值），但<b>不再最小方差</b>（BLUE被打破）。标准误公式算错了 → t/F检验结论不可靠。</p>
+<p class="explain">类比：你的枪瞄得很准（无偏），但枪管松了导致散布变大（方差增大）。打10发平均命中，但单发可能偏很远。</p>
+
+<h4>修正</h4>
+<ul>
+  <li><b>WLS（加权最小二乘）</b>：给方差大的观测降低权重，恢复同方差</li>
+  <li><b>怀特稳健标准误</b>：不改β̂（还是那个数），只修正标准误的计算公式 → t值变了 → 显著性结论可能变</li>
+</ul>
+
+<hr>
+
+<!-- ===== 3.2 自相关 ===== -->
+<h3>3.2 假定④被违反 → 自相关</h3>
+
+<h4>什么是自相关？</h4>
+<p>假定④要求不同观测的误差互不相关。如果前一期残差影响后一期——残差"手拉手"往一个方向跑——就叫自相关。</p>
+<p class="explain">时间序列数据尤其常见：今天股价涨了，明天大概率还涨（正自相关）；或者今天涨明天跌（负自相关）。</p>
+
+<p class="bridge">→ 有两种检验方法：</p>
+
+<h4>自相关检验（2种）</h4>
+
+<div class="card">
+<p><b>① DW检验（Durbin-Watson）</b>— 只能检验一阶自相关</p>
+
+<div class="formula">
+  DW ≈ 2(1 − ρ̂)，ρ̂ = 相邻残差的相关系数<br>
+  直接代入：ρ̂=1 → DW=0（完全正自相关）| ρ̂=0 → DW=2（无自相关✓）| ρ̂=−1 → DW=4（完全负自相关）
+</div>
+
+<!-- DW区间图 -->
+<div class="fig">
+<svg width="500" height="70" viewBox="0 0 500 70">
+  <rect x="20" y="15" width="80" height="30" fill="#FFCDD2" rx="3"/>
+  <rect x="100" y="15" width="50" height="30" fill="#FFF9C4" rx="3"/>
+  <rect x="150" y="15" width="170" height="30" fill="#C8E6C9" rx="3"/>
+  <rect x="320" y="15" width="50" height="30" fill="#FFF9C4" rx="3"/>
+  <rect x="370" y="15" width="80" height="30" fill="#FFCDD2" rx="3"/>
+  
+  <text x="60" y="35" font-size="10" text-anchor="middle" fill="#C62828" font-weight="bold">正自相关</text>
+  <text x="125" y="35" font-size="10" text-anchor="middle" fill="#F9A825">不确定</text>
+  <text x="235" y="35" font-size="10" text-anchor="middle" fill="#2E7D32" font-weight="bold">无自相关 ✓</text>
+  <text x="345" y="35" font-size="10" text-anchor="middle" fill="#F9A825">不确定</text>
+  <text x="410" y="35" font-size="10" text-anchor="middle" fill="#C62828" font-weight="bold">负自相关</text>
+  
+  <text x="20" y="60" font-size="10" fill="#333">0</text>
+  <text x="97" y="60" font-size="10" fill="#333">dL</text>
+  <text x="147" y="60" font-size="10" fill="#333">dU</text>
+  <text x="310" y="60" font-size="10" fill="#333">4-dU</text>
+  <text x="363" y="60" font-size="10" fill="#333">4-dL</text>
+  <text x="443" y="60" font-size="10" fill="#333">4</text>
+</svg>
+<div class="fig-caption">图4：DW检验的区间判断</div>
+</div>
+
+<p class="explain">限制：只能检验一阶自相关；要求模型含截距项、不含被解释变量滞后项</p>
+
+<p style="margin-top:10px;"><b>② BG-LM检验 ★ 更通用</b>— 可以检验高阶自相关</p>
+<p class="indent">做法：残差对自身滞后项做自回归 → nR² ~ χ²</p>
+<p class="indent"><span class="tag tag-h0">H₀：不存在自相关</span> → 读表看 Obs*R-squared 行：p < 5% → 有自相关</p>
+</div>
+
+<p class="warn">⚠ DW是<b>自相关</b>检验，不是异方差检验（GQ才是异方差）——选择题高频考点！</p>
+
+<h4>后果</h4>
+<p>和异方差一样：OLS仍无偏一致，但标准误有偏，t/F不可靠。</p>
+
+<h4>修正</h4>
+<ul>
+  <li><b>广义差分</b>：对Y和X同时做 (Yₜ − ρ̂Yₜ₋₁) 变换</li>
+  <li><b>Cochrane-Orcutt迭代法</b>：先估 ρ̂ ≈ 1 − DW/2，再做广义差分</li>
+</ul>
+<p class="warn">⚠ ρ̂ ≈ 1 − DW/2（不是DW本身！）考过：DW=0.52 → ρ̂ = 1−0.52/2 = 0.74，不是0.52</p>
+
+<p class="tip">💡 金融计量学恰恰要<b>利用</b>自相关来建模预测（→ 第二条线），而不只是"修正"它。</p>
+
+<hr>
+
+<!-- ===== 3.3 多重共线性 ===== -->
+<h3>3.3 假定⑥被违反 → 多重共线性</h3>
+
+<h4>什么是多重共线性？</h4>
+<p>解释变量之间高度线性相关。比如"身高"和"臂展"同时放进回归——两者几乎成正比，模型分不清谁在起作用。</p>
+
+<p class="bridge">→ 怎么判断？（4种方法，不是假设检验的形式，没有H₀）</p>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th>方法</th><th>判断标准</th></tr>
+  <tr><td>①</td><td class="left">简单相关系数</td><td class="left">|Rᵢⱼ| ≈ 1 → 两个变量高度相关</td></tr>
+  <tr><td>②</td><td class="left">VIF（方差膨胀因子）</td><td class="left">VIF = 1/(1−R²ⱼ) > 5 或 > 10 → 严重</td></tr>
+  <tr><td>③</td><td class="left"><b>F大R²大但t小</b></td><td class="left">联合显著但各自不显著 → 典型表现</td></tr>
+  <tr><td>④</td><td class="left">条件指数CI</td><td class="left">CI > 20 → 有共线性</td></tr>
+</table>
+</div>
+
+<h4>后果（讲师推导链——简答必背）</h4>
+<div class="formula">
+  <b>完全共线性</b>：X'X不可逆 → 无法求出β̂（直接炸了）<br><br>
+  <b>不完全共线性</b>推导链：<br>
+  解释变量间相关性高 → 二阶矩增大 → VIF↑ → Var(β̂)↑<br>
+  → ① 不再具有最小方差性（BLUE被打破）<br>
+  → ② t = β̂/se(β̂) ↓（分母se变大）→ t检验失效<br>
+  → ③ 置信区间变宽 → 预测精度下降
+</div>
+
+<p class="warn">⚠ 关键区别：多重共线性时 <b>F检验和R²不受影响</b>（只有t检验受影响）——这是和异方差/自相关不同的地方</p>
+
+<h4>修正</h4>
+<p>剔除不重要变量 / 增加样本量 / 逐步回归（AIC/BIC选变量）/ 岭回归</p>
+
+<hr>
+
+<!-- ===== 3.4 内生性 ===== -->
+<h3>3.4 外生性假定被违反 → 内生性（最严重！）</h3>
+
+<h4>什么是内生性？</h4>
+<p>解释变量X和扰动项U相关：Cov(X, U) ≠ 0。</p>
+<p class="explain">前面三种违反（异方差/自相关/共线性）都只影响"精确度"，β̂还是在瞄准真值。但内生性直接让β̂<b>偏离靶心</b>——不仅不够精确，方向都偏了，而且样本量再大也救不回来。</p>
+
+<h4>三种来源</h4>
+<ol>
+  <li><b>遗漏变量</b>（最常见）：重要变量被遗漏进入U，且与X相关。例：研究教育对收入的影响，但"能力"这个变量无法观测，被遗漏进入U，而能力和教育年限相关 → Cov(教育, U) ≠ 0</li>
+  <li><b>测量误差</b>：X的观测值含误差，误差进入U且与X相关</li>
+  <li><b>联立性/反向因果</b>：X影响Y的同时Y也影响X（如价格与需求互相决定）→ 联立方程问题</li>
+</ol>
+
+<p class="bridge">→ 怎么检验有没有内生性？</p>
+
+<div class="card">
+<p><b>Hausman检验</b></p>
+<p>思路：如果没有内生性，OLS就够好了，工具变量法（IV）和OLS结果应该差不多。如果结果差很大，说明OLS偏了 → 有内生性。</p>
+<p><span class="tag tag-h0">H₀：不存在内生性</span></p>
+<div class="vs-row">
+  <div class="vs-box vs-bad"><b>拒绝H₀</b>：有内生性 → OLS有偏且不一致！</div>
+  <div class="vs-box vs-good"><b>不拒绝H₀</b>：外生OK ✓，用OLS就行</div>
+</div>
+</div>
+
+<h4>后果</h4>
+<p><span class="tag tag-warn">OLS 有偏且不一致——唯一破坏无偏性和一致性的违反！</span></p>
+
+<h4>修正：工具变量法（IV）/ 两阶段最小二乘（2SLS）</h4>
+
+<p>核心思路：X"脏了"（和U相关），找一个"干净的替身"Z。Z必须同时满足：</p>
+<ol>
+  <li><b>相关性</b>：Cov(Z, X) ≠ 0 → Z和X高度相关</li>
+  <li><b>外生性</b>：Cov(Z, U) = 0 → Z和U不相关</li>
+</ol>
+<p class="warn">⚠ 只满足相关性不够！2015年真题考过。</p>
+
+<div class="formula">
+  <b>2SLS 两步操作：</b><br>
+  第一步：用Z回归X → 得到拟合值X̂（X̂只保留了X中被Z解释的"干净"部分）<br>
+  第二步：用X̂替代原来的X，对Y做OLS → 得到一致的β̂<br><br>
+  代价：IV估计的方差比OLS大——用效率换一致性。
+</div>
+<hr>
+
+<!-- ===== 3.5 显著性检验 ===== -->
+<h3>3.5 体检通过后——显著性检验</h3>
+
+<p>前面四项体检（异方差/自相关/共线性/内生性）都通过了（或已修正），现在可以放心问：<b>β̂ 到底显不显著？模型到底有没有解释力？</b></p>
+
+<div class="card">
+<table>
+  <tr><th></th><th>t 检验</th><th>F 检验</th></tr>
+  <tr><td class="left"><b>问的问题</b></td><td class="left"><b>单个</b>变量对Y有没有显著影响？</td><td class="left"><b>所有</b>变量联合起来对Y有没有显著影响？</td></tr>
+  <tr><td class="left"><b>H₀</b></td><td class="left">βᵢ = 0（这个变量没用）</td><td class="left">β₁ = β₂ = … = βₖ = 0（整个方程没用）</td></tr>
+  <tr><td class="left"><b>统计量</b></td><td class="left">t = β̂ᵢ / se(β̂ᵢ)</td><td class="left">F = [R²/k] / [(1−R²)/(n−k−1)]</td></tr>
+  <tr><td class="left"><b>单/双侧</b></td><td class="left"><b>双侧</b> → 临界值查 <b>α/2</b><br>如α=0.05查t₀.₀₂₅</td><td class="left"><b>单侧</b> → 临界值查 <b>α</b><br>如F₀.₀₅</td></tr>
+  <tr><td class="left"><b>一元回归</b></td><td colspan="2">F = t²，两者完全等价，结论一定一致</td></tr>
+  <tr><td class="left"><b>多元回归</b></td><td colspan="2">各管各的。可能F显著但某个t不显著 → 多重共线性的表现</td></tr>
+</table>
+</div>
+
+<h4>假设检验四步流程（万能模板）</h4>
+<div class="formula">
+  ① <b>列假设</b>：写出 H₀ 和 H₁<br>
+  ② <b>构造统计量</b>：代入数据算出 t / F / χ² 的数值<br>
+  ③ <b>查临界值</b>：根据α和自由度，查分布表得到门槛值<br>
+  ④ <b>比较判断</b>：|统计量| vs 临界值 → 套口诀<br><br>
+  <b>口诀：数小率大接H₀，数大率小拒H₀</b><br>
+  "数" = |统计量| vs 临界值 → 统计量 < 临界值 = "数小" → 不拒绝<br>
+  "率" = p值 vs α → p > α = "率大" → 不拒绝
+</div>
+
+<p class="warn">⚠ t检验是双侧 → 题目给的是 t₀.₀₂₅ 不是 t₀.₀₅（α要除以2！）<br>
+⚠ F检验是单侧 → 直接用 F₀.₀₅<br>
+⚠ 但两者等价：t₀.₀₂₅² = F₀.₀₅（一元回归时）</p>
+
+<h4>读回归结果表的套路</h4>
+<div class="card">
+<table>
+  <tr><th>表中位置</th><th>对应什么</th><th>怎么用</th></tr>
+  <tr><td class="left">Dependent Variable</td><td class="left">被解释变量 Y</td><td class="left">知道在预测什么</td></tr>
+  <tr><td class="left">Variable列：C</td><td class="left">截距 β̂₀</td><td class="left">写方程时的常数项</td></tr>
+  <tr><td class="left">Variable列：INCOME等</td><td class="left">斜率系数 β̂ᵢ</td><td class="left">X变1单位，Y变多少</td></tr>
+  <tr><td class="left">Coefficient</td><td class="left">系数估计值</td><td class="left">写方程用</td></tr>
+  <tr><td class="left">Std. Error</td><td class="left">标准误 se(β̂)</td><td class="left">算t统计量的分母</td></tr>
+  <tr><td class="left">t-Statistic</td><td class="left">t统计量 = Coef/SE</td><td class="left">和临界值比大小</td></tr>
+  <tr><td class="left">Prob.</td><td class="left">p值</td><td class="left">和α比大小</td></tr>
+  <tr><td class="left">R-squared</td><td class="left">R²</td><td class="left">模型解释了多少%的Y的变动</td></tr>
+  <tr><td class="left">F-statistic</td><td class="left">F统计量</td><td class="left">方程整体显著吗</td></tr>
+  <tr><td class="left">Durbin-Watson</td><td class="left">DW值</td><td class="left">自相关诊断</td></tr>
+</table>
+</div>
+
+<h4>读检验结果表的统一套路（White / LM 等）</h4>
+<div class="formula">
+  ① 看 <b>Obs*R-squared</b> 那行的 Probability（不看F那行）<br>
+  ② p < 5% → 拒绝H₀ → 有问题<br>
+  ③ p > 5% → 不拒绝H₀ → 没问题
+</div>
+
+<hr>
+
+<!-- ===== 3.6 后果对比 ===== -->
+<h3>3.6 一张表看清所有后果</h3>
+
+<p>四种假设违反，后果各不相同。关键区别只有一条：<b>只有内生性破坏无偏性和一致性</b>。</p>
+
+<table>
+  <tr><th>违反类型</th><th>无偏性</th><th>一致性</th><th>最小方差</th><th>t/F检验</th><th>修正</th></tr>
+  <tr><td class="left">多重共线性</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="left">t失效，<b>F和R²不受影响</b></td><td class="left">剔除变量/岭回归</td></tr>
+  <tr><td class="left">异方差</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="left">都不可靠</td><td class="left">WLS/稳健标准误</td></tr>
+  <tr><td class="left">自相关</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="left">都不可靠</td><td class="left">广义差分/GLS</td></tr>
+  <tr style="background:#FFF3E0;"><td class="left" style="color:#C62828;font-weight:bold;">内生性</td><td class="no">✗有偏</td><td class="no">✗不一致</td><td class="no">✗</td><td class="left">都不可靠</td><td class="left">IV/2SLS</td></tr>
+</table>
+
+<hr>
+
+<!-- ===== 3.7 H0总结 ===== -->
+<h3>3.7 H₀ 方向总结</h3>
+
+<p>所有检验的H₀，分三类记：</p>
+
+<div class="card" style="border-color:#1565C0;">
+<p><b style="color:#1565C0;">第一类：诊断性检验 → H₀ = "不存在XX"（没毛病）</b></p>
+<table>
+  <tr><th>检验</th><th>H₀</th><th>拒绝意味着</th></tr>
+  <tr><td>White / BP / GQ / Glejser</td><td>不存在异方差</td><td>有异方差，需修正</td></tr>
+  <tr><td>DW / BG-LM</td><td>不存在自相关</td><td>有自相关，需修正</td></tr>
+  <tr><td>Hausman</td><td>不存在内生性</td><td>有内生性，用IV</td></tr>
+  <tr><td>ARCH-LM</td><td>不存在ARCH效应</td><td>有ARCH效应，建GARCH</td></tr>
+</table>
+<p class="explain">记法：完美是小概率 → 没毛病放H₀ → 拒绝才说明有问题</p>
+</div>
+
+<div class="card" style="border-color:#E65100;">
+<p><b style="color:#E65100;">第二类：显著性检验 → H₀ = "等于零"（没有影响）</b></p>
+<table>
+  <tr><th>检验</th><th>H₀</th><th>拒绝意味着</th></tr>
+  <tr><td>t检验</td><td>βᵢ = 0</td><td>该变量显著</td></tr>
+  <tr><td>F检验</td><td>β₁=…=βₖ=0</td><td>方程整体显著</td></tr>
+  <tr><td>格兰杰因果</td><td>γ₁=…=γₚ=0</td><td>X是Y的格兰杰原因</td></tr>
+</table>
+<p class="explain">记法：系数为零 = 变量可有可无 → 拒绝 = 有用</p>
+</div>
+
+<div class="card" style="border-color:#C62828;">
+<p><b style="color:#C62828;">第三类：特殊方向 → 单独记</b></p>
+<table>
+  <tr><th>检验</th><th>H₀</th><th>好消息怎么来</th></tr>
+  <tr><td>ADF</td><td>非平稳（有单位根）</td><td><b>拒绝</b>H₀ = 平稳</td></tr>
+  <tr><td>白噪声 (LB)</td><td>是白噪声</td><td><b>不拒绝</b>H₀ = 残差OK</td></tr>
+  <tr><td>EG协整</td><td>无协整</td><td><b>拒绝</b>H₀ = 有长期关系</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ===== 补充 ===== -->
+<h3>3.8 补充：随机误差项U包含哪些因素？（名词解释题）</h3>
+<ol>
+  <li>模型中省略的解释变量的影响</li>
+  <li>研究变量的测量误差</li>
+  <li>随机因素（X、Y本身的随机波动）</li>
+  <li>经济活动中的某些不确定性</li>
+</ol>
+<p class="explain">理解：U是"垃圾桶"，模型没能解释的东西全在里面。四条按讲师手写笔记的表述记。</p>
+
+</body>
+</html>
