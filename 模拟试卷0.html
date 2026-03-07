@@ -55,6 +55,29 @@
   td.left { text-align: left; }
   .warn { font-size: 12px; color: #B05050; margin: 4px 0 4px 16px; font-weight: bold; }
   hr { border: none; border-top: 1px solid #E0DDD5; margin: 16px 0; }
+
+  details.answer {
+    margin: 8px 0; page-break-inside: avoid;
+  }
+  details.answer summary {
+    cursor: pointer; padding: 8px 14px; background: #EBF0EC; border: 1px solid #90B094;
+    border-radius: 6px; font-weight: bold; color: #5A8060; font-size: 13px;
+    list-style: none; user-select: none;
+  }
+  details.answer summary::-webkit-details-marker { display: none; }
+  details.answer summary::before { content: "▶ "; font-size: 11px; }
+  details.answer[open] summary::before { content: "▼ "; }
+  details.answer summary:hover { background: #D5E0D7; }
+  details.answer .a-content {
+    border-left: 4px solid #7A9E7E; padding: 10px 14px; margin: 0;
+    background: #F5F8F5; border-radius: 0 0 6px 0;
+  }
+  @media print {
+    details.answer { open: true; }
+    details.answer .a-content { display: block !important; }
+    details.answer summary::before { content: ""; }
+  }
+
   @media print {
     body { padding: 0; font-size: 12px; }
     .q-box { break-inside: avoid; }
@@ -78,8 +101,9 @@
 <p>（3）假设违反的后果 + 补救措施</p>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <h4>（1）六条古典假定</h4>
 <table>
@@ -111,6 +135,8 @@
 </table>
 <p class="warn">⚠ 只有内生性破坏无偏性和一致性，其他三种只影响效率</p>
 </div>
+</details>
+
 
 <!-- Q2 -->
 <div class="q-box">
@@ -121,8 +147,9 @@
 <p>（4）约束条件（受约束F检验）</p>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <h4>（1）拟合优度</h4>
 <div class="formula">
@@ -148,6 +175,8 @@
 </div>
 <p class="explain">Chow检验是受约束F检验的特例（约束 = "两段系数完全相同"）</p>
 </div>
+</details>
+
 
 <hr>
 
@@ -167,8 +196,9 @@
 <p><b>追问：我国股票适合用什么模型解释？</b></p>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 <table>
   <tr><th>编号</th><th>模型</th><th>识别依据</th><th>参数</th></tr>
   <tr><td>(1)</td><td class="left"><b>AR(2)</b></td><td class="left">只有Y的滞后项，2个</td><td>p = 2</td></tr>
@@ -191,14 +221,17 @@
 <p><b>ARMA(p,q)</b>。其中AR部分反映股价变化的<b>动态惯性</b>——过去的价格对当前有持续影响；MA部分反映<b>冲击因素</b>的阶段性影响——过去的预测误差对当前值的影响。</p>
 <p class="explain">如果波动率也需要建模（波动聚集现象），则在ARMA基础上加GARCH。</p>
 </div>
+</details>
+
 
 <!-- Q2 白噪声 -->
 <div class="q-box">
 <div class="q-title">Q2 简述如何判断白噪声，并举例应用</div>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <h4>白噪声定义</h4>
 <div class="formula">
@@ -225,14 +258,17 @@
   <tr><td class="left">③ 对ε²</td><td class="left">波动恒定吗？</td><td class="left">无ARCH效应 ✓</td><td class="left">有ARCH效应，需建GARCH</td></tr>
 </table>
 </div>
+</details>
+
 
 <!-- Q3 平稳性 -->
 <div class="q-box">
 <div class="q-title">Q3 如何进行平稳性检验？</div>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <h4>三种方法</h4>
 <ol>
@@ -249,14 +285,17 @@
 </ol>
 <p class="warn">⚠ 拒绝H₀才是好消息——方向反直觉！ADF使用DF分布临界值，不是标准t分布</p>
 </div>
+</details>
+
 
 <!-- Q4 模型识别 -->
 <div class="q-box">
 <div class="q-title">Q4 如何进行模型识别？</div>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <h4>方法一：ACF/PACF图</h4>
 <table>
@@ -273,6 +312,8 @@
   越小越好。在候选模型中选AIC/BIC最小的。不一致时优先BIC。
 </div>
 </div>
+</details>
+
 
 <hr>
 
@@ -287,8 +328,9 @@
 <p>Ⅲ. 2002-2015每年的GDP</p>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 <table>
   <tr><th>数据</th><th>类型</th><th>判断依据</th><th>模型</th></tr>
   <tr><td class="left">Ⅰ. 云南各地州×多年</td><td><b>面板数据</b></td><td class="left">多个个体（各地州）+ 多个时期（2010-2022）</td><td class="left">面板回归<br>Y = β₀ + β₁X₁ + β₂X₂ + β₃X₃ + uᵢₜ<br>Y=出生率, X₁=人均收入, X₂=消费支出, X₃=教育投入</td></tr>
@@ -298,14 +340,17 @@
 
 <p class="explain"><b>区分关键</b>：看有几个维度。只有个体维度→截面数据；只有时间维度→时间序列；两者都有→面板数据。</p>
 </div>
+</details>
+
 
 <!-- Q2 固定效应vs随机效应 -->
 <div class="q-box">
 <div class="q-title">Q2 什么是固定效应模型和随机效应模型？如何进行模型识别？</div>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <p>面板数据模型：Yᵢₜ = α₀ + β₁Xᵢₜ + uᵢ + εᵢₜ，其中 uᵢ 是个体效应（个体之间的差异）。</p>
 
@@ -333,14 +378,17 @@
 </div>
 <p class="explain">实务中一般无脑选固定效应也OK。</p>
 </div>
+</details>
+
 
 <!-- Q3 工具变量 -->
 <div class="q-box">
 <div class="q-title">Q3 面板数据模型中，工具变量法有何应用？工具变量的选取有什么要求？</div>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 
 <h4>应用场景</h4>
 <p>面板数据中如果存在内生性（Hausman检验拒绝H₀），除了用固定效应外，还可以引入<b>工具变量（IV）</b>，通过2SLS消除内生性。</p>
@@ -354,14 +402,17 @@
 </ol>
 <p class="warn">⚠ 只满足相关性不够！2015年真题考过。相关性+外生性缺一不可。</p>
 </div>
+</details>
+
 
 <!-- Q4 随机误差项 -->
 <div class="q-box">
 <div class="q-title">Q4 面板数据模型随机误差项的假设有哪些？</div>
 </div>
 
-<div class="a-box">
-<div class="a-title">答案要点</div>
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
 <ol>
   <li><b>每个截面的误差项零均值</b>：E(εᵢₜ) = 0</li>
   <li><b>每个个体对应的误差项同方差</b>：Var(εᵢₜ) = σ²（同一个体不同时期方差相同）</li>
@@ -371,6 +422,8 @@
 <p class="explain">对比OLS的古典假定：面板数据的假定多了一个"截面维度"——不仅要求同一个体的时序残差满足假定，还要求不同个体之间的残差也满足。</p>
 <p class="explain">如果违反了截面间同方差 → 截面异方差；违反了截面间不相关 → 截面相关。都需要用更稳健的估计方法。</p>
 </div>
+</details>
+
 
 <hr>
 
