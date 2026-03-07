@@ -2376,20 +2376,24 @@ function buildTOC() {
     if (!h.id) h.id = 'toc-heading-' + i;
     const level = h.tagName === 'H2' ? 'toc-h2' : 'toc-h3';
     const text = h.textContent.trim().substring(0, 30);
-    html += '<a class="' + level + '" href="#' + h.id + '" onclick="tocClick(event, '' + h.id + '')">' + text + '</a>';
+    html += '<a class="' + level + '" href="#' + h.id + '">' + text + '</a>';
   });
   tocList.innerHTML = html;
 }
 
-function tocClick(e, id) {
+// Event delegation for TOC clicks
+document.addEventListener('click', function(e) {
+  var link = e.target.closest('#toc-list a');
+  if (!link) return;
   e.preventDefault();
-  const el = document.getElementById(id);
+  var id = link.getAttribute('href').substring(1);
+  var el = document.getElementById(id);
   if (el) {
-    const offset = 90; // account for sticky header
-    const y = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    var offset = 90;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - offset;
     window.scrollTo({top: y, behavior: 'smooth'});
   }
-}
+});
 
 // Highlight current section in TOC on scroll
 window.addEventListener('scroll', function() {
