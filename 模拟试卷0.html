@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>金融计量学 · 模拟试卷0 · 知识点整理</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 13px; line-height: 1.7; color: #1a1a1a;
+    background: #fff; padding: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { font-size: 22px; text-align: center; margin-bottom: 4px; letter-spacing: 2px; }
+  .subtitle { text-align: center; color: #666; font-size: 12px; margin-bottom: 24px; }
+  h2 { font-size: 17px; color: #fff; padding: 7px 16px; margin: 28px 0 14px 0; border-radius: 4px; }
+  h2.sec1 { background: #607D8B; }
+  h2.sec2 { background: #708090; }
+  h2.sec3 { background: #A0785A; }
+  h3 { font-size: 14px; color: #555; border-left: 4px solid #607D8B; padding-left: 10px; margin: 18px 0 8px 0; }
+  h3.ts { border-color: #708090; }
+  h3.panel { border-color: #A0785A; }
+  h4 { font-size: 13px; color: #333; margin: 12px 0 4px 0; padding: 3px 8px; background: #F0EDE8; border-radius: 3px; display: inline-block; }
+  p { margin: 6px 0; }
+  .bridge { color: #A0785A; font-weight: bold; margin: 10px 0 4px 0; }
+  .explain { color: #444; font-size: 12.5px; margin: 4px 0 4px 20px; }
+  .formula {
+    background: #F0EDE8; border: 1px solid #D5D0C8; border-radius: 4px;
+    padding: 8px 14px; margin: 8px 0; font-family: "Cambria Math", "STIX Two Math", "Microsoft YaHei", serif;
+    font-size: 13px; line-height: 1.8; page-break-inside: avoid;
+  }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; margin: 2px 2px; }
+  .tag-q { background: #E8EDF0; border: 1px solid #90A0A8; color: #4A6070; }
+  .tag-a { background: #EBF0EC; border: 1px solid #90B094; color: #4A6B50; }
+  .tag-warn { background: #EDD5D5; border: 1px solid #C47070; color: #A04545; }
+  .card {
+    border: 1px solid #D5D0C8; border-radius: 6px; padding: 10px 14px;
+    background: #FAFAF7; margin: 10px 0; page-break-inside: avoid;
+  }
+  .q-box {
+    border: 2px solid #B0B8C1; border-radius: 8px; padding: 12px 16px;
+    background: #F5F6F7; margin: 12px 0; page-break-inside: avoid;
+  }
+  .q-title { font-weight: bold; font-size: 14px; color: #4A6070; margin-bottom: 6px; }
+  .a-box {
+    border-left: 4px solid #7A9E7E; padding: 10px 14px; margin: 8px 0;
+    background: #F5F8F5; border-radius: 0 6px 6px 0;
+  }
+  .a-title { font-weight: bold; color: #5A8060; margin-bottom: 4px; }
+  ol, ul { margin: 4px 0 4px 24px; font-size: 12.5px; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+  th { background: #F0EDE8; font-weight: bold; }
+  td.left { text-align: left; }
+  .warn { font-size: 12px; color: #B05050; margin: 4px 0 4px 16px; font-weight: bold; }
+  hr { border: none; border-top: 1px solid #E0DDD5; margin: 16px 0; }
+  @media print {
+    body { padding: 0; font-size: 12px; }
+    .q-box { break-inside: avoid; }
+    .a-box { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>金融计量学 · 模拟试卷0</h1>
+<div class="subtitle">题目 + 答案要点 + 知识点回顾 · 莫兰迪色系 · A4可打印</div>
+
+<!-- ========== 第一部分 ========== -->
+<h2 class="sec1">一、计量经济学</h2>
+
+<!-- Q1 -->
+<div class="q-box">
+<div class="q-title">Q1 基本假设相关（三合一题）</div>
+<p>（1）名词解释：简述OLS的基本假设及其含义</p>
+<p>（2）简述判断假设违反的方法</p>
+<p>（3）假设违反的后果 + 补救措施</p>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<h4>（1）六条古典假定</h4>
+<table>
+  <tr><th>编号</th><th>假定</th><th>公式</th><th>含义</th></tr>
+  <tr><td>①</td><td class="left">X非随机</td><td>X是确定性的</td><td class="left">完全随机的东西无法预测</td></tr>
+  <tr><td>②</td><td class="left">零均值</td><td>E(Uᵢ) = 0</td><td class="left">偏离有正有负，但平均为零</td></tr>
+  <tr><td>③</td><td class="left">同方差</td><td>Var(Uᵢ) = σ²</td><td class="left">偏离的波动前后一致</td></tr>
+  <tr><td>④</td><td class="left">无自相关</td><td>Cov(Uᵢ,Uⱼ)=0</td><td class="left">前一期残差不影响后一期</td></tr>
+  <tr><td>⑤</td><td class="left">正态分布</td><td>Uᵢ ~ N(0,σ²)</td><td class="left">大部分偏离集中在零附近</td></tr>
+  <tr><td>⑥</td><td class="left">无完全共线性</td><td>X'X可逆</td><td class="left">解释变量之间不能完全线性相关</td></tr>
+</table>
+
+<h4>（2）判断方法</h4>
+<table>
+  <tr><th>违反类型</th><th>检验方法</th><th>H₀</th></tr>
+  <tr><td class="left">异方差（③被违反）</td><td class="left">散点图 / GQ / <b>White ★</b> / Glejser / BP</td><td>不存在异方差</td></tr>
+  <tr><td class="left">自相关（④被违反）</td><td class="left">DW（一阶）/ <b>BG-LM ★</b>（高阶）</td><td>不存在自相关</td></tr>
+  <tr><td class="left">共线性（⑥被违反）</td><td class="left">|Rᵢⱼ|≈1 / VIF>10 / F大R²大t小 / CI>20</td><td>（无假设检验形式）</td></tr>
+  <tr><td class="left">内生性（外生性被违反）</td><td class="left">Hausman检验</td><td>不存在内生性</td></tr>
+</table>
+
+<h4>（3）后果 + 补救</h4>
+<table>
+  <tr><th>违反类型</th><th>无偏性</th><th>一致性</th><th>最小方差</th><th>t/F</th><th>修正</th></tr>
+  <tr><td class="left">多重共线性</td><td>✓</td><td>✓</td><td style="color:#B05050;">✗</td><td class="left">t失效，F和R²不受影响</td><td class="left">剔除变量/岭回归</td></tr>
+  <tr><td class="left">异方差</td><td>✓</td><td>✓</td><td style="color:#B05050;">✗</td><td class="left">都不可靠</td><td class="left">WLS/稳健标准误</td></tr>
+  <tr><td class="left">自相关</td><td>✓</td><td>✓</td><td style="color:#B05050;">✗</td><td class="left">都不可靠</td><td class="left">广义差分/GLS</td></tr>
+  <tr style="background:#F5EDE3;"><td class="left" style="color:#B05050;font-weight:bold;">内生性</td><td style="color:#B05050;">✗有偏</td><td style="color:#B05050;">✗不一致</td><td style="color:#B05050;">✗</td><td class="left">都不可靠</td><td class="left">IV/2SLS</td></tr>
+</table>
+<p class="warn">⚠ 只有内生性破坏无偏性和一致性，其他三种只影响效率</p>
+</div>
+
+<!-- Q2 -->
+<div class="q-box">
+<div class="q-title">Q2 模型拟合效果的评判</div>
+<p>（1）拟合优度</p>
+<p>（2）是否有异方差</p>
+<p>（3）是否有结构突变</p>
+<p>（4）约束条件（受约束F检验）</p>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<h4>（1）拟合优度</h4>
+<div class="formula">
+  R² = ESS/TSS = 1 − RSS/TSS（越接近1越好）<br>
+  调整R²：惩罚多余变量，加无用变量可能下降<br>
+  AIC/BIC：越小越好，BIC惩罚更重，不一致时优先BIC
+</div>
+
+<h4>（2）异方差检验</h4>
+<p>White检验最通用：残差²对X及交叉项/平方项回归 → nR²~χ²，H₀:不存在异方差。读表看Obs*R-squared行。</p>
+
+<h4>（3）结构突变：Chow检验</h4>
+<div class="formula">
+  F = [(RSS_pooled − RSS₁ − RSS₂)/(k+1)] / [(RSS₁+RSS₂)/(n−2(k+1))]<br>
+  H₀：两段参数相同 → 拒绝H₀ → 存在结构突变 → 分段建模或加时间虚拟变量
+</div>
+
+<h4>（4）受约束F检验</h4>
+<div class="formula">
+  F = [(RSS_R − RSS_UR)/q] / [RSS_UR/(n−k−1)]<br>
+  q = 约束个数；RSS_R ≥ RSS_UR（加约束只会使残差变大）<br>
+  H₀：约束成立 → 拒绝则约束不成立
+</div>
+<p class="explain">Chow检验是受约束F检验的特例（约束 = "两段系数完全相同"）</p>
+</div>
+
+<hr>
+
+<!-- ========== 第二部分 ========== -->
+<h2 class="sec2">二、时间序列数据</h2>
+
+<!-- Q1 模型识别 -->
+<div class="q-box">
+<div class="q-title">Q1 模型识别：写出以下模型的类型和参数</div>
+<div class="formula">
+  (1) Yₜ = c + α₁Yₜ₋₁ + α₂Yₜ₋₂ + εₜ<br>
+  (2) Yₜ = μ + θ₁εₜ₋₁ + θ₂εₜ₋₂ + θ₃εₜ₋₃<br>
+  (3) εₜ² = α₀ + α₁ε²ₜ₋₁ + α₂ε²ₜ₋₂ + α₃ε²ₜ₋₃ + α₄ε²ₜ₋₄<br>
+  (4) σ²ₜ = ω + Σᵢ₌₁⁴ αᵢε²ₜ₋ᵢ + Σⱼ₌₁⁶ βⱼσ²ₜ₋ⱼ<br>
+  (5) Yₜ = c + α₁Yₜ₋₁ + α₂Yₜ₋₂ + εₜ + θ₁εₜ₋₁ + θ₂εₜ₋₂ + θ₃εₜ₋₃
+</div>
+<p><b>追问：我国股票适合用什么模型解释？</b></p>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案</div>
+<table>
+  <tr><th>编号</th><th>模型</th><th>识别依据</th><th>参数</th></tr>
+  <tr><td>(1)</td><td class="left"><b>AR(2)</b></td><td class="left">只有Y的滞后项，2个</td><td>p = 2</td></tr>
+  <tr><td>(2)</td><td class="left"><b>MA(3)</b></td><td class="left">只有ε的滞后项，3个</td><td>q = 3</td></tr>
+  <tr><td>(3)</td><td class="left"><b>ARCH(4)</b></td><td class="left">方差方程只有ε²项，4个</td><td>q = 4</td></tr>
+  <tr><td>(4)</td><td class="left"><b>GARCH(6,4)</b></td><td class="left">方差方程有ε²项(4个) + σ²项(6个)</td><td>p=6, q=4</td></tr>
+  <tr><td>(5)</td><td class="left"><b>ARMA(2,3)</b></td><td class="left">既有Y滞后(2个)又有ε滞后(3个)</td><td>p=2, q=3</td></tr>
+</table>
+
+<h4>识别口诀</h4>
+<ul>
+  <li>只有Y的滞后项 → <b>AR</b>，数滞后项个数 = p</li>
+  <li>只有ε的滞后项 → <b>MA</b>，数滞后项个数 = q</li>
+  <li>两者都有 → <b>ARMA</b></li>
+  <li>方差方程只有ε²项 → <b>ARCH</b></li>
+  <li>方差方程有ε²项 + σ²项 → <b>GARCH</b>，p=σ²项个数，q=ε²项个数</li>
+</ul>
+
+<h4>追问：股票适合什么模型？</h4>
+<p><b>ARMA(p,q)</b>。其中AR部分反映股价变化的<b>动态惯性</b>——过去的价格对当前有持续影响；MA部分反映<b>冲击因素</b>的阶段性影响——过去的预测误差对当前值的影响。</p>
+<p class="explain">如果波动率也需要建模（波动聚集现象），则在ARMA基础上加GARCH。</p>
+</div>
+
+<!-- Q2 白噪声 -->
+<div class="q-box">
+<div class="q-title">Q2 简述如何判断白噪声，并举例应用</div>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<h4>白噪声定义</h4>
+<div class="formula">
+  三个条件：<br>
+  ① E(εₜ) = μ（均值恒定）<br>
+  ② Var(εₜ) = σ²（方差恒定）<br>
+  ③ Cov(εₜ, εₛ) = 0, t≠s（完全无自相关）<br><br>
+  白噪声 = 宽平稳 + 无自相关，比宽平稳更严格
+</div>
+
+<h4>判断方法（三种）</h4>
+<ol>
+  <li><b>ACF图观察法</b>：画残差的ACF图，若绑大多数都落在置信区间边界内 → 白噪声</li>
+  <li><b>Box-Pierce检验</b>：Q_BP = n · Σρ̂ₖ² ~ χ²(m)，H₀:是白噪声</li>
+  <li><b>Ljung-Box检验 ★</b>（BP改进版）：Q_LB = n(n+2) · Σ[ρ̂ₖ²/(n−k)] ~ χ²(m)，H₀:是白噪声</li>
+</ol>
+<p class="warn">⚠ H₀是"好消息"（是白噪声），不拒绝H₀才是好结果——和大多数检验方向相反！</p>
+
+<h4>三大应用场景</h4>
+<table>
+  <tr><th>对什么做</th><th>问的问题</th><th>是白噪声</th><th>不是白噪声</th></tr>
+  <tr><td class="left">① 对平稳序列</td><td class="left">能预测吗？</td><td class="left">完全随机，不值得建模</td><td class="left">有自相关，可以建模 ✓</td></tr>
+  <tr><td class="left">② 对模型残差</td><td class="left">拟合好吗？</td><td class="left">信息提取干净 ✓</td><td class="left">还有信息没提取，调整模型</td></tr>
+  <tr><td class="left">③ 对ε²</td><td class="left">波动恒定吗？</td><td class="left">无ARCH效应 ✓</td><td class="left">有ARCH效应，需建GARCH</td></tr>
+</table>
+</div>
+
+<!-- Q3 平稳性 -->
+<div class="q-box">
+<div class="q-title">Q3 如何进行平稳性检验？</div>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<h4>三种方法</h4>
+<ol>
+  <li><b>时间路径图</b>：直接画图看趋势和方差变化（直观但不严格）</li>
+  <li><b>ACF图</b>：平稳→ACF快速衰减；非平稳→ACF缓慢衰减</li>
+  <li><b>单位根检验（ADF）★</b>：
+    <ul>
+      <li>写出特征方程，看有没有模长=1的根（单位根）</li>
+      <li>有单位根 → 非平稳；所有根在单位圆外（模>1）→ 平稳</li>
+      <li>H₀：存在单位根（非平稳），拒绝H₀ = 平稳 = 好消息</li>
+      <li>DF针对AR(1)残差无自相关；ADF拓展到高阶/残差有自相关</li>
+    </ul>
+  </li>
+</ol>
+<p class="warn">⚠ 拒绝H₀才是好消息——方向反直觉！ADF使用DF分布临界值，不是标准t分布</p>
+</div>
+
+<!-- Q4 模型识别 -->
+<div class="q-box">
+<div class="q-title">Q4 如何进行模型识别？</div>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<h4>方法一：ACF/PACF图</h4>
+<table>
+  <tr><th>ACF</th><th>PACF</th><th>选什么模型</th></tr>
+  <tr><td>拖尾</td><td><b>截尾</b>（p阶后=0）</td><td><b>AR(p)</b></td></tr>
+  <tr><td><b>截尾</b>（q阶后=0）</td><td>拖尾</td><td><b>MA(q)</b></td></tr>
+  <tr><td>拖尾</td><td>拖尾</td><td><b>ARMA(p,q)</b></td></tr>
+</table>
+<p class="explain">速记：AR→PACF截，MA→ACF截，ARMA→全拖</p>
+
+<h4>方法二：信息准则</h4>
+<div class="formula">
+  AIC = ln(σ̂²) + 2k/n &nbsp; &nbsp; BIC = ln(σ̂²) + k·ln(n)/n<br>
+  越小越好。在候选模型中选AIC/BIC最小的。不一致时优先BIC。
+</div>
+</div>
+
+<hr>
+
+<!-- ========== 第三部分 ========== -->
+<h2 class="sec3">三、面板数据</h2>
+
+<!-- Q1 建模 -->
+<div class="q-box">
+<div class="q-title">Q1 根据下面给出的变量，建立合适的模型</div>
+<p>Ⅰ. 2010-2022 云南各地州的人均收入、消费支出、教育投入与出生率</p>
+<p>Ⅱ. 2021年北京各区犯罪发生率</p>
+<p>Ⅲ. 2002-2015每年的GDP</p>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+<table>
+  <tr><th>数据</th><th>类型</th><th>判断依据</th><th>模型</th></tr>
+  <tr><td class="left">Ⅰ. 云南各地州×多年</td><td><b>面板数据</b></td><td class="left">多个个体（各地州）+ 多个时期（2010-2022）</td><td class="left">面板回归<br>Y = β₀ + β₁X₁ + β₂X₂ + β₃X₃ + uᵢₜ<br>Y=出生率, X₁=人均收入, X₂=消费支出, X₃=教育投入</td></tr>
+  <tr><td class="left">Ⅱ. 北京各区×某一年</td><td><b>截面数据</b></td><td class="left">多个个体（各区）但只有一个时期（2021年）</td><td class="left">OLS截面回归</td></tr>
+  <tr><td class="left">Ⅲ. 一个国家×多年</td><td><b>时间序列</b></td><td class="left">一个个体（一国）+ 多个时期（2002-2015）</td><td class="left">ARMA(p,q)等时序模型</td></tr>
+</table>
+
+<p class="explain"><b>区分关键</b>：看有几个维度。只有个体维度→截面数据；只有时间维度→时间序列；两者都有→面板数据。</p>
+</div>
+
+<!-- Q2 固定效应vs随机效应 -->
+<div class="q-box">
+<div class="q-title">Q2 什么是固定效应模型和随机效应模型？如何进行模型识别？</div>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<p>面板数据模型：Yᵢₜ = α₀ + β₁Xᵢₜ + uᵢ + εᵢₜ，其中 uᵢ 是个体效应（个体之间的差异）。</p>
+
+<p class="bridge">→ 核心问题：uᵢ 和 Xᵢₜ 有没有相关？</p>
+
+<div class="card">
+<table>
+  <tr><th></th><th>固定效应模型（FE）</th><th>随机效应模型（RE）</th></tr>
+  <tr><td class="left"><b>核心假设</b></td><td class="left">uᵢ 与 Xᵢₜ <b>相关</b>（有内生性）</td><td class="left">uᵢ 与 Xᵢₜ <b>不相关</b>（无内生性）</td></tr>
+  <tr><td class="left"><b>处理方式</b></td><td class="left">uᵢ 看作截距的一部分<br>（每个个体有不同截距）</td><td class="left">uᵢ 看作扰动项的一部分<br>（复合扰动 = uᵢ + εᵢₜ）</td></tr>
+  <tr><td class="left"><b>估计方法</b></td><td class="left">组内估计（去均值消除uᵢ）</td><td class="left">GLS</td></tr>
+  <tr><td class="left"><b>局限</b></td><td class="left">不随时间变化的变量系数无法估计</td><td class="left">若uᵢ与X相关则有偏</td></tr>
+</table>
+</div>
+
+<h4>模型选择：三步决策</h4>
+<div class="formula">
+  <b>第一步 F检验</b>：混合模型 vs 固定效应<br>
+  → H₀: 混合模型更优（无个体效应）→ 拒绝则有个体效应<br><br>
+  <b>第二步 BP检验</b>：混合模型 vs 随机效应<br>
+  → H₀: 无异方差（用混合）→ 拒绝则用随机效应<br><br>
+  <b>第三步 Hausman检验 ★（最重要）</b>：固定效应 vs 随机效应<br>
+  → H₀: 无内生性（FE和RE都一致，RE更有效 → 选RE）<br>
+  → 拒绝H₀: 有内生性（只有FE一致 → 选FE）
+</div>
+<p class="explain">实务中一般无脑选固定效应也OK。</p>
+</div>
+
+<!-- Q3 工具变量 -->
+<div class="q-box">
+<div class="q-title">Q3 面板数据模型中，工具变量法有何应用？工具变量的选取有什么要求？</div>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+
+<h4>应用场景</h4>
+<p>面板数据中如果存在内生性（Hausman检验拒绝H₀），除了用固定效应外，还可以引入<b>工具变量（IV）</b>，通过2SLS消除内生性。</p>
+<p class="explain">Hausman检验本身就是在比较OLS（或RE）和IV的结果——差距显著说明有内生性，应使用IV或FE。</p>
+
+<h4>工具变量Z的选取要求（三条）</h4>
+<ol>
+  <li><b>相关性</b>：Cov(Z, X) ≠ 0 → Z和内生解释变量X高度相关（可统计检验）</li>
+  <li><b>外生性</b>：Cov(Z, U) = 0 → Z和扰动项U不相关（依赖经济理论，不可直接检验）</li>
+  <li><b>排斥性</b>：IV不应作为解释变量直接出现在方程中（Z对Y的影响只通过X传递）</li>
+</ol>
+<p class="warn">⚠ 只满足相关性不够！2015年真题考过。相关性+外生性缺一不可。</p>
+</div>
+
+<!-- Q4 随机误差项 -->
+<div class="q-box">
+<div class="q-title">Q4 面板数据模型随机误差项的假设有哪些？</div>
+</div>
+
+<div class="a-box">
+<div class="a-title">答案要点</div>
+<ol>
+  <li><b>每个截面的误差项零均值</b>：E(εᵢₜ) = 0</li>
+  <li><b>每个个体对应的误差项同方差</b>：Var(εᵢₜ) = σ²（同一个体不同时期方差相同）</li>
+  <li><b>不同截面间残差不相关</b>：Cov(εᵢₜ, εⱼₜ) = 0, i≠j（个体i和个体j的残差不相关）</li>
+  <li><b>不同截面间具有同方差</b>：不同个体的误差方差相同</li>
+</ol>
+<p class="explain">对比OLS的古典假定：面板数据的假定多了一个"截面维度"——不仅要求同一个体的时序残差满足假定，还要求不同个体之间的残差也满足。</p>
+<p class="explain">如果违反了截面间同方差 → 截面异方差；违反了截面间不相关 → 截面相关。都需要用更稳健的估计方法。</p>
+</div>
+
+<hr>
+
+<!-- ========== 附：考试知识定位 ========== -->
+<h2 style="background:#708090;font-size:15px;color:#fff;padding:6px 14px;border-radius:4px;margin-top:24px;">附：本卷知识点在三条线中的位置</h2>
+
+<div class="card">
+<table>
+  <tr><th>题号</th><th>考点</th><th>属于哪条线</th></tr>
+  <tr><td>一-Q1</td><td class="left">古典假定 + 检验 + 后果 + 修正</td><td>第一条线：OLS基础</td></tr>
+  <tr><td>一-Q2</td><td class="left">R² / 异方差 / Chow检验 / 受约束F</td><td>第一条线：OLS基础</td></tr>
+  <tr><td>二-Q1</td><td class="left">模型识别（AR/MA/ARCH/GARCH/ARMA）</td><td>第二条线：时间序列</td></tr>
+  <tr><td>二-Q2</td><td class="left">白噪声定义 + 检验 + 三大应用</td><td>第二条线：时间序列</td></tr>
+  <tr><td>二-Q3</td><td class="left">平稳性检验（ADF）</td><td>第二条线：时间序列</td></tr>
+  <tr><td>二-Q4</td><td class="left">ACF/PACF识别 + AIC/BIC定阶</td><td>第二条线：时间序列</td></tr>
+  <tr><td>三-Q1</td><td class="left">面板/截面/时序数据的区分</td><td>面板数据（第一条线延伸）</td></tr>
+  <tr><td>三-Q2</td><td class="left">固定效应 vs 随机效应 + Hausman</td><td>面板数据（第一条线延伸）</td></tr>
+  <tr><td>三-Q3</td><td class="left">工具变量法在面板中的应用</td><td>面板数据 + 第一条线（内生性）</td></tr>
+  <tr><td>三-Q4</td><td class="left">面板误差项假设</td><td>面板数据（古典假定的面板版）</td></tr>
+</table>
+</div>
+
+</body>
+</html>
