@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融计量学 · 知识手册</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 13px; line-height: 1.7; color: #1a1a1a;
+    background: #F5F3F0; min-height: 100vh;
+  }
+
+  /* ===== 顶部导航 ===== */
+  .nav-header {
+    background: #fff; border-bottom: 1px solid #E0DDD5;
+    padding: 16px 20px 0; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .nav-title {
+    font-size: 20px; text-align: center; letter-spacing: 3px; color: #4A4A4A;
+    margin-bottom: 12px;
+  }
+  .nav-title span { font-size: 12px; color: #999; letter-spacing: 1px; display: block; margin-top: 2px; }
+  .nav-tabs {
+    display: flex; justify-content: center; gap: 4px; max-width: 900px; margin: 0 auto;
+  }
+  .nav-tab {
+    padding: 10px 20px; border-radius: 8px 8px 0 0; cursor: pointer;
+    font-size: 13px; font-weight: bold; color: #777; background: #F0EDE8;
+    border: 1px solid #E0DDD5; border-bottom: none;
+    transition: all 0.2s; user-select: none;
+  }
+  .nav-tab:hover { background: #E8E5E0; color: #555; }
+  .nav-tab.active { background: #fff; color: #4A4A4A; border-color: #D0CDC5; }
+  .nav-tab .tab-icon { font-size: 15px; margin-right: 4px; }
+  .nav-tab .tab-num { 
+    display: inline-block; width: 20px; height: 20px; line-height: 20px;
+    border-radius: 50%; text-align: center; font-size: 11px; margin-right: 4px;
+  }
+  .tab-num.c1 { background: #D5DEE3; color: #607D8B; }
+  .tab-num.c2 { background: #D8DDE0; color: #708090; }
+  .tab-num.c3 { background: #E5DDD5; color: #A0785A; }
+  .tab-num.c4 { background: #D8DDE0; color: #607D8B; }
+
+  /* ===== 内容区 ===== */
+  .content-wrapper {
+    max-width: 1100px; margin: 0 auto; padding: 20px;
+    background: #fff; min-height: calc(100vh - 100px);
+    border-left: 1px solid #E0DDD5; border-right: 1px solid #E0DDD5;
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== 首页 ===== */
+  .home-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    max-width: 800px; margin: 30px auto;
+  }
+  .home-card {
+    border: 1px solid #E0DDD5; border-radius: 12px; padding: 24px;
+    background: #FAFAF7; cursor: pointer; transition: all 0.2s;
+    text-align: center;
+  }
+  .home-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .home-card .hc-num { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
+  .home-card .hc-title { font-size: 16px; font-weight: bold; margin-bottom: 6px; }
+  .home-card .hc-desc { font-size: 12px; color: #888; line-height: 1.5; }
+  .hc1 { border-left: 4px solid #607D8B; }
+  .hc1 .hc-num { color: #607D8B; }
+  .hc2 { border-left: 4px solid #708090; }
+  .hc2 .hc-num { color: #708090; }
+  .hc3 { border-left: 4px solid #A0785A; }
+  .hc3 .hc-num { color: #A0785A; }
+  .hc4 { border-left: 4px solid #607D8B; }
+  .hc4 .hc-num { color: #607D8B; }
+  .home-welcome {
+    text-align: center; margin: 40px 0 20px; color: #666;
+  }
+  .home-welcome h2 { font-size: 24px; color: #4A4A4A; margin-bottom: 8px; letter-spacing: 2px; }
+  .home-welcome p { font-size: 13px; }
+  .home-stats {
+    display: flex; justify-content: center; gap: 30px; margin: 20px 0 30px;
+    color: #888; font-size: 12px;
+  }
+  .home-stats span { padding: 4px 12px; background: #F0EDE8; border-radius: 20px; }
+
+  /* ===== 子页面继承样式 ===== */
+  h2 { font-size: 17px; color: #fff; padding: 7px 16px; margin: 28px 0 14px 0; border-radius: 4px; }
+  h2.line1 { background: #607D8B; }
+  h2.line2 { background: #708090; }
+  h2.line3 { background: #A0785A; }
+  h2.sec1 { background: #607D8B; }
+  h2.sec2 { background: #708090; }
+  h2.sec3 { background: #A0785A; }
+  h3 { font-size: 15px; border-left: 4px solid #607D8B; padding-left: 10px; margin: 22px 0 8px 0; color: #607D8B; }
+  h3.ts { color: #708090; border-color: #708090; }
+  h3.panel { color: #A0785A; border-color: #A0785A; }
+  h4 { font-size: 13px; color: #333; margin: 14px 0 6px 0; padding: 4px 8px; background: #F0EDE8; border-radius: 3px; display: inline-block; }
+  p { margin: 6px 0; }
+  .bridge { color: #A0785A; font-weight: bold; margin: 12px 0 4px 0; font-size: 13px; }
+  .lead { color: #607D8B; font-weight: bold; margin: 10px 0 4px 0; }
+  .indent { margin-left: 20px; }
+  .explain { color: #444; font-size: 12.5px; margin: 4px 0 4px 20px; }
+  .formula {
+    background: #F0EDE8; border: 1px solid #D5D0C8; border-radius: 4px;
+    padding: 8px 14px; margin: 8px 0; font-family: "Cambria Math", "STIX Two Math", "Microsoft YaHei", serif;
+    font-size: 13px; line-height: 1.8; page-break-inside: avoid;
+  }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; margin: 2px 2px; }
+  .tag-h0 { background: #F0EBD8; border: 1px solid #C0A060; }
+  .tag-warn { background: #EDD5D5; border: 1px solid #C47070; color: #A04545; }
+  .tag-ok { background: #D5E0D7; border: 1px solid #7A9E7E; color: #4A6B50; }
+  .tag-fix { background: #D5E0E8; border: 1px solid #6A8CA0; color: #4A6A80; }
+  .tag-q { background: #E8EDF0; border: 1px solid #90A0A8; color: #4A6070; }
+  .card {
+    border: 1px solid #D5D0C8; border-radius: 6px; padding: 10px 14px;
+    background: #FAFAF7; margin: 10px 0; page-break-inside: avoid;
+  }
+  .vs-row { display: flex; gap: 10px; margin: 8px 0; }
+  .vs-box { flex: 1; padding: 8px 10px; border-radius: 4px; font-size: 12px; }
+  .vs-good { background: #EBF0EC; border: 1px solid #90B094; }
+  .vs-bad { background: #F5EDED; border: 1px solid #C47070; }
+  .vs-mid { background: #F5F0E5; border: 1px solid #C9A87C; }
+  ol, ul { margin: 4px 0 4px 24px; font-size: 12.5px; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+  th { background: #F0EDE8; font-weight: bold; }
+  td.left { text-align: left; }
+  td.yes { color: #5A8060; font-weight: bold; }
+  td.no { color: #B05050; font-weight: bold; }
+  .warn { font-size: 12px; color: #B05050; margin: 4px 0 4px 16px; font-weight: bold; }
+  .tip { font-size: 12px; color: #607D8B; margin: 4px 0 4px 16px; }
+  hr { border: none; border-top: 1px solid #E0DDD5; margin: 16px 0; }
+  .fig { text-align: center; margin: 12px 0; }
+  .fig-caption { font-size: 11px; color: #666; margin-top: 4px; }
+
+  /* 试卷样式 */
+  .q-box {
+    border: 2px solid #B0B8C1; border-radius: 8px; padding: 12px 16px;
+    background: #F5F6F7; margin: 12px 0; page-break-inside: avoid;
+  }
+  .q-title { font-weight: bold; font-size: 14px; color: #4A6070; margin-bottom: 6px; }
+  details.answer { margin: 8px 0; page-break-inside: avoid; }
+  details.answer summary {
+    cursor: pointer; padding: 8px 14px; background: #EBF0EC; border: 1px solid #90B094;
+    border-radius: 6px; font-weight: bold; color: #5A8060; font-size: 13px;
+    list-style: none; user-select: none;
+  }
+  details.answer summary::-webkit-details-marker { display: none; }
+  details.answer summary::before { content: "▶ "; font-size: 11px; }
+  details.answer[open] summary::before { content: "▼ "; }
+  details.answer summary:hover { background: #D5E0D7; }
+  details.answer .a-content {
+    border-left: 4px solid #7A9E7E; padding: 10px 14px; margin: 0;
+    background: #F5F8F5; border-radius: 0 0 6px 0;
+  }
+  .a-title { font-weight: bold; color: #5A8060; margin-bottom: 4px; }
+
+  /* 返回顶部 */
+  .back-top {
+    position: fixed; bottom: 30px; right: 30px; width: 40px; height: 40px;
+    border-radius: 50%; background: #607D8B; color: #fff; text-align: center;
+    line-height: 40px; cursor: pointer; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    opacity: 0.7; transition: opacity 0.2s; z-index: 200;
+  }
+  .back-top:hover { opacity: 1; }
+
+  @media print {
+    .nav-header { position: static; box-shadow: none; }
+    .back-top { display: none; }
+    body { background: #fff; }
+    .content-wrapper { border: none; }
+    details.answer .a-content { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div class="nav-header">
+  <div class="nav-title">
+    金融计量学 · 知识手册
+    <span>西南财经大学博士入学考试 · 备考复习</span>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab('home')">
+      <span class="tab-icon">🏠</span> 首页
+    </div>
+    <div class="nav-tab" onclick="switchTab('line1')">
+      <span class="tab-num c1">1</span> OLS基础
+    </div>
+    <div class="nav-tab" onclick="switchTab('line2')">
+      <span class="tab-num c2">2</span> 时间序列
+    </div>
+    <div class="nav-tab" onclick="switchTab('line3')">
+      <span class="tab-num c3">3</span> 多序列
+    </div>
+    <div class="nav-tab" onclick="switchTab('exam0')">
+      <span class="tab-num c4">📝</span> 模拟试卷
+    </div>
+  </div>
+</div>
+
+<!-- 内容区 -->
+<div class="content-wrapper">
+
+  <!-- 首页 -->
+  <div id="tab-home" class="tab-content active">
+    <div class="home-welcome">
+      <h2 style="background:none;color:#4A4A4A;padding:0;margin:0 0 8px 0;">金融计量学 · 知识手册</h2>
+      <p>按三条知识逻辑线组织，从OLS基础 → 时间序列 → 多序列拓展，层层递进</p>
+    </div>
+    <div class="home-stats">
+      <span>📅 考试：3月22日</span>
+      <span>📚 三条知识线 + 模拟试卷</span>
+      <span>🎨 莫兰迪色系 · A4可打印</span>
+    </div>
+    <div class="home-grid">
+      <div class="home-card hc1" onclick="switchTab('line1')">
+        <div class="hc-num">01</div>
+        <div class="hc-title">OLS 基础</div>
+        <div class="hc-desc">古典假定 · 假设违反检验<br>异方差/自相关/共线性/内生性<br>后果对比 · 修正方法 · 显著性检验</div>
+      </div>
+      <div class="home-card hc2" onclick="switchTab('line2')">
+        <div class="hc-num">02</div>
+        <div class="hc-title">时间序列建模</div>
+        <div class="hc-desc">平稳性检验(ADF) · ACF/PACF识别<br>AR/MA/ARMA模型 · 白噪声检验<br>ARCH效应 · GARCH模型</div>
+      </div>
+      <div class="home-card hc3" onclick="switchTab('line3')">
+        <div class="hc-num">03</div>
+        <div class="hc-title">多序列拓展</div>
+        <div class="hc-desc">协整(EG两步法) · 伪回归<br>误差修正模型ECM · 纠偏机制<br>格兰杰因果检验 · 四种情况</div>
+      </div>
+      <div class="home-card hc4" onclick="switchTab('exam0')">
+        <div class="hc-num">📝</div>
+        <div class="hc-title">模拟试卷</div>
+        <div class="hc-desc">计量经济学 · 时间序列 · 面板数据<br>10道大题 · 点击展开答案<br>含知识点定位表</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第一条线 -->
+  <div id="tab-line1" class="tab-content">
+<h2 class="line1">1. 从问题出发：计量经济学在干什么？</h2>
+
+<p>生活中我们想预测一件事——比如<b>收入增加了，储蓄会增加多少？</b></p>
+
+<p>为了回答这个问题，我们把"收入影响储蓄"写成数学关系：</p>
+
+<div class="formula">
+  <b>总体回归方程：</b>Y = β₀ + β₁X + U<br>
+  <span style="color:#666;">Y = 储蓄（想预测的）&nbsp;|&nbsp; X = 收入（原因）&nbsp;|&nbsp; β₁ = 收入每增1元，储蓄平均增多少 &nbsp;|&nbsp; U = 其他乱七八糟的影响（看不见）</span>
+</div>
+
+<p class="bridge">→ 但问题来了：β₁ 到底是多少？</p>
+
+<p>β₁ 是总体参数——我们永远不知道它的真实值（除非调查全国每一个人）。我们只有一份样本数据，只能用样本去<b>估计</b>它。估计出来的值叫 <b>β̂₁</b>（帽子 = "估计值"）。</p>
+
+<p class="bridge">→ 那怎么估计？总得有个标准吧。</p>
+
+<p>标准就是：让估计出来的回归线<b>尽可能贴近数据</b>。怎么衡量"贴近"？看每个数据点到回归线的竖直距离（残差），让这些距离的<b>平方和最小</b>。</p>
+
+<p class="explain">为什么用平方和？因为残差有正（点在线上方）有负（点在线下方），直接加会互相抵消。平方后全部变正，大的偏离被加倍惩罚。</p>
+
+<!-- OLS散点图 -->
+<div class="fig">
+<svg width="460" height="280" viewBox="0 0 460 280">
+  <!-- 坐标轴 -->
+  <line x1="50" y1="240" x2="430" y2="240" stroke="#333" stroke-width="1.5"/>
+  <line x1="50" y1="240" x2="50" y2="20" stroke="#333" stroke-width="1.5"/>
+  <text x="430" y="258" font-size="12" fill="#333">X (收入)</text>
+  <text x="12" y="20" font-size="12" fill="#333">Y (储蓄)</text>
+  
+  <!-- 回归线 -->
+  <line x1="70" y1="210" x2="410" y2="60" stroke="#607D8B" stroke-width="2.5"/>
+  <text x="390" y="50" font-size="11" fill="#607D8B" font-weight="bold">Ŷ = β̂₀ + β̂₁X</text>
+  
+  <!-- 数据点 + 残差线 -->
+  <circle cx="100" cy="175" r="4" fill="#C47070"/>
+  <line x1="100" y1="175" x2="100" y2="197" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="150" cy="160" r="4" fill="#C47070"/>
+  <line x1="150" y1="160" x2="150" y2="179" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <circle cx="200" cy="185" r="4" fill="#C47070"/>
+  <line x1="200" y1="185" x2="200" y2="161" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="250" cy="120" r="4" fill="#C47070"/>
+  <line x1="250" y1="120" x2="250" y2="143" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="300" cy="135" r="4" fill="#C47070"/>
+  <line x1="300" y1="135" x2="300" y2="124" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="350" cy="80" r="4" fill="#C47070"/>
+  <line x1="350" y1="80" x2="350" y2="106" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+  
+  <circle cx="390" cy="100" r="4" fill="#C47070"/>
+  <line x1="390" y1="100" x2="390" y2="91" stroke="#C47070" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- 标注残差 -->
+  <text x="255" y="134" font-size="10" fill="#C47070">eᵢ(残差)</text>
+  <text x="108" y="190" font-size="10" fill="#C47070">eⱼ</text>
+  
+  <!-- 标注 -->
+  <circle cx="250" cy="120" r="6" fill="none" stroke="#C47070" stroke-width="1.5"/>
+  <text x="260" y="118" font-size="10" fill="#333">(Xᵢ, Yᵢ) 真实点</text>
+  <circle cx="250" cy="143" r="3" fill="#607D8B"/>
+  <text x="260" y="155" font-size="10" fill="#607D8B">(Xᵢ, Ŷᵢ) 回归线上的点</text>
+</svg>
+<div class="fig-caption">图1：OLS 找到一条线，使所有红色虚线（残差）的平方和最小</div>
+</div>
+
+<div class="formula">
+  <b>最小化目标：</b>min Σ eᵢ² = min Σ [Yᵢ − (β̂₀ + β̂₁Xᵢ)]²<br><br>
+  <b>怎么求解：</b>对 β̂ 求偏导，令偏导 = 0<br>
+  → 正规方程 X'Xβ̂ = X'Y<br>
+  → 解出 <b>β̂ = (X'X)⁻¹X'Y</b>
+</div>
+
+<p class="warn">⚠ 2026年已考：写出 β̂ 的推导过程 + 证明无偏性。这是必须闭卷默写的公式。</p>
+
+<p class="bridge">→ β̂ 算出来了，但还有两个问题要回答：</p>
+<ol>
+  <li><b>β̂ 准不准？</b>（是不是在"瞄准"真值β？）→ 这取决于古典假定（第2节）</li>
+  <li><b>模型好不好？</b>（解释了多少Y的变动？）→ 这要看 R²（下面马上讲）</li>
+</ol>
+
+<hr>
+
+<h3>1.1 残差 vs 误差——先分清这两个"差"</h3>
+
+<p>在回答"准不准"之前，先分清两个容易混的概念：</p>
+
+<div class="vs-row">
+  <div class="vs-box vs-bad">
+    <b>误差 U（Error）</b><br>
+    <b>总体</b>角度，<b>不可观测</b><br>
+    Uᵢ = Yᵢ − (β₀ + β₁Xᵢ)<br>
+    真实值偏离真实回归线多少<br>
+    永远看不见（因为β₀, β₁未知）
+  </div>
+  <div class="vs-box vs-good">
+    <b>残差 e（Residual）</b><br>
+    <b>样本</b>角度，<b>可以算出</b><br>
+    eᵢ = Yᵢ − Ŷᵢ = Yᵢ − (β̂₀ + β̂₁Xᵢ)<br>
+    真实值偏离估计的回归线多少<br>
+    β̂已知，所以能算出来
+  </div>
+</div>
+
+<p class="explain">类比：误差U是"上帝知道的真实偏离"，残差e是"我们能算出的对偏离的估计"。残差是误差的估计值。</p>
+
+<p class="bridge">→ 既然误差U看不见，那我们怎么判断模型好不好？靠残差。具体来说，靠 TSS 分解和 R²。</p>
+
+<hr>
+
+<h3>1.2 模型好不好？—— TSS 分解与 R²</h3>
+
+<p>对散点图上每一个数据点 i，都可以把Y偏离均值的总距离（离差）拆成两部分：</p>
+
+<!-- TSS分解图 -->
+<div class="fig">
+<svg width="440" height="300" viewBox="0 0 440 300">
+  <!-- 坐标轴 -->
+  <line x1="60" y1="260" x2="400" y2="260" stroke="#333" stroke-width="1"/>
+  <line x1="60" y1="260" x2="60" y2="20" stroke="#333" stroke-width="1"/>
+  <text x="400" y="275" font-size="11" fill="#333">X</text>
+  <text x="25" y="20" font-size="11" fill="#333">Y</text>
+  
+  <!-- 均值线 Ȳ -->
+  <line x1="60" y1="155" x2="400" y2="155" stroke="#999" stroke-width="1" stroke-dasharray="6,3"/>
+  <text x="405" y="158" font-size="11" fill="#999">Ȳ (均值线)</text>
+  
+  <!-- 回归线 -->
+  <line x1="80" y1="220" x2="380" y2="60" stroke="#607D8B" stroke-width="2"/>
+  <text x="355" y="50" font-size="11" fill="#607D8B">回归线 Ŷ</text>
+  
+  <!-- 数据点 i -->
+  <circle cx="260" cy="80" r="5" fill="#C47070"/>
+  <text x="268" y="78" font-size="11" fill="#C47070" font-weight="bold">Yᵢ (真实值)</text>
+  
+  <!-- 回归线上的点 -->
+  <circle cx="260" cy="120" r="4" fill="#607D8B"/>
+  <text x="268" y="118" font-size="11" fill="#607D8B">Ŷᵢ (拟合值)</text>
+  
+  <!-- 均值线上的点 -->
+  <circle cx="260" cy="155" r="3" fill="#999"/>
+  
+  <!-- 三段差 -->
+  <!-- RSS: Yi - Yi_hat -->
+  <line x1="245" y1="80" x2="245" y2="120" stroke="#C47070" stroke-width="3"/>
+  <text x="195" y="104" font-size="11" fill="#C47070" font-weight="bold">RSS: Yᵢ−Ŷᵢ</text>
+  <text x="195" y="117" font-size="10" fill="#C47070">没解释的</text>
+  
+  <!-- ESS: Yi_hat - Y_bar -->
+  <line x1="250" y1="120" x2="250" y2="155" stroke="#607D8B" stroke-width="3"/>
+  <text x="268" y="142" font-size="11" fill="#607D8B" font-weight="bold">ESS: Ŷᵢ−Ȳ</text>
+  <text x="268" y="155" font-size="10" fill="#607D8B">解释了的</text>
+  
+  <!-- TSS: Yi - Y_bar -->
+  <line x1="237" y1="80" x2="237" y2="155" stroke="#C49A6C" stroke-width="2" stroke-dasharray="4,2"/>
+  <text x="170" y="76" font-size="11" fill="#C49A6C" font-weight="bold">TSS: Yᵢ−Ȳ</text>
+  <text x="170" y="64" font-size="10" fill="#C49A6C">总变动</text>
+  
+  <!-- 大括号标注 -->
+  <text x="140" y="145" font-size="18" fill="#C49A6C">｛</text>
+</svg>
+<div class="fig-caption">图2：对每个点 i，总变动（TSS）= 模型解释的（ESS）+ 模型没解释的（RSS）</div>
+</div>
+
+<div class="formula">
+  <b>对所有点取平方和 → TSS = ESS + RSS</b><br><br>
+  TSS = Σ(Yᵢ − Ȳ)² — Y 的总变动<br>
+  ESS = Σ(Ŷᵢ − Ȳ)² — 模型<b>解释了</b>的部分（回归线偏离均值线多远）<br>
+  RSS = Σ(Yᵢ − Ŷᵢ)² — 模型<b>没解释</b>的部分（数据点偏离回归线多远）
+</div>
+
+<p class="bridge">→ 那"模型好不好"就可以量化了：ESS占TSS的比例越大，模型越好。这个比例就是 R²。</p>
+
+<div class="formula">
+  <b>R² = ESS / TSS = 1 − RSS / TSS</b><br><br>
+  R² = 1：RSS = 0，所有点在回归线上 → 完美拟合（ESS = TSS，模型解释了全部变动）<br>
+  R² = 0：ESS = 0，Ŷᵢ = Ȳ，回归线退化为水平均值线 → 模型什么都没解释<br><br>
+  <b>调整 R²</b>：R² 有个缺陷——加变量必然增大（哪怕加的是无用变量）。调整R² 会惩罚无用变量，加错变量可能反而下降。<br>
+  <b>AIC / BIC</b>：另一种衡量模型好坏的指标，越小越好。BIC惩罚更重，AIC与BIC不一致时优先BIC。
+</div>
+
+<p class="bridge">→ 现在我们知道了β̂怎么算（OLS）、模型好不好怎么看（R²）。但最关键的问题还没答：β̂ 到底准不准？</p>
+<h2 class="line1">2. β̂ 准不准？—— 古典假定与高斯-马尔科夫定理</h2>
+
+<p>答案是：<b>如果古典假定全部成立，β̂就是最好的估计</b>。"最好"的意思是：在所有线性无偏估计量中，β̂的方差最小（波动最小，最精确）。</p>
+
+<p class="bridge">→ 那古典假定具体是什么？一共六条：</p>
+
+<h3>2.1 六条古典假定（简答必背）</h3>
+
+<div class="card">
+<table>
+  <tr><th>编号</th><th>假定</th><th>公式</th><th>直觉理解</th></tr>
+  <tr><td>①</td><td class="left">X 非随机</td><td>X 是确定性的</td><td class="left">完全随机的东西无法预测——你拿噪声当原因，能预测出什么？</td></tr>
+  <tr><td>②</td><td class="left">零均值</td><td>E(Uᵢ) = 0</td><td class="left">偏离有正有负，但平均为零——不系统性地偏向某一边</td></tr>
+  <tr><td>③</td><td class="left"><b>同方差</b></td><td>Var(Uᵢ) = σ²</td><td class="left">偏离的波动前后一致——不能收入低时波动小、收入高时波动大</td></tr>
+  <tr><td>④</td><td class="left"><b>无自相关</b></td><td>Cov(Uᵢ,Uⱼ)=0</td><td class="left">前一期残差不影响后一期——残差不能"手拉手"往一个方向跑</td></tr>
+  <tr><td>⑤</td><td class="left">正态分布</td><td>Uᵢ ~ N(0,σ²)</td><td class="left">大部分偏离集中在零附近，越大的偏离越少（钟形分布）</td></tr>
+  <tr><td>⑥</td><td class="left"><b>无完全共线性</b></td><td>X'X 可逆</td><td class="left">解释变量之间不能完全线性相关——否则分不清谁在起作用</td></tr>
+</table>
+</div>
+
+<p class="warn">⚠ ③同方差 + ④无自相关合称"球型扰动假设"，经常一起考，缺一不可（2010年真题考过）</p>
+
+<p class="bridge">→ 这六条全部成立时，就有了下面这个定理：</p>
+
+<h3>2.2 高斯-马尔科夫定理</h3>
+
+<p>满足六条假定 → β̂ 具有 <b>BLUE</b> 性质：</p>
+<ul>
+  <li><b>B</b>est = 最优的（方差最小）</li>
+  <li><b>L</b>inear = β̂ 是 Y 的线性函数</li>
+  <li><b>U</b>nbiased = 无偏：E[β̂] = β（反复抽样，β̂的平均值等于真值）</li>
+  <li><b>E</b>stimator = 估计量</li>
+</ul>
+<p class="explain">一句话：在所有"Y的线性函数+无偏"的估计量中，OLS的β̂方差最小。没有比它更精确的了。</p>
+
+<h4>无偏性证明（2026已考）</h4>
+<div class="formula">
+  β̂ = (X'X)⁻¹X'Y<br>
+  → 代入 Y = Xβ + U<br>
+  → β̂ = (X'X)⁻¹X'(Xβ + U) = β + (X'X)⁻¹X'U<br>
+  → 取期望：E[β̂|X] = β + (X'X)⁻¹X' · <b>E[U|X]</b><br>
+  → 关键一步：假定②要求 E[U|X] = 0<br>
+  → 所以 E[β̂|X] = β &nbsp; ✓（无偏）
+</div>
+
+<p><b>大样本额外获得的性质：一致性</b> — n→∞ 时 β̂→β（样本量越大，估计越准）</p>
+
+<p class="bridge">→ 但现实中，六条假定几乎不可能全部满足。违反了某条假定 → BLUE 就不再成立 → β̂ 可能不准了。怎么办？</p>
+<p class="bridge">→ 分两步：<b>先检验</b>（有没有违反？）→ <b>再修正</b>（违反了怎么补救？）</p>
+
+<h2 class="line1">3. 假定被违反了——检验、后果、修正</h2>
+
+<p>OLS估计完β̂之后，要做一轮<b>"体检"</b>：逐项检查六条假定有没有被违反。发现问题 → 修正 → 修正后才能放心下结论。</p>
+
+<p class="tip">💡 下面按<b>假定③④⑥+外生性</b>展开（假定①②⑤在实践中较少单独检验，但简答题要能写出来）。</p>
+
+<hr>
+
+<!-- ===== 3.1 异方差 ===== -->
+<h3>3.1 假定③被违反 → 异方差</h3>
+
+<h4>什么是异方差？</h4>
+<p>假定③要求残差方差恒定（Var(Uᵢ) = σ²）。如果方差随X变化——比如收入越高，消费的波动越大——就叫异方差。</p>
+
+<!-- 异方差对比图 -->
+<div class="fig">
+<svg width="560" height="180" viewBox="0 0 560 180">
+  <!-- 左图：同方差 -->
+  <rect x="0" y="0" width="260" height="175" fill="#EBF0EC" rx="6"/>
+  <text x="130" y="20" font-size="12" fill="#5A8060" text-anchor="middle" font-weight="bold">✓ 同方差：残差上下等宽</text>
+  <line x1="30" y1="90" x2="240" y2="90" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+  <!-- 均匀散点 -->
+  <circle cx="50" cy="75" r="3" fill="#5A8060" opacity="0.6"/><circle cx="60" cy="105" r="3" fill="#5A8060" opacity="0.6"/>
+  <circle cx="80" cy="80" r="3" fill="#5A8060" opacity="0.6"/><circle cx="90" cy="100" r="3" fill="#5A8060" opacity="0.6"/>
+  <circle cx="110" cy="78" r="3" fill="#5A8060" opacity="0.6"/><circle cx="120" cy="102" r="3" fill="#5A8060" opacity="0.6"/>
+  <circle cx="140" cy="82" r="3" fill="#5A8060" opacity="0.6"/><circle cx="150" cy="98" r="3" fill="#5A8060" opacity="0.6"/>
+  <circle cx="170" cy="76" r="3" fill="#5A8060" opacity="0.6"/><circle cx="180" cy="104" r="3" fill="#5A8060" opacity="0.6"/>
+  <circle cx="200" cy="84" r="3" fill="#5A8060" opacity="0.6"/><circle cx="210" cy="96" r="3" fill="#5A8060" opacity="0.6"/>
+  <circle cx="230" cy="80" r="3" fill="#5A8060" opacity="0.6"/><circle cx="235" cy="100" r="3" fill="#5A8060" opacity="0.6"/>
+  <text x="130" y="165" font-size="11" fill="#666" text-anchor="middle">波动幅度前后一致</text>
+  
+  <!-- 右图：异方差 -->
+  <rect x="290" y="0" width="260" height="175" fill="#F5EDED" rx="6"/>
+  <text x="420" y="20" font-size="12" fill="#B05050" text-anchor="middle" font-weight="bold">✗ 异方差：残差呈"喇叭口"</text>
+  <line x1="320" y1="90" x2="530" y2="90" stroke="#999" stroke-width="1" stroke-dasharray="3,2"/>
+  <!-- 喇叭散点 -->
+  <circle cx="335" cy="87" r="3" fill="#B05050" opacity="0.6"/><circle cx="340" cy="93" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="355" cy="84" r="3" fill="#B05050" opacity="0.6"/><circle cx="360" cy="96" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="380" cy="78" r="3" fill="#B05050" opacity="0.6"/><circle cx="385" cy="102" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="405" cy="72" r="3" fill="#B05050" opacity="0.6"/><circle cx="410" cy="108" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="430" cy="62" r="3" fill="#B05050" opacity="0.6"/><circle cx="435" cy="118" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="460" cy="50" r="3" fill="#B05050" opacity="0.6"/><circle cx="465" cy="130" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="490" cy="40" r="3" fill="#B05050" opacity="0.6"/><circle cx="500" cy="140" r="3" fill="#B05050" opacity="0.6"/>
+  <circle cx="515" cy="35" r="3" fill="#B05050" opacity="0.6"/><circle cx="520" cy="150" r="3" fill="#B05050" opacity="0.6"/>
+  <text x="420" y="165" font-size="11" fill="#666" text-anchor="middle">X越大，波动越大（喇叭口）</text>
+</svg>
+<div class="fig-caption">图3：同方差 vs 异方差的残差散点图对比</div>
+</div>
+
+<p class="bridge">→ 怎么判断有没有异方差？除了直接看图，还有4种统计检验：</p>
+
+<h4>异方差检验（5种方法）</h4>
+<div class="card">
+<table>
+  <tr><th>#</th><th>方法</th><th>做法</th><th>特点</th></tr>
+  <tr><td>①</td><td class="left">散点图</td><td class="left">画残差²对X的图，看有没有喇叭口</td><td class="left">最直观，但不严格</td></tr>
+  <tr><td>②</td><td class="left">GQ检验</td><td class="left">按X排序分两段，比较两段RSS → F检验</td><td class="left">适用递增/递减型<br><span class="tag tag-warn">⚠ GQ是异方差检验，不是自相关！</span></td></tr>
+  <tr><td>③</td><td class="left"><b>White检验 ★</b></td><td class="left">残差²对X及其交叉项、平方项做辅助回归 → nR²~χ²</td><td class="left"><b>最通用</b>，不需假设形式</td></tr>
+  <tr><td>④</td><td class="left">Glejser检验</td><td class="left">|残差|对X回归</td><td class="left">可推断异方差函数形式</td></tr>
+  <tr><td>⑤</td><td class="left">BP检验</td><td class="left">残差²对X回归 → nR²~χ²</td><td class="left">比White简洁（不加交叉项）</td></tr>
+</table>
+<p style="margin-top:8px;"><span class="tag tag-h0">H₀：不存在异方差（同方差）</span> → 拒绝H₀ = 有异方差 = 需要修正</p>
+</div>
+
+<p class="bridge">→ White检验为什么这么做？思路是：</p>
+
+<p class="indent">如果同方差成立，残差²应该是随机的，跟X没关系。所以把残差²当Y，X及其平方项、交叉项当解释变量做辅助回归。如果这个辅助回归的R²很大，说明残差²<b>能被X解释</b>——方差跟着X变——异方差。</p>
+
+<p class="warn">⚠ 读表时看 <b>Obs*R-squared 那行</b>的 Probability，不看 F-statistic 那行（避免临界值附近两行结论不一致）</p>
+
+<p class="bridge">→ 如果发现了异方差，有什么后果？怎么修正？</p>
+
+<h4>后果</h4>
+<p>OLS 仍然<b>无偏且一致</b>（β̂还是在瞄准真值），但<b>不再最小方差</b>（BLUE被打破）。标准误公式算错了 → t/F检验结论不可靠。</p>
+<p class="explain">类比：你的枪瞄得很准（无偏），但枪管松了导致散布变大（方差增大）。打10发平均命中，但单发可能偏很远。</p>
+
+<h4>修正</h4>
+<ul>
+  <li><b>WLS（加权最小二乘）</b>：给方差大的观测降低权重，恢复同方差</li>
+  <li><b>怀特稳健标准误</b>：不改β̂（还是那个数），只修正标准误的计算公式 → t值变了 → 显著性结论可能变</li>
+</ul>
+
+<hr>
+
+<!-- ===== 3.2 自相关 ===== -->
+<h3>3.2 假定④被违反 → 自相关</h3>
+
+<h4>什么是自相关？</h4>
+<p>假定④要求不同观测的误差互不相关。如果前一期残差影响后一期——残差"手拉手"往一个方向跑——就叫自相关。</p>
+<p class="explain">时间序列数据尤其常见：今天股价涨了，明天大概率还涨（正自相关）；或者今天涨明天跌（负自相关）。</p>
+
+<p class="bridge">→ 有两种检验方法：</p>
+
+<h4>自相关检验（2种）</h4>
+
+<div class="card">
+<p><b>① DW检验（Durbin-Watson）</b>— 只能检验一阶自相关</p>
+
+<div class="formula">
+  DW ≈ 2(1 − ρ̂)，ρ̂ = 相邻残差的相关系数<br>
+  直接代入：ρ̂=1 → DW=0（完全正自相关）| ρ̂=0 → DW=2（无自相关✓）| ρ̂=−1 → DW=4（完全负自相关）
+</div>
+
+<!-- DW区间图 -->
+<div class="fig">
+<svg width="500" height="70" viewBox="0 0 500 70">
+  <rect x="20" y="15" width="80" height="30" fill="#EDD5D5" rx="3"/>
+  <rect x="100" y="15" width="50" height="30" fill="#F0EBD8" rx="3"/>
+  <rect x="150" y="15" width="170" height="30" fill="#D5E0D7" rx="3"/>
+  <rect x="320" y="15" width="50" height="30" fill="#F0EBD8" rx="3"/>
+  <rect x="370" y="15" width="80" height="30" fill="#EDD5D5" rx="3"/>
+  
+  <text x="60" y="35" font-size="10" text-anchor="middle" fill="#B05050" font-weight="bold">正自相关</text>
+  <text x="125" y="35" font-size="10" text-anchor="middle" fill="#C0A060">不确定</text>
+  <text x="235" y="35" font-size="10" text-anchor="middle" fill="#5A8060" font-weight="bold">无自相关 ✓</text>
+  <text x="345" y="35" font-size="10" text-anchor="middle" fill="#C0A060">不确定</text>
+  <text x="410" y="35" font-size="10" text-anchor="middle" fill="#B05050" font-weight="bold">负自相关</text>
+  
+  <text x="20" y="60" font-size="10" fill="#333">0</text>
+  <text x="97" y="60" font-size="10" fill="#333">dL</text>
+  <text x="147" y="60" font-size="10" fill="#333">dU</text>
+  <text x="310" y="60" font-size="10" fill="#333">4-dU</text>
+  <text x="363" y="60" font-size="10" fill="#333">4-dL</text>
+  <text x="443" y="60" font-size="10" fill="#333">4</text>
+</svg>
+<div class="fig-caption">图4：DW检验的区间判断</div>
+</div>
+
+<p class="explain">限制：只能检验一阶自相关；要求模型含截距项、不含被解释变量滞后项</p>
+
+<p style="margin-top:10px;"><b>② BG-LM检验 ★ 更通用</b>— 可以检验高阶自相关</p>
+<p class="indent">做法：残差对自身滞后项做自回归 → nR² ~ χ²</p>
+<p class="indent"><span class="tag tag-h0">H₀：不存在自相关</span> → 读表看 Obs*R-squared 行：p < 5% → 有自相关</p>
+</div>
+
+<p class="warn">⚠ DW是<b>自相关</b>检验，不是异方差检验（GQ才是异方差）——选择题高频考点！</p>
+
+<h4>后果</h4>
+<p>和异方差一样：OLS仍无偏一致，但标准误有偏，t/F不可靠。</p>
+
+<h4>修正</h4>
+<ul>
+  <li><b>广义差分</b>：对Y和X同时做 (Yₜ − ρ̂Yₜ₋₁) 变换</li>
+  <li><b>Cochrane-Orcutt迭代法</b>：先估 ρ̂ ≈ 1 − DW/2，再做广义差分</li>
+</ul>
+<p class="warn">⚠ ρ̂ ≈ 1 − DW/2（不是DW本身！）考过：DW=0.52 → ρ̂ = 1−0.52/2 = 0.74，不是0.52</p>
+
+<p class="tip">💡 金融计量学恰恰要<b>利用</b>自相关来建模预测（→ 第二条线），而不只是"修正"它。</p>
+
+<hr>
+
+<!-- ===== 3.3 多重共线性 ===== -->
+<h3>3.3 假定⑥被违反 → 多重共线性</h3>
+
+<h4>什么是多重共线性？</h4>
+<p>解释变量之间高度线性相关。比如"身高"和"臂展"同时放进回归——两者几乎成正比，模型分不清谁在起作用。</p>
+
+<p class="bridge">→ 怎么判断？（4种方法，不是假设检验的形式，没有H₀）</p>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th>方法</th><th>判断标准</th></tr>
+  <tr><td>①</td><td class="left">简单相关系数</td><td class="left">|Rᵢⱼ| ≈ 1 → 两个变量高度相关</td></tr>
+  <tr><td>②</td><td class="left">VIF（方差膨胀因子）</td><td class="left">VIF = 1/(1−R²ⱼ) > 5 或 > 10 → 严重</td></tr>
+  <tr><td>③</td><td class="left"><b>F大R²大但t小</b></td><td class="left">联合显著但各自不显著 → 典型表现</td></tr>
+  <tr><td>④</td><td class="left">条件指数CI</td><td class="left">CI > 20 → 有共线性</td></tr>
+</table>
+</div>
+
+<h4>后果（讲师推导链——简答必背）</h4>
+<div class="formula">
+  <b>完全共线性</b>：X'X不可逆 → 无法求出β̂（直接炸了）<br><br>
+  <b>不完全共线性</b>推导链：<br>
+  解释变量间相关性高 → 二阶矩增大 → VIF↑ → Var(β̂)↑<br>
+  → ① 不再具有最小方差性（BLUE被打破）<br>
+  → ② t = β̂/se(β̂) ↓（分母se变大）→ t检验失效<br>
+  → ③ 置信区间变宽 → 预测精度下降
+</div>
+
+<p class="warn">⚠ 关键区别：多重共线性时 <b>F检验和R²不受影响</b>（只有t检验受影响）——这是和异方差/自相关不同的地方</p>
+
+<h4>修正</h4>
+<p>剔除不重要变量 / 增加样本量 / 逐步回归（AIC/BIC选变量）/ 岭回归</p>
+
+<hr>
+
+<!-- ===== 3.4 内生性 ===== -->
+<h3>3.4 外生性假定被违反 → 内生性（最严重！）</h3>
+
+<h4>什么是内生性？</h4>
+<p>解释变量X和扰动项U相关：Cov(X, U) ≠ 0。</p>
+<p class="explain">前面三种违反（异方差/自相关/共线性）都只影响"精确度"，β̂还是在瞄准真值。但内生性直接让β̂<b>偏离靶心</b>——不仅不够精确，方向都偏了，而且样本量再大也救不回来。</p>
+
+<h4>三种来源</h4>
+<ol>
+  <li><b>遗漏变量</b>（最常见）：重要变量被遗漏进入U，且与X相关。例：研究教育对收入的影响，但"能力"这个变量无法观测，被遗漏进入U，而能力和教育年限相关 → Cov(教育, U) ≠ 0</li>
+  <li><b>测量误差</b>：X的观测值含误差，误差进入U且与X相关</li>
+  <li><b>联立性/反向因果</b>：X影响Y的同时Y也影响X（如价格与需求互相决定）→ 联立方程问题</li>
+</ol>
+
+<p class="bridge">→ 怎么检验有没有内生性？</p>
+
+<div class="card">
+<p><b>Hausman检验</b></p>
+<p>思路：如果没有内生性，OLS就够好了，工具变量法（IV）和OLS结果应该差不多。如果结果差很大，说明OLS偏了 → 有内生性。</p>
+<p><span class="tag tag-h0">H₀：不存在内生性</span></p>
+<div class="vs-row">
+  <div class="vs-box vs-bad"><b>拒绝H₀</b>：有内生性 → OLS有偏且不一致！</div>
+  <div class="vs-box vs-good"><b>不拒绝H₀</b>：外生OK ✓，用OLS就行</div>
+</div>
+</div>
+
+<h4>后果</h4>
+<p><span class="tag tag-warn">OLS 有偏且不一致——唯一破坏无偏性和一致性的违反！</span></p>
+
+<h4>修正：工具变量法（IV）/ 两阶段最小二乘（2SLS）</h4>
+
+<p>核心思路：X"脏了"（和U相关），找一个"干净的替身"Z。Z必须同时满足：</p>
+<ol>
+  <li><b>相关性</b>：Cov(Z, X) ≠ 0 → Z和X高度相关</li>
+  <li><b>外生性</b>：Cov(Z, U) = 0 → Z和U不相关</li>
+</ol>
+<p class="warn">⚠ 只满足相关性不够！2015年真题考过。</p>
+
+<div class="formula">
+  <b>2SLS 两步操作：</b><br>
+  第一步：用Z回归X → 得到拟合值X̂（X̂只保留了X中被Z解释的"干净"部分）<br>
+  第二步：用X̂替代原来的X，对Y做OLS → 得到一致的β̂<br><br>
+  代价：IV估计的方差比OLS大——用效率换一致性。
+</div>
+<hr>
+
+<!-- ===== 3.5 显著性检验 ===== -->
+<h3>3.5 体检通过后——显著性检验</h3>
+
+<p>前面四项体检（异方差/自相关/共线性/内生性）都通过了（或已修正），现在可以放心问：<b>β̂ 到底显不显著？模型到底有没有解释力？</b></p>
+
+<div class="card">
+<table>
+  <tr><th></th><th>t 检验</th><th>F 检验</th></tr>
+  <tr><td class="left"><b>问的问题</b></td><td class="left"><b>单个</b>变量对Y有没有显著影响？</td><td class="left"><b>所有</b>变量联合起来对Y有没有显著影响？</td></tr>
+  <tr><td class="left"><b>H₀</b></td><td class="left">βᵢ = 0（这个变量没用）</td><td class="left">β₁ = β₂ = … = βₖ = 0（整个方程没用）</td></tr>
+  <tr><td class="left"><b>统计量</b></td><td class="left">t = β̂ᵢ / se(β̂ᵢ)</td><td class="left">F = [R²/k] / [(1−R²)/(n−k−1)]</td></tr>
+  <tr><td class="left"><b>单/双侧</b></td><td class="left"><b>双侧</b> → 临界值查 <b>α/2</b><br>如α=0.05查t₀.₀₂₅</td><td class="left"><b>单侧</b> → 临界值查 <b>α</b><br>如F₀.₀₅</td></tr>
+  <tr><td class="left"><b>一元回归</b></td><td colspan="2">F = t²，两者完全等价，结论一定一致</td></tr>
+  <tr><td class="left"><b>多元回归</b></td><td colspan="2">各管各的。可能F显著但某个t不显著 → 多重共线性的表现</td></tr>
+</table>
+</div>
+
+<h4>假设检验四步流程（万能模板）</h4>
+<div class="formula">
+  ① <b>列假设</b>：写出 H₀ 和 H₁<br>
+  ② <b>构造统计量</b>：代入数据算出 t / F / χ² 的数值<br>
+  ③ <b>查临界值</b>：根据α和自由度，查分布表得到门槛值<br>
+  ④ <b>比较判断</b>：|统计量| vs 临界值 → 套口诀<br><br>
+  <b>口诀：数小率大接H₀，数大率小拒H₀</b><br>
+  "数" = |统计量| vs 临界值 → 统计量 < 临界值 = "数小" → 不拒绝<br>
+  "率" = p值 vs α → p > α = "率大" → 不拒绝
+</div>
+
+<p class="warn">⚠ t检验是双侧 → 题目给的是 t₀.₀₂₅ 不是 t₀.₀₅（α要除以2！）<br>
+⚠ F检验是单侧 → 直接用 F₀.₀₅<br>
+⚠ 但两者等价：t₀.₀₂₅² = F₀.₀₅（一元回归时）</p>
+
+<h4>读回归结果表的套路</h4>
+<div class="card">
+<table>
+  <tr><th>表中位置</th><th>对应什么</th><th>怎么用</th></tr>
+  <tr><td class="left">Dependent Variable</td><td class="left">被解释变量 Y</td><td class="left">知道在预测什么</td></tr>
+  <tr><td class="left">Variable列：C</td><td class="left">截距 β̂₀</td><td class="left">写方程时的常数项</td></tr>
+  <tr><td class="left">Variable列：INCOME等</td><td class="left">斜率系数 β̂ᵢ</td><td class="left">X变1单位，Y变多少</td></tr>
+  <tr><td class="left">Coefficient</td><td class="left">系数估计值</td><td class="left">写方程用</td></tr>
+  <tr><td class="left">Std. Error</td><td class="left">标准误 se(β̂)</td><td class="left">算t统计量的分母</td></tr>
+  <tr><td class="left">t-Statistic</td><td class="left">t统计量 = Coef/SE</td><td class="left">和临界值比大小</td></tr>
+  <tr><td class="left">Prob.</td><td class="left">p值</td><td class="left">和α比大小</td></tr>
+  <tr><td class="left">R-squared</td><td class="left">R²</td><td class="left">模型解释了多少%的Y的变动</td></tr>
+  <tr><td class="left">F-statistic</td><td class="left">F统计量</td><td class="left">方程整体显著吗</td></tr>
+  <tr><td class="left">Durbin-Watson</td><td class="left">DW值</td><td class="left">自相关诊断</td></tr>
+</table>
+</div>
+
+<h4>读检验结果表的统一套路（White / LM 等）</h4>
+<div class="formula">
+  ① 看 <b>Obs*R-squared</b> 那行的 Probability（不看F那行）<br>
+  ② p < 5% → 拒绝H₀ → 有问题<br>
+  ③ p > 5% → 不拒绝H₀ → 没问题
+</div>
+
+<hr>
+
+<!-- ===== 3.6 后果对比 ===== -->
+<h3>3.6 一张表看清所有后果</h3>
+
+<p>四种假设违反，后果各不相同。关键区别只有一条：<b>只有内生性破坏无偏性和一致性</b>。</p>
+
+<table>
+  <tr><th>违反类型</th><th>无偏性</th><th>一致性</th><th>最小方差</th><th>t/F检验</th><th>修正</th></tr>
+  <tr><td class="left">多重共线性</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="left">t失效，<b>F和R²不受影响</b></td><td class="left">剔除变量/岭回归</td></tr>
+  <tr><td class="left">异方差</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="left">都不可靠</td><td class="left">WLS/稳健标准误</td></tr>
+  <tr><td class="left">自相关</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="left">都不可靠</td><td class="left">广义差分/GLS</td></tr>
+  <tr style="background:#F5EDE3;"><td class="left" style="color:#B05050;font-weight:bold;">内生性</td><td class="no">✗有偏</td><td class="no">✗不一致</td><td class="no">✗</td><td class="left">都不可靠</td><td class="left">IV/2SLS</td></tr>
+</table>
+
+<hr>
+
+<!-- ===== 3.7 H0总结 ===== -->
+<h3>3.7 H₀ 方向总结</h3>
+
+<p>所有检验的H₀，分三类记：</p>
+
+<div class="card" style="border-color:#607D8B;">
+<p><b style="color:#607D8B;">第一类：诊断性检验 → H₀ = "不存在XX"（没毛病）</b></p>
+<table>
+  <tr><th>检验</th><th>H₀</th><th>拒绝意味着</th></tr>
+  <tr><td>White / BP / GQ / Glejser</td><td>不存在异方差</td><td>有异方差，需修正</td></tr>
+  <tr><td>DW / BG-LM</td><td>不存在自相关</td><td>有自相关，需修正</td></tr>
+  <tr><td>Hausman</td><td>不存在内生性</td><td>有内生性，用IV</td></tr>
+  <tr><td>ARCH-LM</td><td>不存在ARCH效应</td><td>有ARCH效应，建GARCH</td></tr>
+</table>
+<p class="explain">记法：完美是小概率 → 没毛病放H₀ → 拒绝才说明有问题</p>
+</div>
+
+<div class="card" style="border-color:#A0785A;">
+<p><b style="color:#A0785A;">第二类：显著性检验 → H₀ = "等于零"（没有影响）</b></p>
+<table>
+  <tr><th>检验</th><th>H₀</th><th>拒绝意味着</th></tr>
+  <tr><td>t检验</td><td>βᵢ = 0</td><td>该变量显著</td></tr>
+  <tr><td>F检验</td><td>β₁=…=βₖ=0</td><td>方程整体显著</td></tr>
+  <tr><td>格兰杰因果</td><td>γ₁=…=γₚ=0</td><td>X是Y的格兰杰原因</td></tr>
+</table>
+<p class="explain">记法：系数为零 = 变量可有可无 → 拒绝 = 有用</p>
+</div>
+
+<div class="card" style="border-color:#B05050;">
+<p><b style="color:#B05050;">第三类：特殊方向 → 单独记</b></p>
+<table>
+  <tr><th>检验</th><th>H₀</th><th>好消息怎么来</th></tr>
+  <tr><td>ADF</td><td>非平稳（有单位根）</td><td><b>拒绝</b>H₀ = 平稳</td></tr>
+  <tr><td>白噪声 (LB)</td><td>是白噪声</td><td><b>不拒绝</b>H₀ = 残差OK</td></tr>
+  <tr><td>EG协整</td><td>无协整</td><td><b>拒绝</b>H₀ = 有长期关系</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ===== 补充 ===== -->
+<h3>3.8 补充：随机误差项U包含哪些因素？（名词解释题）</h3>
+<ol>
+  <li>模型中省略的解释变量的影响</li>
+  <li>研究变量的测量误差</li>
+  <li>随机因素（X、Y本身的随机波动）</li>
+  <li>经济活动中的某些不确定性</li>
+</ol>
+<p class="explain">理解：U是"垃圾桶"，模型没能解释的东西全在里面。四条按讲师手写笔记的表述记。</p>
+  </div>
+
+  <!-- 第二条线 -->
+  <div id="tab-line2" class="tab-content">
+<h2 class="line2">从第一条线到第二条线：为什么需要时间序列？</h2>
+
+<p>在第一条线里，我们学了OLS回归的基础。OLS有一条假定叫<b>"无自相关"</b>——要求残差前后期互不影响。如果违反了，我们把它当作"问题"去修正。</p>
+
+<p class="bridge">→ 但金融数据恰恰就是自相关的！</p>
+
+<p>股价今天涨了，明天大概率还涨；今天跌了，明天大概率还跌。这种"惯性"就是自相关。如果我们只是把自相关当"问题"去消除，等于扔掉了最有价值的信息。</p>
+
+<p><b>时间序列分析的核心思想</b>：不是消除自相关，而是<b>利用</b>自相关来建模预测。把序列拆成两部分：</p>
+
+<div class="vs-row">
+  <div class="vs-box" style="background:#EBF0EC;border:1px solid #90B094;">
+    <b>确定部分</b>（可预测）<br>
+    序列有自相关 + 平稳<br>
+    → 用AR/MA/ARMA建模<br>
+    → 历史信息可以预测未来
+  </div>
+  <div class="vs-box" style="background:#F5EDED;border:1px solid #EF5350;">
+    <b>随机部分</b>（不可预测）<br>
+    残差无自相关 + 平稳<br>
+    → 希望是白噪声<br>
+    → 说明确定部分已提取干净
+  </div>
+</div>
+
+<p class="explain">类比：序列像一首歌，"确定部分"是旋律（有规律可循），"随机部分"是底噪（完全随机）。建模就是把旋律识别出来，剩下的纯噪音说明旋律已经提取完了。</p>
+
+<p class="bridge">→ 整个时间序列建模就是一个固定流程，四步走完：</p>
+
+<!-- 流程总览 -->
+<div class="card">
+<div class="fig">
+<svg width="900" height="80" viewBox="0 0 900 80">
+  <rect x="5" y="15" width="120" height="50" rx="8" fill="#708090"/><text x="65" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">① 平稳吗？</text>
+  <text x="65" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">ADF检验</text>
+  <text x="140" y="42" font-size="16" fill="#708090">→</text>
+  <rect x="160" y="15" width="140" height="50" rx="8" fill="#708090"/><text x="230" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">② 什么类型？</text>
+  <text x="230" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">ACF/PACF识别</text>
+  <text x="315" y="42" font-size="16" fill="#708090">→</text>
+  <rect x="335" y="15" width="150" height="50" rx="8" fill="#708090"/><text x="410" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">③ 残差OK吗？</text>
+  <text x="410" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">白噪声检验(LB)</text>
+  <text x="500" y="42" font-size="16" fill="#708090">→</text>
+  <rect x="520" y="15" width="160" height="50" rx="8" fill="#708090"/><text x="600" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">④ 波动恒定吗？</text>
+  <text x="600" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">ARCH-LM检验</text>
+  <text x="695" y="42" font-size="16" fill="#708090">→</text>
+  <rect x="715" y="15" width="120" height="50" rx="8" fill="#7A9E7E"/><text x="775" y="45" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">建模完成 ✓</text>
+</svg>
+</div>
+</div>
+
+<p>下面逐步展开。每一步都是：<b>为什么要做这一步 → 怎么做 → 结果怎么判断 → 不通过怎么办</b>。</p>
+
+<hr>
+
+<!-- ===== 第一步 ===== -->
+<h2 class="line2">第一步：序列平不平稳？</h2>
+
+<h3>1.1 为什么第一步就要看平稳性？</h3>
+
+<p>平稳的意思是：序列的统计特征（均值、方差、自协方差）不随时间变化。这意味着<b>过去的规律未来还会继续</b>——这是预测的前提。</p>
+
+<p>如果序列不平稳（比如股价一直在涨），过去的规律不一定适用于未来。更严重的问题是：两个不平稳序列直接回归会产生<b>伪回归</b>——R²虚高但无真实关系。</p>
+
+<p class="bridge">→ 所以拿到数据第一件事：检查平不平稳。</p>
+
+<h3>1.2 平稳性的三个条件（宽平稳）</h3>
+
+<div class="formula">
+  ① 均值恒定：E(Yₜ) = μ，不随时间变（没有趋势）<br>
+  ② 方差恒定：Var(Yₜ) = σ²，不随时间变（波动幅度稳定）<br>
+  ③ 自协方差只取决于滞后阶数k，不取决于时点t：Cov(Yₜ, Yₜ₋ₖ) = γₖ
+</div>
+
+<p class="explain">直觉：平稳序列像围绕一条水平线上下波动，波动幅度前后差不多。非平稳序列像一直往上走或波动越来越大。</p>
+
+<!-- 平稳vs非平稳图 -->
+<div class="fig">
+<svg width="600" height="160" viewBox="0 0 600 160">
+  <!-- 左图：平稳 -->
+  <rect x="0" y="0" width="280" height="155" fill="#EEF0F3" rx="6"/>
+  <text x="140" y="18" font-size="12" fill="#708090" text-anchor="middle" font-weight="bold">✓ 平稳：围绕均值波动</text>
+  <line x1="20" y1="80" x2="265" y2="80" stroke="#708090" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="270" y="84" font-size="9" fill="#708090">μ</text>
+  <polyline points="25,70 40,90 55,65 70,85 85,75 100,95 115,70 130,88 145,72 160,92 175,68 190,85 205,78 220,90 235,72 250,82" fill="none" stroke="#708090" stroke-width="2"/>
+  <text x="140" y="148" font-size="10" fill="#666" text-anchor="middle">均值、方差都不变</text>
+  
+  <!-- 右图：非平稳 -->
+  <rect x="310" y="0" width="280" height="155" fill="#F5EDED" rx="6"/>
+  <text x="450" y="18" font-size="12" fill="#B05050" text-anchor="middle" font-weight="bold">✗ 非平稳：有趋势，方差增大</text>
+  <polyline points="325,130 340,125 355,118 370,110 385,115 400,100 415,95 430,85 445,90 460,70 475,65 490,55 505,60 520,42 535,38 550,25" fill="none" stroke="#B05050" stroke-width="2"/>
+  <text x="450" y="148" font-size="10" fill="#666" text-anchor="middle">一直在涨，过去规律未来不适用</text>
+</svg>
+<div class="fig-caption">图1：平稳序列 vs 非平稳序列</div>
+</div>
+
+<h3>1.3 怎么检验平稳性？</h3>
+
+<p>三种方法，从直观到严格：</p>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th>方法</th><th>做法</th><th>特点</th></tr>
+  <tr><td>①</td><td class="left">时间路径图</td><td class="left">直接画序列的时序图</td><td class="left">最直观，但不严格——看起来"差不多平"不一定真平稳</td></tr>
+  <tr><td>②</td><td class="left">ACF图</td><td class="left">画自相关函数图</td><td class="left">平稳→ACF快速衰减；非平稳→ACF缓慢衰减（拖很长的尾巴）</td></tr>
+  <tr><td>③</td><td class="left"><b>ADF检验 ★</b></td><td class="left">统计假设检验</td><td class="left">最严格，考试必用</td></tr>
+</table>
+</div>
+
+<p class="bridge">→ 考试用的是ADF检验，重点展开：</p>
+
+<h3>1.4 ADF检验（核心）</h3>
+
+<h4>先从最简单的情况说起：AR(1)</h4>
+
+<p>AR(1)模型：Yₜ = φ·Yₜ₋₁ + εₜ。展开后，每期历史冲击 εₖ 传到今天被乘以 φᵏ 作为权重：</p>
+
+<div class="vs-row">
+  <div class="vs-box vs-good">
+    <b>|φ| &lt; 1</b><br>
+    φᵏ 随k增大快速衰减<br>
+    历史冲击影响消失<br>
+    → <b>平稳</b>
+  </div>
+  <div class="vs-box vs-bad">
+    <b>φ = 1</b><br>
+    φᵏ 永远等于1<br>
+    每期冲击100%保留，永不衰减<br>
+    → Var(Yₜ)=tσ² 随时间增大<br>
+    → <b>非平稳（随机游走）</b>
+  </div>
+  <div class="vs-box vs-bad">
+    <b>|φ| &gt; 1</b><br>
+    φᵏ 越来越大<br>
+    冲击被放大 → 爆炸<br>
+    → <b>更不平稳</b>
+  </div>
+</div>
+
+<p class="explain">φ=1就是"单位根"——平稳与不平稳的分界线。过去的冲击永不衰减，像喝醉酒的人越走越偏。</p>
+
+<h4>高阶AR(p)：用特征方程</h4>
+
+<p>AR(1)只有一个系数φ，直接看就行。但AR(p)有多个系数（φ₁, φ₂, …, φₚ），怎么判断？</p>
+
+<p class="bridge">→ 引入滞后算子L（或B），把所有滞后项整理成一个多项式方程：</p>
+
+<div class="formula">
+  滞后算子：L·Yₜ = Yₜ₋₁，L²·Yₜ = Yₜ₋₂，…<br><br>
+  AR(p)整理后：(1 − φ₁L − φ₂L² − … − φₚLᵖ) = 0<br><br>
+  <b>平稳条件：这个多项式方程的所有根的模 &gt; 1（都在单位圆外）</b><br>
+  有根的模 = 1 → 有单位根 → 非平稳<br>
+  有根的模 &lt; 1 → 爆炸 → 非平稳
+</div>
+
+<p class="warn">⚠ 根和系数是倒数关系：根 L = 1/φ。|φ|&lt;1（衰减→平稳）等价于 |L|&gt;1（根在圆外）。"根在圆外"和"系数小于1"说的是同一件事。</p>
+
+<h4>DF检验 vs ADF检验</h4>
+
+<div class="card">
+<table>
+  <tr><th></th><th>DF检验</th><th>ADF检验</th></tr>
+  <tr><td class="left"><b>针对</b></td><td>AR(1)</td><td>AR(p)（高阶拓展）</td></tr>
+  <tr><td class="left"><b>前提</b></td><td>残差无自相关</td><td>加入ΔY滞后项消除残差自相关</td></tr>
+  <tr><td class="left"><b>什么时候用</b></td><td>残差干净时</td><td>残差有自相关时（大部分情况）</td></tr>
+</table>
+<p style="margin-top:8px;">
+  <span class="tag tag-h0">H₀：存在单位根（序列非平稳）</span><br>
+  H₁：不存在单位根（序列平稳，φ &lt; 0）
+</p>
+<div class="vs-row">
+  <div class="vs-box vs-good"><b>拒绝H₀</b> → 无单位根 → <b>平稳 ✓</b>（好消息！）</div>
+  <div class="vs-box vs-bad"><b>不拒绝H₀</b> → 有单位根 → 非平稳 → 需要差分</div>
+</div>
+<p class="warn">⚠ 拒绝H₀才是好消息——方向反直觉！（大多数检验H₀是"没毛病"，但ADF的H₀是"有问题"）</p>
+<p class="warn">⚠ DF/ADF是单侧检验（H₁只看φ&lt;0这一个方向）</p>
+<p class="warn">⚠ ADF使用特殊DF分布的临界值，不是标准t分布</p>
+</div>
+
+<h4>不平稳怎么办？→ 差分</h4>
+
+<p>对序列做差分：ΔYₜ = Yₜ − Yₜ₋₁。差分后再做ADF检验。差几次变平稳就叫<b>几阶单整 I(d)</b>。</p>
+
+<div class="formula">
+  一次差分变平稳 → I(1)（一阶单整）<br>
+  两次差分变平稳 → I(2)（二阶单整）<br>
+  本身就平稳 → I(0)<br><br>
+  <b>实际中常用对数差分</b>：先取对数 ln(Pₜ)，再差分 ln(Pₜ) − ln(Pₜ₋₁)<br>
+  对数差分 ≈ 收益率（当变化率很小时，ln(1+x) ≈ x）<br>
+  例：股价序列（非平稳）→ 取对数 → 差分 → 收益率序列（平稳）→ 可以建模了
+</div>
+
+<p class="bridge">→ 序列平稳了（自己的或差分后的），接下来要确定：它是什么类型的自相关？</p>
+<hr>
+
+<!-- ===== 第二步 ===== -->
+<h2 class="line2">第二步：序列是什么类型的自相关？</h2>
+
+<h3>2.1 为什么要识别类型？</h3>
+
+<p>平稳序列有自相关性（否则就是白噪声，不值得建模）。但自相关有不同形式——"用过去的自己预测自己"和"用过去的误差预测自己"是两种不同的机制，对应不同的模型。选错了模型，预测就不准。</p>
+
+<p class="bridge">→ 怎么区分？用ACF和PACF两个工具。</p>
+
+<h3>2.2 ACF和PACF是什么？</h3>
+
+<div class="vs-row">
+  <div class="vs-box" style="background:#EBF0EC;border:1px solid #90B094;">
+    <b>ACF（自相关函数）= 总相关</b><br>
+    把序列往后错开k期，看错开前后两段有多像<br>
+    包含<b>直接影响 + 间接传递</b>（全部路径的影响都算在里面）<br>
+    k越大（错开越远）→ 相关性越弱 → "近大远小"
+  </div>
+  <div class="vs-box" style="background:#E8EDF0;border:1px solid #7A9CB0;">
+    <b>PACF（偏自相关函数）= 直接相关</b><br>
+    只看 Yₜ 和 Yₜ₋ₖ 两个点之间的<b>净关系</b><br>
+    把中间时期的传递效应<b>扣掉</b>了<br>
+    类比求偏导：其他变量按住不动，只看这一个
+  </div>
+</div>
+
+<p class="explain">ACF = 直接影响 + 间接传递 = 总效果。PACF = 只留直接影响。所以PACF一定不会比ACF大。</p>
+
+<p class="explain"><b>公式层面的区别</b>：ACF的分母都除以γ₀（Yₜ自己的方差），间隔k的间接影响混在里面；PACF的分母分别除以Yₜ和Yₜ₋ₖ各自的标准差，点到点归一化，只反映直接关系。</p>
+
+<h3>2.3 ACF/PACF图长什么样？怎么看？</h3>
+
+<!-- ACF/PACF识别图 -->
+<div class="fig">
+<svg width="700" height="350" viewBox="0 0 700 350">
+  <!-- AR模型 -->
+  <text x="10" y="20" font-size="13" fill="#708090" font-weight="bold">AR(p) 模型</text>
+  
+  <text x="10" y="50" font-size="11" fill="#333">ACF: 拖尾（缓慢衰减）</text>
+  <rect x="10" y="55" width="200" height="60" fill="#EEF0F3" rx="4"/>
+  <line x1="20" y1="85" x2="200" y2="85" stroke="#999" stroke-width="0.5"/>
+  <rect x="30" y="65" width="12" height="20" fill="#708090"/><rect x="50" y="69" width="12" height="16" fill="#708090"/>
+  <rect x="70" y="72" width="12" height="13" fill="#708090"/><rect x="90" y="75" width="12" height="10" fill="#708090"/>
+  <rect x="110" y="77" width="12" height="8" fill="#708090"/><rect x="130" y="79" width="12" height="6" fill="#708090"/>
+  <rect x="150" y="80" width="12" height="5" fill="#708090"/><rect x="170" y="81" width="12" height="4" fill="#708090"/>
+  
+  <text x="230" y="50" font-size="11" fill="#333">PACF: 截尾（p阶后=0）</text>
+  <rect x="230" y="55" width="200" height="60" fill="#EBF0EC" rx="4"/>
+  <line x1="240" y1="85" x2="420" y2="85" stroke="#999" stroke-width="0.5"/>
+  <rect x="250" y="65" width="12" height="20" fill="#5A8060"/><rect x="270" y="70" width="12" height="15" fill="#5A8060"/>
+  <rect x="290" y="83" width="12" height="2" fill="#999"/><rect x="310" y="83" width="12" height="2" fill="#999"/>
+  <rect x="330" y="84" width="12" height="1" fill="#999"/><rect x="350" y="84" width="12" height="1" fill="#999"/>
+  <text x="295" y="110" font-size="9" fill="#B05050">← p阶后全部≈0</text>
+  
+  <!-- MA模型 -->
+  <text x="10" y="145" font-size="13" fill="#708090" font-weight="bold">MA(q) 模型</text>
+  
+  <text x="10" y="170" font-size="11" fill="#333">ACF: 截尾（q阶后=0）</text>
+  <rect x="10" y="175" width="200" height="60" fill="#EBF0EC" rx="4"/>
+  <line x1="20" y1="205" x2="200" y2="205" stroke="#999" stroke-width="0.5"/>
+  <rect x="30" y="185" width="12" height="20" fill="#5A8060"/><rect x="50" y="190" width="12" height="15" fill="#5A8060"/>
+  <rect x="70" y="195" width="12" height="10" fill="#5A8060"/>
+  <rect x="90" y="203" width="12" height="2" fill="#999"/><rect x="110" y="203" width="12" height="2" fill="#999"/>
+  <rect x="130" y="204" width="12" height="1" fill="#999"/>
+  <text x="95" y="230" font-size="9" fill="#B05050">← q阶后全部≈0</text>
+  
+  <text x="230" y="170" font-size="11" fill="#333">PACF: 拖尾（缓慢衰减）</text>
+  <rect x="230" y="175" width="200" height="60" fill="#EEF0F3" rx="4"/>
+  <line x1="240" y1="205" x2="420" y2="205" stroke="#999" stroke-width="0.5"/>
+  <rect x="250" y="185" width="12" height="20" fill="#708090"/><rect x="270" y="189" width="12" height="16" fill="#708090"/>
+  <rect x="290" y="192" width="12" height="13" fill="#708090"/><rect x="310" y="195" width="12" height="10" fill="#708090"/>
+  <rect x="330" y="197" width="12" height="8" fill="#708090"/><rect x="350" y="199" width="12" height="6" fill="#708090"/>
+
+  <!-- ARMA模型 -->
+  <text x="10" y="265" font-size="13" fill="#708090" font-weight="bold">ARMA(p,q) 模型</text>
+  
+  <text x="10" y="290" font-size="11" fill="#333">ACF: 拖尾</text>
+  <rect x="10" y="295" width="200" height="40" fill="#F5EDE3" rx="4"/>
+  <line x1="20" y1="315" x2="200" y2="315" stroke="#999" stroke-width="0.5"/>
+  <rect x="30" y="300" width="12" height="15" fill="#A0785A"/><rect x="50" y="303" width="12" height="12" fill="#A0785A"/>
+  <rect x="70" y="305" width="12" height="10" fill="#A0785A"/><rect x="90" y="307" width="12" height="8" fill="#A0785A"/>
+  <rect x="110" y="309" width="12" height="6" fill="#A0785A"/><rect x="130" y="310" width="12" height="5" fill="#A0785A"/>
+  
+  <text x="230" y="290" font-size="11" fill="#333">PACF: 也拖尾</text>
+  <rect x="230" y="295" width="200" height="40" fill="#F5EDE3" rx="4"/>
+  <line x1="240" y1="315" x2="420" y2="315" stroke="#999" stroke-width="0.5"/>
+  <rect x="250" y="300" width="12" height="15" fill="#A0785A"/><rect x="270" y="303" width="12" height="12" fill="#A0785A"/>
+  <rect x="290" y="306" width="12" height="9" fill="#A0785A"/><rect x="310" y="308" width="12" height="7" fill="#A0785A"/>
+  <rect x="330" y="310" width="12" height="5" fill="#A0785A"/><rect x="350" y="311" width="12" height="4" fill="#A0785A"/>
+  
+  <!-- 右侧总结 -->
+  <rect x="470" y="30" width="220" height="300" fill="#FAFAFA" rx="6" stroke="#B0B8C1"/>
+  <text x="580" y="55" font-size="13" fill="#708090" text-anchor="middle" font-weight="bold">识别口诀</text>
+  <text x="490" y="85" font-size="12" fill="#333">AR(p)：</text><text x="490" y="100" font-size="11" fill="#708090">  ACF拖尾 + PACF截尾</text>
+  <text x="490" y="135" font-size="12" fill="#333">MA(q)：</text><text x="490" y="150" font-size="11" fill="#708090">  ACF截尾 + PACF拖尾</text>
+  <text x="490" y="185" font-size="12" fill="#333">ARMA：</text><text x="490" y="200" font-size="11" fill="#708090">  都拖尾</text>
+  <line x1="490" y1="220" x2="670" y2="220" stroke="#B0B8C1" stroke-width="1"/>
+  <text x="490" y="245" font-size="11" fill="#B05050" font-weight="bold">速记：</text>
+  <text x="490" y="265" font-size="11" fill="#333">AR → PACF截</text>
+  <text x="490" y="285" font-size="11" fill="#333">MA → ACF截</text>
+  <text x="490" y="305" font-size="11" fill="#333">ARMA → 全拖</text>
+</svg>
+<div class="fig-caption">图2：ACF/PACF图形对比 + 识别口诀</div>
+</div>
+
+<p><b>截尾</b> = 某阶后全部落入置信区间（突然变成≈0）<br>
+<b>拖尾</b> = 缓慢衰减或震荡衰减，但始终不为零</p>
+
+<h3>2.4 三种模型到底在说什么？</h3>
+
+<div class="card">
+<table>
+  <tr><th>模型</th><th>公式</th><th>核心思想</th><th>直觉</th></tr>
+  <tr><td><b>AR(p)</b></td><td class="left">Yₜ = c + φ₁Yₜ₋₁ + … + φₚYₜ₋ₚ + εₜ</td><td class="left">用过去的<b>自己</b>预测现在</td><td class="left">今天股价受昨天、前天股价影响——动态惯性</td></tr>
+  <tr><td><b>MA(q)</b></td><td class="left">Yₜ = μ + εₜ + θ₁εₜ₋₁ + … + θqεₜ₋q</td><td class="left">用过去的<b>误差</b>预测现在</td><td class="left">上周的意外冲击还在影响今天——冲击持续效应</td></tr>
+  <tr><td><b>ARMA(p,q)</b></td><td class="left">两者结合</td><td class="left">既受历史自身影响，又受历史冲击影响</td><td class="left">两种机制兼有</td></tr>
+  <tr><td><b>ARIMA(p,d,q)</b></td><td class="left">先差分d次变平稳，再建ARMA</td><td class="left">不平稳序列的处理方式</td><td class="left">股价本身非平稳→取收益率（差分）→平稳→建模</td></tr>
+</table>
+</div>
+
+<p><b>平稳性补充：</b></p>
+<ul>
+  <li>MA模型 → <b>一定平稳</b>，不用再检验</li>
+  <li>AR模型 → 需要看特征根（是否都在单位圆外）</li>
+  <li>ARMA → 检验其中AR部分</li>
+</ul>
+
+<h3>2.5 定阶：p和q具体是几？</h3>
+
+<ul>
+  <li><b>方法一</b>：看ACF/PACF图，几阶后进入置信区间 → 就是几阶</li>
+  <li><b>方法二</b>：信息准则，在候选模型中选AIC/BIC最小的</li>
+</ul>
+
+<div class="formula">
+  AIC = ln(σ̂²) + 2k/n<br>
+  BIC = ln(σ̂²) + k·ln(n)/n<br><br>
+  BIC惩罚更重（n&gt;7时 ln(n)&gt;2），倾向更简洁的模型<br>
+  AIC与BIC不一致时，<b>优先参考BIC</b>（避免过拟合）
+</div>
+
+<p class="bridge">→ 模型选好了、阶数定好了、参数估计完了。接下来要回答：模型拟合得好不好？</p>
+
+<hr>
+
+<!-- ===== 第三步 ===== -->
+<h2 class="line2">第三步：残差是白噪声吗？（模型拟合好不好？）</h2>
+
+<h3>3.1 为什么要检验残差？</h3>
+
+<p>建完模型后提取残差 ε̂ₜ = Yₜ − Ŷₜ。如果模型把"确定部分"（自相关结构）都提取干净了，剩下的残差应该是<b>纯随机的</b>——也就是白噪声。</p>
+
+<p>如果残差不是白噪声（还有自相关），说明模型没提取干净，需要调整阶数重来。</p>
+
+<h3>3.2 白噪声三条件</h3>
+
+<div class="formula">
+  ① 均值恒定：E(εₜ) = μ（通常为0）<br>
+  ② 方差恒定：Var(εₜ) = σ²（同方差）<br>
+  ③ 完全无自相关：Cov(εₜ, εₛ) = 0, t≠s
+</div>
+
+<p class="explain">白噪声 = 宽平稳 + 无自相关。比宽平稳更严格（宽平稳允许有自相关，白噪声不允许）。</p>
+<p class="explain">严格程度排序：严格平稳 &gt; 白噪声 &gt; 宽平稳</p>
+
+<h3>3.3 怎么检验？</h3>
+
+<div class="card">
+<p><b>① ACF图观察法</b>：画残差的ACF图，所有ACF都在置信区间内 → 白噪声</p>
+
+<p style="margin-top:8px;"><b>② Box-Pierce检验（Q_BP）</b></p>
+<p class="indent">统计量：Q_BP = n · Σρ̂ₖ² ~ χ²(m)</p>
+
+<p style="margin-top:8px;"><b>③ Ljung-Box检验（Q_LB）★ BP的改进版，更准</b></p>
+<div class="formula">
+  Q_LB = n(n+2) · Σ[ρ̂ₖ²/(n−k)] ~ χ²(m)
+</div>
+
+<p><span class="tag tag-h0">H₀：残差是白噪声</span></p>
+<div class="vs-row">
+  <div class="vs-box vs-good"><b>不拒绝H₀</b>（p &gt; 5%）→ 残差是白噪声 → <b>模型OK ✓</b></div>
+  <div class="vs-box vs-bad"><b>拒绝H₀</b>（p &lt; 5%）→ 残差不是白噪声 → 调整模型阶数重来</div>
+</div>
+</div>
+
+<p class="warn">⚠ 白噪声检验的H₀方向特殊：H₀是"好消息"（是白噪声），<b>不拒绝H₀</b>才是好结果！和大多数检验相反。</p>
+
+<h3>3.4 白噪声的三大应用场景（考试爱出辨析题）</h3>
+
+<div class="card">
+<table>
+  <tr><th>对什么做白噪声检验</th><th>问的问题</th><th>是白噪声</th><th>不是白噪声</th></tr>
+  <tr><td class="left">① 对<b>平稳序列</b>做</td><td class="left">序列能预测吗？</td><td class="left">完全随机，不值得建模</td><td class="left">有自相关，可以建模 ✓</td></tr>
+  <tr><td class="left">② 对<b>模型残差</b>做</td><td class="left">模型拟合好吗？</td><td class="left">信息提取干净 ✓</td><td class="left">还有信息没提取，调整模型</td></tr>
+  <tr><td class="left">③ 对<b>ε²</b>做</td><td class="left">波动率恒定吗？</td><td class="left">方差恒定，无ARCH效应 ✓</td><td class="left">有ARCH效应，需建GARCH</td></tr>
+</table>
+</div>
+
+<p class="explain">同一个工具用在不同对象上，问的问题不同，"好消息"的方向也不同。第③种就是下一步要做的。</p>
+
+<p class="bridge">→ 残差是白噪声了（均值方程OK），但还没完——金融数据有个特殊现象：波动聚集。</p>
+
+<hr>
+
+<!-- ===== 第四步 ===== -->
+<h2 class="line2">第四步：波动率恒定吗？（需不需要给方差建模？）</h2>
+
+<h3>4.1 什么是波动聚集？</h3>
+
+<p>金融数据有个显著特征：<b>大波动之后往往跟着大波动，小波动之后跟着小波动</b>。虽然残差的均值为零、无自相关（看起来像白噪声），但<b>方差不恒定</b>——波动率在变化。</p>
+
+<!-- 波动聚集图 -->
+<div class="fig">
+<svg width="550" height="130" viewBox="0 0 550 130">
+  <rect x="0" y="0" width="550" height="125" fill="#F5EDE3" rx="6"/>
+  <text x="275" y="18" font-size="12" fill="#A0785A" text-anchor="middle" font-weight="bold">波动聚集现象：大波动后跟大波动，小波动后跟小波动</text>
+  <line x1="20" y1="65" x2="530" y2="65" stroke="#999" stroke-width="0.5" stroke-dasharray="3,2"/>
+  <!-- 小波动段 -->
+  <polyline points="25,62 35,68 45,60 55,70 65,63 75,67 85,61 95,69 105,64 115,66" fill="none" stroke="#A0785A" stroke-width="1.5"/>
+  <!-- 大波动段 -->
+  <polyline points="120,55 135,80 150,40 165,90 180,35 195,85 210,30 225,88 240,38 255,82 270,42" fill="none" stroke="#A0785A" stroke-width="2"/>
+  <!-- 小波动段 -->
+  <polyline points="275,60 290,70 305,58 320,72 335,62 350,68 365,60 380,70" fill="none" stroke="#A0785A" stroke-width="1.5"/>
+  <!-- 又大波动 -->
+  <polyline points="385,50 400,85 415,35 430,90 445,32 460,88 475,40 490,82 505,45 520,78" fill="none" stroke="#A0785A" stroke-width="2"/>
+  
+  <text x="70" y="105" font-size="10" fill="#666" text-anchor="middle">小波动</text>
+  <text x="195" y="105" font-size="10" fill="#B05050" text-anchor="middle" font-weight="bold">大波动</text>
+  <text x="330" y="105" font-size="10" fill="#666" text-anchor="middle">小波动</text>
+  <text x="455" y="105" font-size="10" fill="#B05050" text-anchor="middle" font-weight="bold">大波动</text>
+</svg>
+<div class="fig-caption">图3：金融序列的波动聚集——残差均值为零但方差在变</div>
+</div>
+
+<p>这意味着方差本身也是可以预测的——用过去的波动预测未来的波动。ARCH/GARCH就是给方差建的模型。</p>
+
+<p class="bridge">→ 先检验有没有这种现象（ARCH效应），有才建模。</p>
+
+<h3>4.2 ARCH-LM检验</h3>
+
+<div class="card">
+<p><b>检验什么：</b>残差的平方 ε̂²ₜ 有没有自相关。如果ε̂²ₜ有自相关 = 波动率可预测 = 有ARCH效应。</p>
+<p><b>做法：</b>ε̂²ₜ 对自身滞后项做自回归 → nR² ~ χ²(q)</p>
+<p><span class="tag tag-h0">H₀：不存在ARCH效应（所有αᵢ = 0）</span></p>
+<div class="vs-row">
+  <div class="vs-box vs-good"><b>不拒绝H₀</b> → 无ARCH效应 → 方差恒定 → <b>建模完成 ✓</b></div>
+  <div class="vs-box vs-bad"><b>拒绝H₀</b> → 有ARCH效应 → 波动率可预测 → 需要建GARCH模型</div>
+</div>
+<p class="explain">也可以对ε̂²ₜ做LB白噪声检验：ε̂²ₜ不是白噪声 → 有ARCH效应。</p>
+</div>
+
+<h3>4.3 ARCH模型</h3>
+
+<p>ARCH的思路：把时变的方差σ²ₜ也当作一个可以被预测的变量来建模——用过去的残差平方（冲击大小）预测未来的方差。</p>
+
+<div class="formula">
+  <b>ARCH(q)方差方程：</b><br>
+  σ²ₜ = α₀ + α₁ε²ₜ₋₁ + α₂ε²ₜ₋₂ + … + αqε²ₜ₋q<br><br>
+  含义：今天的波动率 = 一个基准水平(α₀) + 过去q天冲击大小的加权和<br>
+  昨天冲击大 → 今天方差大 → 今天大概率还是大波动
+</div>
+
+<p class="bridge">→ 但ARCH有个问题：要精确刻画波动率，可能需要很多滞后项（q很大）→ 参数太多。怎么简化？</p>
+
+<h3>4.4 GARCH模型（ARCH的升级版）</h3>
+
+<p>GARCH在ARCH基础上加了一项：<b>方差自身的滞后值</b>。这样只需要少量参数就能捕捉长期的波动持续性。</p>
+
+<div class="formula">
+  <b>GARCH(p,q)方差方程：</b><br>
+  σ²ₜ = ω + α₁ε²ₜ₋₁ + … + αqε²ₜ₋q + β₁σ²ₜ₋₁ + … + βpσ²ₜ₋p<br><br>
+  ω = 长期均值水平<br>
+  αᵢε²ₜ₋ᵢ = 过去冲击的影响（ARCH项 ≈ MA的思路）<br>
+  βⱼσ²ₜ₋ⱼ = 过去波动率的影响（GARCH项 ≈ AR的思路）<br><br>
+  <b>本质：ARMA用在方差上</b>——就像均值方程用ARMA，方差方程也用类似结构
+</div>
+
+<h4>ARCH vs GARCH 怎么区分？</h4>
+<div class="card">
+<table>
+  <tr><th></th><th>ARCH(q)</th><th>GARCH(p,q)</th></tr>
+  <tr><td class="left"><b>方差方程</b></td><td class="left">只有 ε²项（过去冲击）</td><td class="left">同时有 ε²项 + σ²项（过去冲击 + 过去方差）</td></tr>
+  <tr><td class="left"><b>读参数</b></td><td class="left">q = ε²滞后项个数</td><td class="left">p = σ²滞后项个数，q = ε²滞后项个数</td></tr>
+  <tr><td class="left"><b>判断方法</b></td><td class="left">方差方程里没有σ²ₜ₋ⱼ → ARCH</td><td class="left">方差方程里有σ²ₜ₋ⱼ → GARCH</td></tr>
+</table>
+<p class="explain">记忆：GARCH(p,q) 中 p对应σ²（方差自回归），q对应ε²（冲击项）。看求和符号上界直接读出p和q。</p>
+</div>
+
+<h4>GARCH(1,1)参数约束（考试必写）</h4>
+
+<div class="formula">
+  <b>σ²ₜ = ω + αε²ₜ₋₁ + βσ²ₜ₋₁</b><br><br>
+  参数约束：<br>
+  ω &gt; 0（基准方差为正）<br>
+  α ≥ 0，β ≥ 0（权重非负）<br>
+  <b>α + β &lt; 1</b>（弱平稳条件——严格小于！不是≤）<br><br>
+  α + β 越接近1 → 波动持续性越强（冲击衰减越慢）
+</div>
+
+<p class="warn">⚠ α + β &lt; 1 是严格不等号！判断题考过"α+β≤1"——错！必须严格小于。</p>
+
+<hr>
+
+<!-- ===== 完整流程 ===== -->
+<h2 class="line2">完整流程图</h2>
+
+<div class="fig">
+<svg width="850" height="320" viewBox="0 0 850 320">
+  <!-- Step 1 -->
+  <rect x="10" y="20" width="150" height="70" rx="8" fill="#708090"/>
+  <text x="85" y="48" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">① 平稳吗？</text>
+  <text x="85" y="65" font-size="10" fill="#C5CCD3" text-anchor="middle">ADF检验</text>
+  <text x="85" y="78" font-size="9" fill="#C5CCD3" text-anchor="middle">H₀:非平稳</text>
+  
+  <!-- 不平稳分支 -->
+  <line x1="85" y1="90" x2="85" y2="120" stroke="#B05050" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="30" y="120" width="110" height="35" rx="5" fill="#C07060"/>
+  <text x="85" y="142" font-size="11" fill="#fff" text-anchor="middle">差分 → I(d)</text>
+  <line x1="140" y1="137" x2="165" y2="55" stroke="#C07060" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow)"/>
+  <text x="55" y="112" font-size="9" fill="#B05050">不拒绝</text>
+  
+  <!-- 平稳 → Step 2 -->
+  <line x1="160" y1="55" x2="200" y2="55" stroke="#708090" stroke-width="1.5"/>
+  <text x="180" y="47" font-size="9" fill="#5A8060">拒绝✓</text>
+  
+  <rect x="200" y="20" width="150" height="70" rx="8" fill="#708090"/>
+  <text x="275" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">② 什么类型？</text>
+  <text x="275" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">ACF/PACF</text>
+  <text x="275" y="73" font-size="9" fill="#C5CCD3" text-anchor="middle">AIC/BIC定阶</text>
+  
+  <!-- Step 2 → 建模 -->
+  <line x1="350" y1="55" x2="390" y2="55" stroke="#708090" stroke-width="1.5"/>
+  
+  <rect x="390" y="25" width="120" height="60" rx="8" fill="#5F7080" stroke="#C5CCD3"/>
+  <text x="450" y="48" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">建ARMA</text>
+  <text x="450" y="65" font-size="10" fill="#C5CCD3" text-anchor="middle">均值方程</text>
+  
+  <!-- 建模 → 残差 -->
+  <line x1="510" y1="55" x2="540" y2="55" stroke="#708090" stroke-width="1.5"/>
+  
+  <!-- Step 3 -->
+  <rect x="540" y="20" width="150" height="70" rx="8" fill="#708090"/>
+  <text x="615" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">③ 残差OK吗？</text>
+  <text x="615" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">LB白噪声检验</text>
+  <text x="615" y="73" font-size="9" fill="#C5CCD3" text-anchor="middle">H₀:是白噪声</text>
+  
+  <!-- 不是白噪声 → 回去 -->
+  <line x1="615" y1="90" x2="615" y2="120" stroke="#B05050" stroke-width="1.5"/>
+  <rect x="560" y="120" width="110" height="35" rx="5" fill="#C07060"/>
+  <text x="615" y="142" font-size="11" fill="#fff" text-anchor="middle">调整阶数</text>
+  <line x1="560" y1="137" x2="275" y2="90" stroke="#C07060" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="590" y="112" font-size="9" fill="#B05050">拒绝</text>
+  
+  <!-- 是白噪声 → Step 4 -->
+  <line x1="690" y1="55" x2="720" y2="55" stroke="#708090" stroke-width="1.5"/>
+  <text x="708" y="47" font-size="9" fill="#5A8060">不拒绝✓</text>
+  
+  <!-- Step 4 -->
+  <rect x="720" y="20" width="120" height="70" rx="8" fill="#708090"/>
+  <text x="780" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">④ 波动恒定？</text>
+  <text x="780" y="58" font-size="10" fill="#C5CCD3" text-anchor="middle">ARCH-LM</text>
+  <text x="780" y="73" font-size="9" fill="#C5CCD3" text-anchor="middle">H₀:无ARCH</text>
+  
+  <!-- 无ARCH → 完成 -->
+  <rect x="730" y="195" width="100" height="40" rx="8" fill="#7A9E7E"/>
+  <text x="780" y="220" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">完成 ✓</text>
+  <line x1="755" y1="90" x2="755" y2="195" stroke="#7A9E7E" stroke-width="1.5"/>
+  <text x="738" y="115" font-size="9" fill="#5A8060">不拒绝✓</text>
+  
+  <!-- 有ARCH → GARCH -->
+  <line x1="805" y1="90" x2="805" y2="195" stroke="#C49A6C" stroke-width="1.5"/>
+  <text x="812" y="115" font-size="9" fill="#B05050">拒绝</text>
+  <rect x="750" y="255" width="100" height="55" rx="8" fill="#C49A6C"/>
+  <text x="800" y="275" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">GARCH</text>
+  <text x="800" y="290" font-size="9" fill="#fff" text-anchor="middle">方差方程</text>
+  <text x="800" y="302" font-size="8" fill="#fff" text-anchor="middle">α+β&lt;1</text>
+  <line x1="805" y1="195" x2="805" y2="255" stroke="#C49A6C" stroke-width="1.5"/>
+  
+  <rect x="610" y="265" width="110" height="40" rx="8" fill="#7A9E7E"/>
+  <text x="665" y="282" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">完成 ✓</text>
+  <text x="665" y="296" font-size="9" fill="#fff" text-anchor="middle">均值+方差</text>
+  <line x1="750" y1="285" x2="720" y2="285" stroke="#7A9E7E" stroke-width="1.5"/>
+</svg>
+<div class="fig-caption">图4：时间序列建模完整流程——四步走</div>
+</div>
+  </div>
+
+  <!-- 第三条线 -->
+  <div id="tab-line3" class="tab-content">
+<h2 class="line3">从第二条线到第三条线：从一个序列到两个序列</h2>
+
+<p>第二条线处理的是<b>一个</b>序列：拿到股价 → 检验平稳性 → 建AR/MA模型 → 预测未来走势。整个过程只涉及Y自己。</p>
+
+<p class="bridge">→ 但很多时候我们想研究的是两个变量之间的关系：收入影响消费吗？货币供应量影响GDP吗？</p>
+
+<p>如果两个序列都是平稳的，直接做OLS回归就行（第一条线的内容）。但金融/宏观数据大部分是<b>非平稳</b>的——GDP在涨、消费在涨、股价在涨。</p>
+
+<p class="bridge">→ 两个非平稳序列能直接回归吗？</p>
+
+<p><b>不能。</b>直接回归会产生<b>伪回归</b>——R²虚高，t检验显著，但变量之间根本没有真实关系。原因是两个序列各自有趋势（都在涨），趋势"撞"在一起造成虚假相关。</p>
+
+<p class="bridge">→ 那怎么办？有没有一种方法能区分"真的有关系"和"伪回归"？</p>
+
+<p><b>有，就是协整检验。</b></p>
+
+<!-- 总览流程 -->
+<div class="card">
+<div class="fig">
+<svg width="800" height="70" viewBox="0 0 800 70">
+  <rect x="5" y="10" width="130" height="50" rx="8" fill="#A0785A"/><text x="70" y="40" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">两个I(1)序列</text>
+  <text x="150" y="38" font-size="16" fill="#A0785A">→</text>
+  <rect x="170" y="10" width="140" height="50" rx="8" fill="#A0785A"/><text x="240" y="35" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">协整检验</text><text x="240" y="50" font-size="10" fill="#D4C0A8" text-anchor="middle">EG两步法</text>
+  <text x="325" y="38" font-size="16" fill="#A0785A">→</text>
+  <rect x="345" y="10" width="120" height="50" rx="8" fill="#7A9E7E"/><text x="405" y="40" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">有协整 ✓</text>
+  <text x="480" y="38" font-size="16" fill="#A0785A">→</text>
+  <rect x="500" y="10" width="100" height="50" rx="8" fill="#607D8B"/><text x="550" y="35" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">ECM</text><text x="550" y="50" font-size="10" fill="#C5CCD3" text-anchor="middle">短期调整</text>
+  <text x="610" y="38" font-size="12" fill="#A0785A">+</text>
+  <rect x="625" y="10" width="140" height="50" rx="8" fill="#607D8B"/><text x="695" y="35" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">格兰杰因果</text><text x="695" y="50" font-size="10" fill="#C5CCD3" text-anchor="middle">谁能预测谁？</text>
+</svg>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== 协整 ===== -->
+<h2 class="line3">1. 协整——两个非平稳序列有没有长期关系？</h2>
+
+<h3>1.1 什么是协整？</h3>
+
+<p>用一个生活化的比喻：</p>
+
+<p class="indent">想象两个喝醉的人从酒吧出来，各自走路歪歪扭扭（非平稳）。如果他们各走各的，那两人的距离会越来越远（无协整 → 伪回归）。但如果他们手拉手——虽然各自还是歪歪扭扭的，但两人之间的<b>距离始终保持在一个稳定范围内</b>，偏远了会自动拉回来。这就是协整。</p>
+
+<p class="bridge">→ 用数学说：</p>
+
+<div class="formula">
+  收入 Y 是 I(1)（非平稳，一直在涨）<br>
+  消费 X 也是 I(1)（非平稳，也在涨）<br><br>
+  但 <b>Y − βX</b>（两者的线性组合）是<b>平稳</b>的<br>
+  → 它在一个固定均值附近上下波动，偏离了会自动回来<br><br>
+  这个β就是长期均衡关系。例子：消费倾向 = 消费/收入，长期来看是稳定的。
+</div>
+
+<p><b>单整 vs 协整：</b></p>
+<div class="vs-row">
+  <div class="vs-box" style="background:#E8EDF0;border:1px solid #90B094;">
+    <b>单整</b>：针对<b>单个</b>序列<br>
+    差几次变平稳 = 几阶单整 I(d)
+  </div>
+  <div class="vs-box" style="background:#F5EDE3;border:1px solid #C9A87C;">
+    <b>协整</b>：针对<b>多个</b>序列<br>
+    各自不平稳，但线性组合平稳<br>
+    = 之间有长期均衡关系
+  </div>
+</div>
+
+<h3>1.2 怎么检验有没有协整？</h3>
+
+<p>两种方法，看变量个数选：</p>
+
+<div class="card">
+<table>
+  <tr><th>方法</th><th>适用</th><th>考试重要性</th></tr>
+  <tr><td class="left"><b>EG两步法（Engle-Granger）</b></td><td class="left">一阶协整：Y和单个X（两个变量）</td><td><span class="tag tag-warn">★ 重点必考</span></td></tr>
+  <tr><td class="left">Johansen检验（JJ）</td><td class="left">多阶协整：三个以上变量</td><td>了解名字即可</td></tr>
+</table>
+</div>
+
+<h3>1.3 EG两步法（重点展开）</h3>
+
+<p>思路非常简单：如果Y和X有协整，那它们的偏差（残差）应该是平稳的。所以：</p>
+
+<div class="card">
+<p><b>第一步：对Y和X做OLS</b> → 目的不是要回归结果，而是要拿到<b>残差</b></p>
+<div class="formula">
+  Y = β̂₀ + β̂₁X + û<br>
+  残差 û = Y − Ŷ = Y − β̂₀ − β̂₁X<br><br>
+  û 代表什么？Y和X之间的偏差——Y偏离了长期均衡关系多少
+</div>
+
+<p style="margin-top:10px;"><b>第二步：对残差 û 做ADF单位根检验</b> → 看残差平不平稳</p>
+
+<p><span class="tag tag-h0">H₀：残差不平稳（无协整）</span></p>
+<p>H₁：残差平稳（有协整）</p>
+
+<div class="vs-row">
+  <div class="vs-box vs-good">
+    <b>残差平稳 → 拒绝H₀ → 有协整 ✓</b><br>
+    Y和X的偏差会自动回归均值<br>
+    两者存在长期均衡关系
+  </div>
+  <div class="vs-box vs-bad">
+    <b>残差不平稳 → 不拒绝H₀ → 无协整</b><br>
+    Y和X的偏差越走越远<br>
+    → 伪回归，R²虚高无意义
+  </div>
+</div>
+</div>
+
+<!-- EG流程图 -->
+<div class="fig">
+<svg width="650" height="200" viewBox="0 0 650 200">
+  <!-- Step 1 -->
+  <rect x="10" y="30" width="150" height="55" rx="8" fill="#A0785A"/>
+  <text x="85" y="52" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">第一步：OLS回归</text>
+  <text x="85" y="70" font-size="10" fill="#D4C0A8" text-anchor="middle">Y = β̂₀ + β̂₁X + û</text>
+  
+  <text x="175" y="60" font-size="14" fill="#A0785A">→</text>
+  
+  <!-- 得到残差 -->
+  <rect x="195" y="35" width="100" height="45" rx="6" fill="#F5EDE3" stroke="#C9A87C"/>
+  <text x="245" y="55" font-size="11" fill="#8B6F50" text-anchor="middle" font-weight="bold">得到残差 û</text>
+  <text x="245" y="70" font-size="10" fill="#8B6F50" text-anchor="middle">û = Y − Ŷ</text>
+  
+  <text x="310" y="60" font-size="14" fill="#A0785A">→</text>
+  
+  <!-- Step 2 -->
+  <rect x="330" y="30" width="150" height="55" rx="8" fill="#A0785A"/>
+  <text x="405" y="52" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">第二步：对û做ADF</text>
+  <text x="405" y="70" font-size="10" fill="#D4C0A8" text-anchor="middle">H₀: û不平稳</text>
+  
+  <text x="495" y="60" font-size="14" fill="#A0785A">→</text>
+  
+  <!-- 分支 -->
+  <rect x="515" y="10" width="125" height="40" rx="6" fill="#7A9E7E"/>
+  <text x="577" y="25" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">拒绝 → 有协整 ✓</text>
+  <text x="577" y="42" font-size="9" fill="#fff" text-anchor="middle">长期均衡关系存在</text>
+  
+  <rect x="515" y="65" width="125" height="40" rx="6" fill="#C07060"/>
+  <text x="577" y="80" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">不拒绝 → 伪回归 ✗</text>
+  <text x="577" y="97" font-size="9" fill="#fff" text-anchor="middle">R²虚高无真实关系</text>
+  
+  <!-- 经济含义 -->
+  <rect x="10" y="120" width="630" height="65" rx="6" fill="#F5EDE3" stroke="#C9A87C"/>
+  <text x="25" y="140" font-size="12" fill="#8B6F50" font-weight="bold">经济含义举例：</text>
+  <text x="25" y="158" font-size="11" fill="#555">收入Y和消费X各自都在涨（非平稳），但消费倾向（消费/收入的比例）是稳定的。</text>
+  <text x="25" y="175" font-size="11" fill="#555">残差 û = 实际消费 − 均衡消费 → 如果û平稳，说明偏离了会自动回来 → 有协整。</text>
+</svg>
+<div class="fig-caption">图1：EG两步法流程</div>
+</div>
+
+<p class="warn">⚠ 此处ADF的临界值与普通ADF不同——残差是估计出来的（不是原始数据），标准更严格</p>
+<p class="warn">⚠ 两个I(1)变量不代表一定有协整！必须做EG检验才知道（试卷2单选Q2考过）</p>
+<p class="warn">⚠ 伪回归判断标志：R² > DW 时高度怀疑</p>
+
+<hr>
+
+<!-- ===== ECM ===== -->
+<h2 class="line3">2. ECM——偏离了长期均衡怎么调整回来？</h2>
+
+<h3>2.1 为什么需要ECM？</h3>
+
+<p>协整告诉我们Y和X<b>长期</b>存在均衡关系。但<b>短期</b>内可能会偏离——比如某个季度消费突然偏高（超出均衡水平）。</p>
+
+<p class="bridge">→ 偏离了之后怎么办？会不会一直偏下去？</p>
+
+<p>不会。协整的含义就是"偏离了会自动回来"。ECM（误差修正模型）就是描述<b>这个"回来"的过程</b>——回来多快、怎么回来。</p>
+
+<h3>2.2 ECM模型</h3>
+
+<div class="formula">
+  <b>ΔYₜ = α · ûₜ₋₁ + 短期动态项 + vₜ</b><br><br>
+  ûₜ₋₁ = Yₜ₋₁ − β̂Xₜ₋₁ → 上一期偏离长期均衡的程度（误差修正项）<br>
+  α → 调整速度（必须 &lt; 0 才能纠偏）<br>
+  短期动态项 → ΔXₜ 等（短期内X变化对Y的即时影响）<br>
+  vₜ → 随机扰动
+</div>
+
+<h4>α 为什么必须小于零？</h4>
+
+<p class="indent">假设上一期Y偏高了（ûₜ₋₁ > 0，实际消费超出均衡水平）。</p>
+<p class="indent">α < 0 → α · ûₜ₋₁ < 0 → ΔYₜ < 0 → 本期Y向下调整 → <b>往均衡方向回来</b>。</p>
+<p class="indent">反过来，上一期Y偏低了（ûₜ₋₁ < 0），α · ûₜ₋₁ > 0 → Y向上调整 → 也是往均衡方向回来。</p>
+
+<!-- ECM纠偏图 -->
+<div class="fig">
+<svg width="500" height="170" viewBox="0 0 500 170">
+  <!-- 均衡线 -->
+  <line x1="30" y1="85" x2="470" y2="85" stroke="#A0785A" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="475" y="88" font-size="10" fill="#A0785A">长期均衡</text>
+  
+  <!-- Y的实际路径 -->
+  <polyline points="40,85 80,60 120,50 160,65 200,80 240,88 280,95 320,105 360,95 400,88 440,85" fill="none" stroke="#607D8B" stroke-width="2.5"/>
+  <text x="120" y="43" font-size="10" fill="#607D8B" font-weight="bold">Y偏高了</text>
+  <text x="320" y="118" font-size="10" fill="#607D8B" font-weight="bold">Y偏低了</text>
+  
+  <!-- 向下调整箭头 -->
+  <line x1="140" y1="55" x2="180" y2="75" stroke="#B05050" stroke-width="1.5" marker-end="url(#arrowred)"/>
+  <text x="155" y="60" font-size="9" fill="#B05050">α·û &lt; 0</text>
+  <text x="155" y="72" font-size="9" fill="#B05050">往下调</text>
+  
+  <!-- 向上调整箭头 -->
+  <line x1="340" y1="108" x2="380" y2="92" stroke="#5A8060" stroke-width="1.5"/>
+  <text x="345" y="122" font-size="9" fill="#5A8060">α·û &gt; 0</text>
+  <text x="345" y="134" font-size="9" fill="#5A8060">往上调</text>
+  
+  <text x="250" y="160" font-size="11" fill="#666" text-anchor="middle">不管偏高还是偏低，α&lt;0保证Y总是往均衡方向回来</text>
+</svg>
+<div class="fig-caption">图2：ECM的纠偏机制——α&lt;0确保偏离后自动回归均衡</div>
+</div>
+
+<h3>2.3 ECM的建模步骤</h3>
+
+<div class="formula">
+  <b>第一步</b>：OLS回归 Y = β̂₀ + β̂₁X → 建立长期均衡关系<br>
+  <b>第二步</b>：用残差 û 构建误差修正方程 → 描述短期调整机制<br><br>
+  一句话：<b>EG检验告诉你"有没有长期关系"，ECM告诉你"偏离了怎么回来"</b>
+</div>
+
+<p class="warn">⚠ 必须先确认有协整（EG检验通过），才能建ECM。没有协整就建ECM没有意义。</p>
+
+<hr>
+
+<!-- ===== 格兰杰因果 ===== -->
+<h2 class="line3">3. 格兰杰因果——谁能预测谁？</h2>
+
+<h3>3.1 为什么还需要格兰杰因果？</h3>
+
+<p>协整告诉我们Y和X有长期关系，ECM告诉我们偏离了怎么调整。但还有一个问题没回答：</p>
+
+<p class="bridge">→ 到底是X引起了Y的变化，还是Y引起了X的变化？还是互相影响？</p>
+
+<p>格兰杰因果检验就是回答这个问题的。</p>
+
+<h3>3.2 格兰杰因果的核心思想</h3>
+
+<p><b>"能预测"不等于"格兰杰原因"。</b>格兰杰因果的定义比"能预测"更严格：</p>
+
+<div class="formula">
+  在<b>已经用Y自身历史</b>预测Y的基础上，再加入X的历史，如果预测变得<b>更准</b>了<br>
+  → X是Y的格兰杰原因<br><br>
+  关键词：<b>额外</b>提高预测。不是说X能预测Y就行，而是在Y已经用了自己历史的前提下，X还能<b>额外</b>帮忙。
+</div>
+
+<p class="explain">类比：你已经根据昨天的天气预报了今天的天气（Y的历史）。然后有人告诉你昨天的气压数据（X的历史）。如果加了气压后预测变准了，那气压就是天气的"格兰杰原因"。如果加了也没变准，气压就不是。</p>
+
+<h3>3.3 怎么检验？</h3>
+
+<p>构建两个方程，分别检验交叉项系数：</p>
+
+<div class="formula">
+  <b>方程1</b>（X能不能预测Y？）：Yₜ = Σαᵢ·Xₜ₋ᵢ + Σβᵢ·Yₜ₋ᵢ + μ₁ₜ<br>
+  <b>方程2</b>（Y能不能预测X？）：Xₜ = Σλᵢ·Yₜ₋ᵢ + Σδᵢ·Xₜ₋ᵢ + μ₂ₜ<br><br>
+  <b>只看交叉项</b>（α和λ），不看自身滞后项（β和δ）
+</div>
+
+<div class="card">
+<p><b>检验X是不是Y的格兰杰原因：</b></p>
+<p><span class="tag tag-h0">H₀：α₁ = α₂ = … = αₚ = 0（X的滞后项系数全为零 → X对Y没有额外预测力）</span></p>
+<p>检验方法：F检验</p>
+<div class="vs-row">
+  <div class="vs-box vs-bad"><b>拒绝H₀</b>：α ≠ 0 → X的历史值对Y有额外解释力 → <b>X是Y的格兰杰原因</b></div>
+  <div class="vs-box vs-good"><b>不拒绝H₀</b>：α = 0 → 加了X也没变准 → X不是Y的格兰杰原因</div>
+</div>
+</div>
+
+<h3>3.4 四种情况</h3>
+
+<div class="card">
+<table>
+  <tr><th>情况</th><th>条件</th><th>含义</th></tr>
+  <tr><td class="left"><b>X → Y</b></td><td>α ≠ 0，λ = 0</td><td class="left">X是Y的格兰杰原因，Y不是X的</td></tr>
+  <tr><td class="left"><b>Y → X</b></td><td>α = 0，λ ≠ 0</td><td class="left">Y是X的格兰杰原因，X不是Y的</td></tr>
+  <tr><td class="left"><b>X ↔ Y</b></td><td>α ≠ 0，λ ≠ 0</td><td class="left">互为格兰杰原因</td></tr>
+  <tr><td class="left"><b>无因果</b></td><td>α = 0，λ = 0</td><td class="left">谁也不是谁的格兰杰原因</td></tr>
+</table>
+<p class="explain">判断方法：只看<b>交叉项</b>（α和λ），不看自身滞后项（β和δ）</p>
+</div>
+
+<h3>3.5 考试实例：投资额 vs 销售额</h3>
+
+<div class="card">
+<table>
+  <tr><th>检验方向</th><th>F统计量</th><th>p值</th><th>判断</th><th>结论</th></tr>
+  <tr><td class="left">投资额 → 销售额</td><td>1.681</td><td>0.148</td><td class="left">p=0.148 > 0.05 → 率大 → 不拒绝H₀</td><td class="left">投资额<b>不是</b>销售额的格兰杰原因</td></tr>
+  <tr><td class="left">销售额 → 投资额</td><td>9.575</td><td>0.000</td><td class="left">p=0.000 < 0.05 → 率小 → 拒绝H₀</td><td class="left">销售额<b>是</b>投资额的格兰杰原因</td></tr>
+</table>
+<p style="margin-top:6px;"><b>综合结论：</b>单向格兰杰因果，方向是<b>销售额 → 投资额</b></p>
+<p class="explain">白话翻译：已知投资额自身历史，再加销售额历史，对投资额的预测变准了。但反过来，加投资额历史对销售额的预测没变准。说明是销售先动，投资跟着动。</p>
+</div>
+
+<p class="warn">⚠ 格兰杰因果是<b>统计预测关系</b>，不是真实因果！它只说明"X的历史能额外预测Y"，不说明"X导致了Y"。结论依赖模型设定（滞后阶数、有没有遗漏第三变量），换设定可能翻转。</p>
+
+<p class="warn">⚠ 每个案例必须写清三件事：H₀是什么、数字是多少（F值/p值）、白话翻译结论</p>
+
+<hr>
+
+<!-- ===== 完整流程 ===== -->
+<h2 class="line3">4. 完整流程图</h2>
+
+<div class="fig">
+<svg width="750" height="280" viewBox="0 0 750 280">
+  <!-- 起点 -->
+  <rect x="10" y="30" width="130" height="50" rx="8" fill="#A0785A"/>
+  <text x="75" y="50" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">两个I(1)序列</text>
+  <text x="75" y="68" font-size="9" fill="#D4C0A8" text-anchor="middle">各自非平稳</text>
+  
+  <line x1="140" y1="55" x2="180" y2="55" stroke="#A0785A" stroke-width="1.5"/>
+  
+  <!-- EG检验 -->
+  <rect x="180" y="20" width="160" height="70" rx="8" fill="#A0785A"/>
+  <text x="260" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">协整检验（EG）</text>
+  <text x="260" y="58" font-size="10" fill="#D4C0A8" text-anchor="middle">① OLS得残差û</text>
+  <text x="260" y="72" font-size="10" fill="#D4C0A8" text-anchor="middle">② 对û做ADF</text>
+  <text x="260" y="85" font-size="9" fill="#D4C0A8" text-anchor="middle">H₀: 无协整</text>
+  
+  <!-- 无协整 -->
+  <line x1="260" y1="90" x2="260" y2="130" stroke="#C07060" stroke-width="1.5"/>
+  <text x="270" y="115" font-size="9" fill="#C07060">不拒绝</text>
+  <rect x="190" y="130" width="140" height="45" rx="6" fill="#C07060"/>
+  <text x="260" y="150" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">伪回归 ✗</text>
+  <text x="260" y="165" font-size="9" fill="#fff" text-anchor="middle">R²虚高，结论不可信</text>
+  
+  <!-- 有协整 -->
+  <line x1="340" y1="55" x2="400" y2="55" stroke="#7A9E7E" stroke-width="1.5"/>
+  <text x="370" y="47" font-size="9" fill="#5A8060">拒绝 ✓</text>
+  
+  <rect x="400" y="25" width="120" height="60" rx="8" fill="#7A9E7E"/>
+  <text x="460" y="48" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">有协整 ✓</text>
+  <text x="460" y="65" font-size="9" fill="#fff" text-anchor="middle">长期均衡关系</text>
+  
+  <line x1="520" y1="45" x2="570" y2="45" stroke="#607D8B" stroke-width="1.5"/>
+  <line x1="520" y1="65" x2="570" y2="65" stroke="#607D8B" stroke-width="1.5"/>
+  
+  <!-- ECM -->
+  <rect x="570" y="15" width="160" height="55" rx="8" fill="#607D8B"/>
+  <text x="650" y="35" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">ECM 误差修正模型</text>
+  <text x="650" y="50" font-size="10" fill="#C5CCD3" text-anchor="middle">ΔYₜ = α·ûₜ₋₁ + ...</text>
+  <text x="650" y="63" font-size="9" fill="#C5CCD3" text-anchor="middle">α&lt;0 → 纠偏回均衡</text>
+  
+  <!-- 格兰杰 -->
+  <rect x="570" y="85" width="160" height="70" rx="8" fill="#607D8B"/>
+  <text x="650" y="105" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">格兰杰因果检验</text>
+  <text x="650" y="120" font-size="10" fill="#C5CCD3" text-anchor="middle">谁能预测谁？</text>
+  <text x="650" y="135" font-size="9" fill="#C5CCD3" text-anchor="middle">H₀: X滞后项系数=0</text>
+  <text x="650" y="148" font-size="8" fill="#C5CCD3" text-anchor="middle">⚠ 统计预测 ≠ 真实因果</text>
+
+  <!-- 联立方程补充 -->
+  <rect x="10" y="200" width="720" height="65" rx="6" fill="#F5EDE3" stroke="#C9A87C"/>
+  <text x="25" y="220" font-size="12" fill="#8B6F50" font-weight="bold">补充：联立方程中的内生/外生/先决变量</text>
+  <text x="25" y="238" font-size="11" fill="#555">内生变量：方程组中有方程解释它（出现在某个等式左边）→ 由系统内部决定 → Cov(X,U)≠0 → OLS有偏</text>
+  <text x="25" y="253" font-size="11" fill="#555">外生变量：方程组中没有方程解释它（只在右边出现）→ 由外部给定 | 先决变量：外生变量 + 内生变量的滞后项</text>
+</svg>
+<div class="fig-caption">图3：多序列分析完整流程</div>
+</div>
+
+<hr>
+
+<!-- ===== 三条线总览 ===== -->
+<h2 class="line3">附：三条线如何串联？</h2>
+
+<div class="card">
+<div class="fig">
+<svg width="800" height="220" viewBox="0 0 800 220">
+  <!-- 第一条线 -->
+  <rect x="10" y="10" width="240" height="80" rx="8" fill="#607D8B"/>
+  <text x="130" y="35" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">第一条线：OLS基础</text>
+  <text x="130" y="55" font-size="10" fill="#C5CCD3" text-anchor="middle">古典假定 → 检验违反 → 修正</text>
+  <text x="130" y="72" font-size="10" fill="#C5CCD3" text-anchor="middle">处理截面数据 / 平稳数据</text>
+  
+  <!-- 箭头+说明 -->
+  <line x1="250" y1="50" x2="300" y2="50" stroke="#999" stroke-width="1"/>
+  <text x="275" y="42" font-size="9" fill="#999" text-anchor="middle">假定④被违反</text>
+  <text x="275" y="62" font-size="9" fill="#999" text-anchor="middle">→ 利用自相关</text>
+  
+  <!-- 第二条线 -->
+  <rect x="300" y="10" width="240" height="80" rx="8" fill="#708090"/>
+  <text x="420" y="35" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">第二条线：时间序列</text>
+  <text x="420" y="55" font-size="10" fill="#C5CCD3" text-anchor="middle">平稳性→建模→白噪声→GARCH</text>
+  <text x="420" y="72" font-size="10" fill="#C5CCD3" text-anchor="middle">处理单个时间序列</text>
+  
+  <!-- 箭头+说明 -->
+  <line x1="540" y1="50" x2="590" y2="50" stroke="#999" stroke-width="1"/>
+  <text x="565" y="42" font-size="9" fill="#999" text-anchor="middle">多个序列</text>
+  <text x="565" y="62" font-size="9" fill="#999" text-anchor="middle">→ 各自非平稳</text>
+  
+  <!-- 第三条线 -->
+  <rect x="590" y="10" width="200" height="80" rx="8" fill="#A0785A"/>
+  <text x="690" y="35" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">第三条线：多序列</text>
+  <text x="690" y="55" font-size="10" fill="#D4C0A8" text-anchor="middle">协整→ECM→格兰杰</text>
+  <text x="690" y="72" font-size="10" fill="#D4C0A8" text-anchor="middle">研究序列间的关系</text>
+  
+  <!-- 底部总结 -->
+  <rect x="10" y="120" width="780" height="85" rx="8" fill="#F5F2ED" stroke="#D5D0C8"/>
+  <text x="400" y="145" font-size="13" fill="#555" text-anchor="middle" font-weight="bold">三条线的递进关系</text>
+  <text x="400" y="168" font-size="11" fill="#666" text-anchor="middle">第一条线是基础（OLS），第二条线是拓展（单个序列的时间维度），第三条线是进一步拓展（多个序列之间的关系）</text>
+  <text x="400" y="190" font-size="11" fill="#666" text-anchor="middle">每条线都在解决一个核心问题：第一条→β̂准不准？ 第二条→序列怎么预测？ 第三条→序列之间什么关系？</text>
+</svg>
+</div>
+</div>
+  </div>
+
+  <!-- 模拟试卷 -->
+  <div id="tab-exam0" class="tab-content">
+<!-- ========== 第一部分 ========== -->
+<h2 class="sec1">一、计量经济学</h2>
+
+<!-- Q1 -->
+<div class="q-box">
+<div class="q-title">Q1 基本假设相关（三合一题）</div>
+<p>（1）名词解释：简述OLS的基本假设及其含义</p>
+<p>（2）简述判断假设违反的方法</p>
+<p>（3）假设违反的后果 + 补救措施</p>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<h4>（1）六条古典假定</h4>
+<table>
+  <tr><th>编号</th><th>假定</th><th>公式</th><th>含义</th></tr>
+  <tr><td>①</td><td class="left">X非随机</td><td>X是确定性的</td><td class="left">完全随机的东西无法预测</td></tr>
+  <tr><td>②</td><td class="left">零均值</td><td>E(Uᵢ) = 0</td><td class="left">偏离有正有负，但平均为零</td></tr>
+  <tr><td>③</td><td class="left">同方差</td><td>Var(Uᵢ) = σ²</td><td class="left">偏离的波动前后一致</td></tr>
+  <tr><td>④</td><td class="left">无自相关</td><td>Cov(Uᵢ,Uⱼ)=0</td><td class="left">前一期残差不影响后一期</td></tr>
+  <tr><td>⑤</td><td class="left">正态分布</td><td>Uᵢ ~ N(0,σ²)</td><td class="left">大部分偏离集中在零附近</td></tr>
+  <tr><td>⑥</td><td class="left">无完全共线性</td><td>X'X可逆</td><td class="left">解释变量之间不能完全线性相关</td></tr>
+</table>
+
+<h4>（2）判断方法</h4>
+<table>
+  <tr><th>违反类型</th><th>检验方法</th><th>H₀</th></tr>
+  <tr><td class="left">异方差（③被违反）</td><td class="left">散点图 / GQ / <b>White ★</b> / Glejser / BP</td><td>不存在异方差</td></tr>
+  <tr><td class="left">自相关（④被违反）</td><td class="left">DW（一阶）/ <b>BG-LM ★</b>（高阶）</td><td>不存在自相关</td></tr>
+  <tr><td class="left">共线性（⑥被违反）</td><td class="left">|Rᵢⱼ|≈1 / VIF>10 / F大R²大t小 / CI>20</td><td>（无假设检验形式）</td></tr>
+  <tr><td class="left">内生性（外生性被违反）</td><td class="left">Hausman检验</td><td>不存在内生性</td></tr>
+</table>
+
+<h4>（3）后果 + 补救</h4>
+<table>
+  <tr><th>违反类型</th><th>无偏性</th><th>一致性</th><th>最小方差</th><th>t/F</th><th>修正</th></tr>
+  <tr><td class="left">多重共线性</td><td>✓</td><td>✓</td><td style="color:#B05050;">✗</td><td class="left">t失效，F和R²不受影响</td><td class="left">剔除变量/岭回归</td></tr>
+  <tr><td class="left">异方差</td><td>✓</td><td>✓</td><td style="color:#B05050;">✗</td><td class="left">都不可靠</td><td class="left">WLS/稳健标准误</td></tr>
+  <tr><td class="left">自相关</td><td>✓</td><td>✓</td><td style="color:#B05050;">✗</td><td class="left">都不可靠</td><td class="left">广义差分/GLS</td></tr>
+  <tr style="background:#F5EDE3;"><td class="left" style="color:#B05050;font-weight:bold;">内生性</td><td style="color:#B05050;">✗有偏</td><td style="color:#B05050;">✗不一致</td><td style="color:#B05050;">✗</td><td class="left">都不可靠</td><td class="left">IV/2SLS</td></tr>
+</table>
+<p class="warn">⚠ 只有内生性破坏无偏性和一致性，其他三种只影响效率</p>
+</div>
+</details>
+
+
+<!-- Q2 -->
+<div class="q-box">
+<div class="q-title">Q2 模型拟合效果的评判</div>
+<p>（1）拟合优度</p>
+<p>（2）是否有异方差</p>
+<p>（3）是否有结构突变</p>
+<p>（4）约束条件（受约束F检验）</p>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<h4>（1）拟合优度</h4>
+<div class="formula">
+  R² = ESS/TSS = 1 − RSS/TSS（越接近1越好）<br>
+  调整R²：惩罚多余变量，加无用变量可能下降<br>
+  AIC/BIC：越小越好，BIC惩罚更重，不一致时优先BIC
+</div>
+
+<h4>（2）异方差检验</h4>
+<p>White检验最通用：残差²对X及交叉项/平方项回归 → nR²~χ²，H₀:不存在异方差。读表看Obs*R-squared行。</p>
+
+<h4>（3）结构突变：Chow检验</h4>
+<div class="formula">
+  F = [(RSS_pooled − RSS₁ − RSS₂)/(k+1)] / [(RSS₁+RSS₂)/(n−2(k+1))]<br>
+  H₀：两段参数相同 → 拒绝H₀ → 存在结构突变 → 分段建模或加时间虚拟变量
+</div>
+
+<h4>（4）受约束F检验</h4>
+<div class="formula">
+  F = [(RSS_R − RSS_UR)/q] / [RSS_UR/(n−k−1)]<br>
+  q = 约束个数；RSS_R ≥ RSS_UR（加约束只会使残差变大）<br>
+  H₀：约束成立 → 拒绝则约束不成立
+</div>
+<p class="explain">Chow检验是受约束F检验的特例（约束 = "两段系数完全相同"）</p>
+</div>
+</details>
+
+
+<hr>
+
+<!-- ========== 第二部分 ========== -->
+<h2 class="sec2">二、时间序列数据</h2>
+
+<!-- Q1 模型识别 -->
+<div class="q-box">
+<div class="q-title">Q1 模型识别：写出以下模型的类型和参数</div>
+<div class="formula">
+  (1) Yₜ = c + α₁Yₜ₋₁ + α₂Yₜ₋₂ + εₜ<br>
+  (2) Yₜ = μ + θ₁εₜ₋₁ + θ₂εₜ₋₂ + θ₃εₜ₋₃<br>
+  (3) εₜ² = α₀ + α₁ε²ₜ₋₁ + α₂ε²ₜ₋₂ + α₃ε²ₜ₋₃ + α₄ε²ₜ₋₄<br>
+  (4) σ²ₜ = ω + Σᵢ₌₁⁴ αᵢε²ₜ₋ᵢ + Σⱼ₌₁⁶ βⱼσ²ₜ₋ⱼ<br>
+  (5) Yₜ = c + α₁Yₜ₋₁ + α₂Yₜ₋₂ + εₜ + θ₁εₜ₋₁ + θ₂εₜ₋₂ + θ₃εₜ₋₃
+</div>
+<p><b>追问：我国股票适合用什么模型解释？</b></p>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+<table>
+  <tr><th>编号</th><th>模型</th><th>识别依据</th><th>参数</th></tr>
+  <tr><td>(1)</td><td class="left"><b>AR(2)</b></td><td class="left">只有Y的滞后项，2个</td><td>p = 2</td></tr>
+  <tr><td>(2)</td><td class="left"><b>MA(3)</b></td><td class="left">只有ε的滞后项，3个</td><td>q = 3</td></tr>
+  <tr><td>(3)</td><td class="left"><b>ARCH(4)</b></td><td class="left">方差方程只有ε²项，4个</td><td>q = 4</td></tr>
+  <tr><td>(4)</td><td class="left"><b>GARCH(6,4)</b></td><td class="left">方差方程有ε²项(4个) + σ²项(6个)</td><td>p=6, q=4</td></tr>
+  <tr><td>(5)</td><td class="left"><b>ARMA(2,3)</b></td><td class="left">既有Y滞后(2个)又有ε滞后(3个)</td><td>p=2, q=3</td></tr>
+</table>
+
+<h4>识别口诀</h4>
+<ul>
+  <li>只有Y的滞后项 → <b>AR</b>，数滞后项个数 = p</li>
+  <li>只有ε的滞后项 → <b>MA</b>，数滞后项个数 = q</li>
+  <li>两者都有 → <b>ARMA</b></li>
+  <li>方差方程只有ε²项 → <b>ARCH</b></li>
+  <li>方差方程有ε²项 + σ²项 → <b>GARCH</b>，p=σ²项个数，q=ε²项个数</li>
+</ul>
+
+<h4>追问：股票适合什么模型？</h4>
+<p><b>ARMA(p,q)</b>。其中AR部分反映股价变化的<b>动态惯性</b>——过去的价格对当前有持续影响；MA部分反映<b>冲击因素</b>的阶段性影响——过去的预测误差对当前值的影响。</p>
+<p class="explain">如果波动率也需要建模（波动聚集现象），则在ARMA基础上加GARCH。</p>
+</div>
+</details>
+
+
+<!-- Q2 白噪声 -->
+<div class="q-box">
+<div class="q-title">Q2 简述如何判断白噪声，并举例应用</div>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<h4>白噪声定义</h4>
+<div class="formula">
+  三个条件：<br>
+  ① E(εₜ) = μ（均值恒定）<br>
+  ② Var(εₜ) = σ²（方差恒定）<br>
+  ③ Cov(εₜ, εₛ) = 0, t≠s（完全无自相关）<br><br>
+  白噪声 = 宽平稳 + 无自相关，比宽平稳更严格
+</div>
+
+<h4>判断方法（三种）</h4>
+<ol>
+  <li><b>ACF图观察法</b>：画残差的ACF图，若绑大多数都落在置信区间边界内 → 白噪声</li>
+  <li><b>Box-Pierce检验</b>：Q_BP = n · Σρ̂ₖ² ~ χ²(m)，H₀:是白噪声</li>
+  <li><b>Ljung-Box检验 ★</b>（BP改进版）：Q_LB = n(n+2) · Σ[ρ̂ₖ²/(n−k)] ~ χ²(m)，H₀:是白噪声</li>
+</ol>
+<p class="warn">⚠ H₀是"好消息"（是白噪声），不拒绝H₀才是好结果——和大多数检验方向相反！</p>
+
+<h4>三大应用场景</h4>
+<table>
+  <tr><th>对什么做</th><th>问的问题</th><th>是白噪声</th><th>不是白噪声</th></tr>
+  <tr><td class="left">① 对平稳序列</td><td class="left">能预测吗？</td><td class="left">完全随机，不值得建模</td><td class="left">有自相关，可以建模 ✓</td></tr>
+  <tr><td class="left">② 对模型残差</td><td class="left">拟合好吗？</td><td class="left">信息提取干净 ✓</td><td class="left">还有信息没提取，调整模型</td></tr>
+  <tr><td class="left">③ 对ε²</td><td class="left">波动恒定吗？</td><td class="left">无ARCH效应 ✓</td><td class="left">有ARCH效应，需建GARCH</td></tr>
+</table>
+</div>
+</details>
+
+
+<!-- Q3 平稳性 -->
+<div class="q-box">
+<div class="q-title">Q3 如何进行平稳性检验？</div>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<h4>三种方法</h4>
+<ol>
+  <li><b>时间路径图</b>：直接画图看趋势和方差变化（直观但不严格）</li>
+  <li><b>ACF图</b>：平稳→ACF快速衰减；非平稳→ACF缓慢衰减</li>
+  <li><b>单位根检验（ADF）★</b>：
+    <ul>
+      <li>写出特征方程，看有没有模长=1的根（单位根）</li>
+      <li>有单位根 → 非平稳；所有根在单位圆外（模>1）→ 平稳</li>
+      <li>H₀：存在单位根（非平稳），拒绝H₀ = 平稳 = 好消息</li>
+      <li>DF针对AR(1)残差无自相关；ADF拓展到高阶/残差有自相关</li>
+    </ul>
+  </li>
+</ol>
+<p class="warn">⚠ 拒绝H₀才是好消息——方向反直觉！ADF使用DF分布临界值，不是标准t分布</p>
+</div>
+</details>
+
+
+<!-- Q4 模型识别 -->
+<div class="q-box">
+<div class="q-title">Q4 如何进行模型识别？</div>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<h4>方法一：ACF/PACF图</h4>
+<table>
+  <tr><th>ACF</th><th>PACF</th><th>选什么模型</th></tr>
+  <tr><td>拖尾</td><td><b>截尾</b>（p阶后=0）</td><td><b>AR(p)</b></td></tr>
+  <tr><td><b>截尾</b>（q阶后=0）</td><td>拖尾</td><td><b>MA(q)</b></td></tr>
+  <tr><td>拖尾</td><td>拖尾</td><td><b>ARMA(p,q)</b></td></tr>
+</table>
+<p class="explain">速记：AR→PACF截，MA→ACF截，ARMA→全拖</p>
+
+<h4>方法二：信息准则</h4>
+<div class="formula">
+  AIC = ln(σ̂²) + 2k/n &nbsp; &nbsp; BIC = ln(σ̂²) + k·ln(n)/n<br>
+  越小越好。在候选模型中选AIC/BIC最小的。不一致时优先BIC。
+</div>
+</div>
+</details>
+
+
+<hr>
+
+<!-- ========== 第三部分 ========== -->
+<h2 class="sec3">三、面板数据</h2>
+
+<!-- Q1 建模 -->
+<div class="q-box">
+<div class="q-title">Q1 根据下面给出的变量，建立合适的模型</div>
+<p>Ⅰ. 2010-2022 云南各地州的人均收入、消费支出、教育投入与出生率</p>
+<p>Ⅱ. 2021年北京各区犯罪发生率</p>
+<p>Ⅲ. 2002-2015每年的GDP</p>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+<table>
+  <tr><th>数据</th><th>类型</th><th>判断依据</th><th>模型</th></tr>
+  <tr><td class="left">Ⅰ. 云南各地州×多年</td><td><b>面板数据</b></td><td class="left">多个个体（各地州）+ 多个时期（2010-2022）</td><td class="left">面板回归<br>Y = β₀ + β₁X₁ + β₂X₂ + β₃X₃ + uᵢₜ<br>Y=出生率, X₁=人均收入, X₂=消费支出, X₃=教育投入</td></tr>
+  <tr><td class="left">Ⅱ. 北京各区×某一年</td><td><b>截面数据</b></td><td class="left">多个个体（各区）但只有一个时期（2021年）</td><td class="left">OLS截面回归</td></tr>
+  <tr><td class="left">Ⅲ. 一个国家×多年</td><td><b>时间序列</b></td><td class="left">一个个体（一国）+ 多个时期（2002-2015）</td><td class="left">ARMA(p,q)等时序模型</td></tr>
+</table>
+
+<p class="explain"><b>区分关键</b>：看有几个维度。只有个体维度→截面数据；只有时间维度→时间序列；两者都有→面板数据。</p>
+</div>
+</details>
+
+
+<!-- Q2 固定效应vs随机效应 -->
+<div class="q-box">
+<div class="q-title">Q2 什么是固定效应模型和随机效应模型？如何进行模型识别？</div>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<p>面板数据模型：Yᵢₜ = α₀ + β₁Xᵢₜ + uᵢ + εᵢₜ，其中 uᵢ 是个体效应（个体之间的差异）。</p>
+
+<p class="bridge">→ 核心问题：uᵢ 和 Xᵢₜ 有没有相关？</p>
+
+<div class="card">
+<table>
+  <tr><th></th><th>固定效应模型（FE）</th><th>随机效应模型（RE）</th></tr>
+  <tr><td class="left"><b>核心假设</b></td><td class="left">uᵢ 与 Xᵢₜ <b>相关</b>（有内生性）</td><td class="left">uᵢ 与 Xᵢₜ <b>不相关</b>（无内生性）</td></tr>
+  <tr><td class="left"><b>处理方式</b></td><td class="left">uᵢ 看作截距的一部分<br>（每个个体有不同截距）</td><td class="left">uᵢ 看作扰动项的一部分<br>（复合扰动 = uᵢ + εᵢₜ）</td></tr>
+  <tr><td class="left"><b>估计方法</b></td><td class="left">组内估计（去均值消除uᵢ）</td><td class="left">GLS</td></tr>
+  <tr><td class="left"><b>局限</b></td><td class="left">不随时间变化的变量系数无法估计</td><td class="left">若uᵢ与X相关则有偏</td></tr>
+</table>
+</div>
+
+<h4>模型选择：三步决策</h4>
+<div class="formula">
+  <b>第一步 F检验</b>：混合模型 vs 固定效应<br>
+  → H₀: 混合模型更优（无个体效应）→ 拒绝则有个体效应<br><br>
+  <b>第二步 BP检验</b>：混合模型 vs 随机效应<br>
+  → H₀: 无异方差（用混合）→ 拒绝则用随机效应<br><br>
+  <b>第三步 Hausman检验 ★（最重要）</b>：固定效应 vs 随机效应<br>
+  → H₀: 无内生性（FE和RE都一致，RE更有效 → 选RE）<br>
+  → 拒绝H₀: 有内生性（只有FE一致 → 选FE）
+</div>
+<p class="explain">实务中一般无脑选固定效应也OK。</p>
+</div>
+</details>
+
+
+<!-- Q3 工具变量 -->
+<div class="q-box">
+<div class="q-title">Q3 面板数据模型中，工具变量法有何应用？工具变量的选取有什么要求？</div>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+
+<h4>应用场景</h4>
+<p>面板数据中如果存在内生性（Hausman检验拒绝H₀），除了用固定效应外，还可以引入<b>工具变量（IV）</b>，通过2SLS消除内生性。</p>
+<p class="explain">Hausman检验本身就是在比较OLS（或RE）和IV的结果——差距显著说明有内生性，应使用IV或FE。</p>
+
+<h4>工具变量Z的选取要求（三条）</h4>
+<ol>
+  <li><b>相关性</b>：Cov(Z, X) ≠ 0 → Z和内生解释变量X高度相关（可统计检验）</li>
+  <li><b>外生性</b>：Cov(Z, U) = 0 → Z和扰动项U不相关（依赖经济理论，不可直接检验）</li>
+  <li><b>排斥性</b>：IV不应作为解释变量直接出现在方程中（Z对Y的影响只通过X传递）</li>
+</ol>
+<p class="warn">⚠ 只满足相关性不够！2015年真题考过。相关性+外生性缺一不可。</p>
+</div>
+</details>
+
+
+<!-- Q4 随机误差项 -->
+<div class="q-box">
+<div class="q-title">Q4 面板数据模型随机误差项的假设有哪些？</div>
+</div>
+
+<details class="answer">
+<summary>点击查看答案</summary>
+<div class="a-content">
+<ol>
+  <li><b>每个截面的误差项零均值</b>：E(εᵢₜ) = 0</li>
+  <li><b>每个个体对应的误差项同方差</b>：Var(εᵢₜ) = σ²（同一个体不同时期方差相同）</li>
+  <li><b>不同截面间残差不相关</b>：Cov(εᵢₜ, εⱼₜ) = 0, i≠j（个体i和个体j的残差不相关）</li>
+  <li><b>不同截面间具有同方差</b>：不同个体的误差方差相同</li>
+</ol>
+<p class="explain">对比OLS的古典假定：面板数据的假定多了一个"截面维度"——不仅要求同一个体的时序残差满足假定，还要求不同个体之间的残差也满足。</p>
+<p class="explain">如果违反了截面间同方差 → 截面异方差；违反了截面间不相关 → 截面相关。都需要用更稳健的估计方法。</p>
+</div>
+</details>
+
+
+<hr>
+
+<!-- ========== 附：考试知识定位 ========== -->
+<h2 style="background:#708090;font-size:15px;color:#fff;padding:6px 14px;border-radius:4px;margin-top:24px;">附：本卷知识点在三条线中的位置</h2>
+
+<div class="card">
+<table>
+  <tr><th>题号</th><th>考点</th><th>属于哪条线</th></tr>
+  <tr><td>一-Q1</td><td class="left">古典假定 + 检验 + 后果 + 修正</td><td>第一条线：OLS基础</td></tr>
+  <tr><td>一-Q2</td><td class="left">R² / 异方差 / Chow检验 / 受约束F</td><td>第一条线：OLS基础</td></tr>
+  <tr><td>二-Q1</td><td class="left">模型识别（AR/MA/ARCH/GARCH/ARMA）</td><td>第二条线：时间序列</td></tr>
+  <tr><td>二-Q2</td><td class="left">白噪声定义 + 检验 + 三大应用</td><td>第二条线：时间序列</td></tr>
+  <tr><td>二-Q3</td><td class="left">平稳性检验（ADF）</td><td>第二条线：时间序列</td></tr>
+  <tr><td>二-Q4</td><td class="left">ACF/PACF识别 + AIC/BIC定阶</td><td>第二条线：时间序列</td></tr>
+  <tr><td>三-Q1</td><td class="left">面板/截面/时序数据的区分</td><td>面板数据（第一条线延伸）</td></tr>
+  <tr><td>三-Q2</td><td class="left">固定效应 vs 随机效应 + Hausman</td><td>面板数据（第一条线延伸）</td></tr>
+  <tr><td>三-Q3</td><td class="left">工具变量法在面板中的应用</td><td>面板数据 + 第一条线（内生性）</td></tr>
+  <tr><td>三-Q4</td><td class="left">面板误差项假设</td><td>面板数据（古典假定的面板版）</td></tr>
+</table>
+</div>
+  </div>
+
+</div>
+
+<!-- 返回顶部 -->
+<div class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+function switchTab(tabId) {
+  // Hide all content
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  // Deactivate all tabs
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  
+  // Show selected content
+  document.getElementById('tab-' + tabId).classList.add('active');
+  
+  // Activate the clicked tab
+  const tabs = document.querySelectorAll('.nav-tab');
+  const tabMap = {'home': 0, 'line1': 1, 'line2': 2, 'line3': 3, 'exam0': 4};
+  if (tabMap[tabId] !== undefined) {
+    tabs[tabMap[tabId]].classList.add('active');
+  }
+  
+  // Scroll to top
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+
+</body>
+</html>
