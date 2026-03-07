@@ -2391,7 +2391,7 @@ function buildAllTOC() {
     var headings = tab.querySelectorAll('h2, h3');
     
     html += '<div class="toc-section">';
-    html += '<div class="toc-tab-title" data-tab="' + tabId + '" onclick="toggleTocSection(this, '' + tabId + '')">' + tabNames[tabId] + '</div>';
+    html += '<div class="toc-tab-title" data-tab="' + tabId + '">' + tabNames[tabId] + '</div>';
     html += '<div class="toc-items" data-items="' + tabId + '">';
     
     headings.forEach(function(h, i) {
@@ -2420,22 +2420,26 @@ function buildAllTOC() {
   }
 }
 
-function toggleTocSection(el, tabId) {
-  var items = document.querySelector('.toc-items[data-items="' + tabId + '"]');
-  var isExpanded = el.classList.contains('expanded');
-  
-  // Close all
-  document.querySelectorAll('.toc-tab-title').forEach(function(t) { t.classList.remove('expanded'); });
-  document.querySelectorAll('.toc-items').forEach(function(t) { t.classList.remove('show'); });
-  
-  if (!isExpanded) {
-    el.classList.add('expanded');
-    if (items) items.classList.add('show');
+// toggleTocSection removed - using event delegation instead
+
+// Event delegation for TOC section title clicks
+document.addEventListener('click', function(e) {
+  var title = e.target.closest('.toc-tab-title');
+  if (title) {
+    e.preventDefault();
+    var tabId = title.getAttribute('data-tab');
+    var items = document.querySelector('.toc-items[data-items="' + tabId + '"]');
+    var isExpanded = title.classList.contains('expanded');
+    document.querySelectorAll('.toc-tab-title').forEach(function(t) { t.classList.remove('expanded'); });
+    document.querySelectorAll('.toc-items').forEach(function(t) { t.classList.remove('show'); });
+    if (!isExpanded) {
+      title.classList.add('expanded');
+      if (items) items.classList.add('show');
+    }
+    switchTab(tabId);
+    return;
   }
-  
-  // Switch to that tab
-  switchTab(tabId);
-}
+});
 
 // Event delegation for TOC link clicks
 document.addEventListener('click', function(e) {
