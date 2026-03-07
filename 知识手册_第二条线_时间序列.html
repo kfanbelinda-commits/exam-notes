@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>金融计量学 · 知识手册 · 第二条线</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    font-size: 13px; line-height: 1.7; color: #1a1a1a;
+    background: #fff; padding: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  h1 { font-size: 22px; text-align: center; margin-bottom: 4px; letter-spacing: 2px; }
+  .subtitle { text-align: center; color: #666; font-size: 12px; margin-bottom: 24px; }
+  h2 { font-size: 17px; color: #fff; padding: 7px 16px; margin: 28px 0 14px 0; border-radius: 4px; }
+  h2.line2 { background: #6A1B9A; }
+  h3 { font-size: 15px; color: #6A1B9A; border-left: 4px solid #6A1B9A; padding-left: 10px; margin: 22px 0 8px 0; }
+  h4 { font-size: 13px; color: #333; margin: 14px 0 6px 0; padding: 4px 8px; background: #F3E5F5; border-radius: 3px; display: inline-block; }
+  p { margin: 6px 0; }
+  .lead { color: #6A1B9A; font-weight: bold; margin: 10px 0 4px 0; }
+  .bridge { color: #E65100; font-weight: bold; margin: 12px 0 4px 0; font-size: 13px; }
+  .indent { margin-left: 20px; }
+  .explain { color: #444; font-size: 12.5px; margin: 4px 0 4px 20px; }
+  .formula {
+    background: #F3E5F5; border: 1px solid #CE93D8; border-radius: 4px;
+    padding: 8px 14px; margin: 8px 0; font-family: "Cambria Math", "STIX Two Math", "Microsoft YaHei", serif;
+    font-size: 13px; line-height: 1.8; page-break-inside: avoid;
+  }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; margin: 2px 2px; }
+  .tag-h0 { background: #FFF9C4; border: 1px solid #F9A825; }
+  .tag-warn { background: #FFCDD2; border: 1px solid #E53935; color: #B71C1C; }
+  .tag-ok { background: #C8E6C9; border: 1px solid #43A047; color: #1B5E20; }
+  .tag-fix { background: #BBDEFB; border: 1px solid #1E88E5; color: #0D47A1; }
+  .card {
+    border: 1px solid #CE93D8; border-radius: 6px; padding: 10px 14px;
+    background: #FAFAFA; margin: 10px 0; page-break-inside: avoid;
+  }
+  .vs-row { display: flex; gap: 10px; margin: 8px 0; }
+  .vs-box { flex: 1; padding: 8px 10px; border-radius: 4px; font-size: 12px; }
+  .vs-good { background: #E8F5E9; border: 1px solid #66BB6A; }
+  .vs-bad { background: #FFEBEE; border: 1px solid #EF5350; }
+  .vs-mid { background: #FFF8E1; border: 1px solid #FFB74D; }
+  ol, ul { margin: 4px 0 4px 24px; font-size: 12.5px; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 12px; page-break-inside: avoid; }
+  th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: center; }
+  th { background: #F3E5F5; font-weight: bold; }
+  td.left { text-align: left; }
+  td.yes { color: #2E7D32; font-weight: bold; }
+  td.no { color: #C62828; font-weight: bold; }
+  .warn { font-size: 12px; color: #C62828; margin: 4px 0 4px 16px; font-weight: bold; }
+  .tip { font-size: 12px; color: #6A1B9A; margin: 4px 0 4px 16px; }
+  hr { border: none; border-top: 1px solid #E0E0E0; margin: 16px 0; }
+  .fig { text-align: center; margin: 12px 0; }
+  .fig-caption { font-size: 11px; color: #666; margin-top: 4px; }
+  @media print {
+    body { padding: 0; font-size: 12px; }
+    h2 { margin-top: 16px; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>金融计量学 · 知识手册</h1>
+<div class="subtitle">第二条线：时间序列建模 · 从原始序列到建模完成</div>
+
+<h2 class="line2">从第一条线到第二条线：为什么需要时间序列？</h2>
+
+<p>在第一条线里，我们学了OLS回归的基础。OLS有一条假定叫<b>"无自相关"</b>——要求残差前后期互不影响。如果违反了，我们把它当作"问题"去修正。</p>
+
+<p class="bridge">→ 但金融数据恰恰就是自相关的！</p>
+
+<p>股价今天涨了，明天大概率还涨；今天跌了，明天大概率还跌。这种"惯性"就是自相关。如果我们只是把自相关当"问题"去消除，等于扔掉了最有价值的信息。</p>
+
+<p><b>时间序列分析的核心思想</b>：不是消除自相关，而是<b>利用</b>自相关来建模预测。把序列拆成两部分：</p>
+
+<div class="vs-row">
+  <div class="vs-box" style="background:#E8F5E9;border:1px solid #66BB6A;">
+    <b>确定部分</b>（可预测）<br>
+    序列有自相关 + 平稳<br>
+    → 用AR/MA/ARMA建模<br>
+    → 历史信息可以预测未来
+  </div>
+  <div class="vs-box" style="background:#FFEBEE;border:1px solid #EF5350;">
+    <b>随机部分</b>（不可预测）<br>
+    残差无自相关 + 平稳<br>
+    → 希望是白噪声<br>
+    → 说明确定部分已提取干净
+  </div>
+</div>
+
+<p class="explain">类比：序列像一首歌，"确定部分"是旋律（有规律可循），"随机部分"是底噪（完全随机）。建模就是把旋律识别出来，剩下的纯噪音说明旋律已经提取完了。</p>
+
+<p class="bridge">→ 整个时间序列建模就是一个固定流程，四步走完：</p>
+
+<!-- 流程总览 -->
+<div class="card">
+<div class="fig">
+<svg width="900" height="80" viewBox="0 0 900 80">
+  <rect x="5" y="15" width="120" height="50" rx="8" fill="#6A1B9A"/><text x="65" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">① 平稳吗？</text>
+  <text x="65" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">ADF检验</text>
+  <text x="140" y="42" font-size="16" fill="#6A1B9A">→</text>
+  <rect x="160" y="15" width="140" height="50" rx="8" fill="#6A1B9A"/><text x="230" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">② 什么类型？</text>
+  <text x="230" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">ACF/PACF识别</text>
+  <text x="315" y="42" font-size="16" fill="#6A1B9A">→</text>
+  <rect x="335" y="15" width="150" height="50" rx="8" fill="#6A1B9A"/><text x="410" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">③ 残差OK吗？</text>
+  <text x="410" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">白噪声检验(LB)</text>
+  <text x="500" y="42" font-size="16" fill="#6A1B9A">→</text>
+  <rect x="520" y="15" width="160" height="50" rx="8" fill="#6A1B9A"/><text x="600" y="45" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">④ 波动恒定吗？</text>
+  <text x="600" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">ARCH-LM检验</text>
+  <text x="695" y="42" font-size="16" fill="#6A1B9A">→</text>
+  <rect x="715" y="15" width="120" height="50" rx="8" fill="#4CAF50"/><text x="775" y="45" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">建模完成 ✓</text>
+</svg>
+</div>
+</div>
+
+<p>下面逐步展开。每一步都是：<b>为什么要做这一步 → 怎么做 → 结果怎么判断 → 不通过怎么办</b>。</p>
+
+<hr>
+
+<!-- ===== 第一步 ===== -->
+<h2 class="line2">第一步：序列平不平稳？</h2>
+
+<h3>1.1 为什么第一步就要看平稳性？</h3>
+
+<p>平稳的意思是：序列的统计特征（均值、方差、自协方差）不随时间变化。这意味着<b>过去的规律未来还会继续</b>——这是预测的前提。</p>
+
+<p>如果序列不平稳（比如股价一直在涨），过去的规律不一定适用于未来。更严重的问题是：两个不平稳序列直接回归会产生<b>伪回归</b>——R²虚高但无真实关系。</p>
+
+<p class="bridge">→ 所以拿到数据第一件事：检查平不平稳。</p>
+
+<h3>1.2 平稳性的三个条件（宽平稳）</h3>
+
+<div class="formula">
+  ① 均值恒定：E(Yₜ) = μ，不随时间变（没有趋势）<br>
+  ② 方差恒定：Var(Yₜ) = σ²，不随时间变（波动幅度稳定）<br>
+  ③ 自协方差只取决于滞后阶数k，不取决于时点t：Cov(Yₜ, Yₜ₋ₖ) = γₖ
+</div>
+
+<p class="explain">直觉：平稳序列像围绕一条水平线上下波动，波动幅度前后差不多。非平稳序列像一直往上走或波动越来越大。</p>
+
+<!-- 平稳vs非平稳图 -->
+<div class="fig">
+<svg width="600" height="160" viewBox="0 0 600 160">
+  <!-- 左图：平稳 -->
+  <rect x="0" y="0" width="280" height="155" fill="#F3E5F5" rx="6"/>
+  <text x="140" y="18" font-size="12" fill="#6A1B9A" text-anchor="middle" font-weight="bold">✓ 平稳：围绕均值波动</text>
+  <line x1="20" y1="80" x2="265" y2="80" stroke="#6A1B9A" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="270" y="84" font-size="9" fill="#6A1B9A">μ</text>
+  <polyline points="25,70 40,90 55,65 70,85 85,75 100,95 115,70 130,88 145,72 160,92 175,68 190,85 205,78 220,90 235,72 250,82" fill="none" stroke="#6A1B9A" stroke-width="2"/>
+  <text x="140" y="148" font-size="10" fill="#666" text-anchor="middle">均值、方差都不变</text>
+  
+  <!-- 右图：非平稳 -->
+  <rect x="310" y="0" width="280" height="155" fill="#FFEBEE" rx="6"/>
+  <text x="450" y="18" font-size="12" fill="#C62828" text-anchor="middle" font-weight="bold">✗ 非平稳：有趋势，方差增大</text>
+  <polyline points="325,130 340,125 355,118 370,110 385,115 400,100 415,95 430,85 445,90 460,70 475,65 490,55 505,60 520,42 535,38 550,25" fill="none" stroke="#C62828" stroke-width="2"/>
+  <text x="450" y="148" font-size="10" fill="#666" text-anchor="middle">一直在涨，过去规律未来不适用</text>
+</svg>
+<div class="fig-caption">图1：平稳序列 vs 非平稳序列</div>
+</div>
+
+<h3>1.3 怎么检验平稳性？</h3>
+
+<p>三种方法，从直观到严格：</p>
+
+<div class="card">
+<table>
+  <tr><th>#</th><th>方法</th><th>做法</th><th>特点</th></tr>
+  <tr><td>①</td><td class="left">时间路径图</td><td class="left">直接画序列的时序图</td><td class="left">最直观，但不严格——看起来"差不多平"不一定真平稳</td></tr>
+  <tr><td>②</td><td class="left">ACF图</td><td class="left">画自相关函数图</td><td class="left">平稳→ACF快速衰减；非平稳→ACF缓慢衰减（拖很长的尾巴）</td></tr>
+  <tr><td>③</td><td class="left"><b>ADF检验 ★</b></td><td class="left">统计假设检验</td><td class="left">最严格，考试必用</td></tr>
+</table>
+</div>
+
+<p class="bridge">→ 考试用的是ADF检验，重点展开：</p>
+
+<h3>1.4 ADF检验（核心）</h3>
+
+<h4>先从最简单的情况说起：AR(1)</h4>
+
+<p>AR(1)模型：Yₜ = φ·Yₜ₋₁ + εₜ。展开后，每期历史冲击 εₖ 传到今天被乘以 φᵏ 作为权重：</p>
+
+<div class="vs-row">
+  <div class="vs-box vs-good">
+    <b>|φ| &lt; 1</b><br>
+    φᵏ 随k增大快速衰减<br>
+    历史冲击影响消失<br>
+    → <b>平稳</b>
+  </div>
+  <div class="vs-box vs-bad">
+    <b>φ = 1</b><br>
+    φᵏ 永远等于1<br>
+    每期冲击100%保留，永不衰减<br>
+    → Var(Yₜ)=tσ² 随时间增大<br>
+    → <b>非平稳（随机游走）</b>
+  </div>
+  <div class="vs-box vs-bad">
+    <b>|φ| &gt; 1</b><br>
+    φᵏ 越来越大<br>
+    冲击被放大 → 爆炸<br>
+    → <b>更不平稳</b>
+  </div>
+</div>
+
+<p class="explain">φ=1就是"单位根"——平稳与不平稳的分界线。过去的冲击永不衰减，像喝醉酒的人越走越偏。</p>
+
+<h4>高阶AR(p)：用特征方程</h4>
+
+<p>AR(1)只有一个系数φ，直接看就行。但AR(p)有多个系数（φ₁, φ₂, …, φₚ），怎么判断？</p>
+
+<p class="bridge">→ 引入滞后算子L（或B），把所有滞后项整理成一个多项式方程：</p>
+
+<div class="formula">
+  滞后算子：L·Yₜ = Yₜ₋₁，L²·Yₜ = Yₜ₋₂，…<br><br>
+  AR(p)整理后：(1 − φ₁L − φ₂L² − … − φₚLᵖ) = 0<br><br>
+  <b>平稳条件：这个多项式方程的所有根的模 &gt; 1（都在单位圆外）</b><br>
+  有根的模 = 1 → 有单位根 → 非平稳<br>
+  有根的模 &lt; 1 → 爆炸 → 非平稳
+</div>
+
+<p class="warn">⚠ 根和系数是倒数关系：根 L = 1/φ。|φ|&lt;1（衰减→平稳）等价于 |L|&gt;1（根在圆外）。"根在圆外"和"系数小于1"说的是同一件事。</p>
+
+<h4>DF检验 vs ADF检验</h4>
+
+<div class="card">
+<table>
+  <tr><th></th><th>DF检验</th><th>ADF检验</th></tr>
+  <tr><td class="left"><b>针对</b></td><td>AR(1)</td><td>AR(p)（高阶拓展）</td></tr>
+  <tr><td class="left"><b>前提</b></td><td>残差无自相关</td><td>加入ΔY滞后项消除残差自相关</td></tr>
+  <tr><td class="left"><b>什么时候用</b></td><td>残差干净时</td><td>残差有自相关时（大部分情况）</td></tr>
+</table>
+<p style="margin-top:8px;">
+  <span class="tag tag-h0">H₀：存在单位根（序列非平稳）</span><br>
+  H₁：不存在单位根（序列平稳，φ &lt; 0）
+</p>
+<div class="vs-row">
+  <div class="vs-box vs-good"><b>拒绝H₀</b> → 无单位根 → <b>平稳 ✓</b>（好消息！）</div>
+  <div class="vs-box vs-bad"><b>不拒绝H₀</b> → 有单位根 → 非平稳 → 需要差分</div>
+</div>
+<p class="warn">⚠ 拒绝H₀才是好消息——方向反直觉！（大多数检验H₀是"没毛病"，但ADF的H₀是"有问题"）</p>
+<p class="warn">⚠ DF/ADF是单侧检验（H₁只看φ&lt;0这一个方向）</p>
+<p class="warn">⚠ ADF使用特殊DF分布的临界值，不是标准t分布</p>
+</div>
+
+<h4>不平稳怎么办？→ 差分</h4>
+
+<p>对序列做差分：ΔYₜ = Yₜ − Yₜ₋₁。差分后再做ADF检验。差几次变平稳就叫<b>几阶单整 I(d)</b>。</p>
+
+<div class="formula">
+  一次差分变平稳 → I(1)（一阶单整）<br>
+  两次差分变平稳 → I(2)（二阶单整）<br>
+  本身就平稳 → I(0)<br><br>
+  <b>实际中常用对数差分</b>：先取对数 ln(Pₜ)，再差分 ln(Pₜ) − ln(Pₜ₋₁)<br>
+  对数差分 ≈ 收益率（当变化率很小时，ln(1+x) ≈ x）<br>
+  例：股价序列（非平稳）→ 取对数 → 差分 → 收益率序列（平稳）→ 可以建模了
+</div>
+
+<p class="bridge">→ 序列平稳了（自己的或差分后的），接下来要确定：它是什么类型的自相关？</p>
+<hr>
+
+<!-- ===== 第二步 ===== -->
+<h2 class="line2">第二步：序列是什么类型的自相关？</h2>
+
+<h3>2.1 为什么要识别类型？</h3>
+
+<p>平稳序列有自相关性（否则就是白噪声，不值得建模）。但自相关有不同形式——"用过去的自己预测自己"和"用过去的误差预测自己"是两种不同的机制，对应不同的模型。选错了模型，预测就不准。</p>
+
+<p class="bridge">→ 怎么区分？用ACF和PACF两个工具。</p>
+
+<h3>2.2 ACF和PACF是什么？</h3>
+
+<div class="vs-row">
+  <div class="vs-box" style="background:#E8F5E9;border:1px solid #66BB6A;">
+    <b>ACF（自相关函数）= 总相关</b><br>
+    把序列往后错开k期，看错开前后两段有多像<br>
+    包含<b>直接影响 + 间接传递</b>（全部路径的影响都算在里面）<br>
+    k越大（错开越远）→ 相关性越弱 → "近大远小"
+  </div>
+  <div class="vs-box" style="background:#E3F2FD;border:1px solid #42A5F5;">
+    <b>PACF（偏自相关函数）= 直接相关</b><br>
+    只看 Yₜ 和 Yₜ₋ₖ 两个点之间的<b>净关系</b><br>
+    把中间时期的传递效应<b>扣掉</b>了<br>
+    类比求偏导：其他变量按住不动，只看这一个
+  </div>
+</div>
+
+<p class="explain">ACF = 直接影响 + 间接传递 = 总效果。PACF = 只留直接影响。所以PACF一定不会比ACF大。</p>
+
+<p class="explain"><b>公式层面的区别</b>：ACF的分母都除以γ₀（Yₜ自己的方差），间隔k的间接影响混在里面；PACF的分母分别除以Yₜ和Yₜ₋ₖ各自的标准差，点到点归一化，只反映直接关系。</p>
+
+<h3>2.3 ACF/PACF图长什么样？怎么看？</h3>
+
+<!-- ACF/PACF识别图 -->
+<div class="fig">
+<svg width="700" height="350" viewBox="0 0 700 350">
+  <!-- AR模型 -->
+  <text x="10" y="20" font-size="13" fill="#6A1B9A" font-weight="bold">AR(p) 模型</text>
+  
+  <text x="10" y="50" font-size="11" fill="#333">ACF: 拖尾（缓慢衰减）</text>
+  <rect x="10" y="55" width="200" height="60" fill="#F3E5F5" rx="4"/>
+  <line x1="20" y1="85" x2="200" y2="85" stroke="#999" stroke-width="0.5"/>
+  <rect x="30" y="65" width="12" height="20" fill="#6A1B9A"/><rect x="50" y="69" width="12" height="16" fill="#6A1B9A"/>
+  <rect x="70" y="72" width="12" height="13" fill="#6A1B9A"/><rect x="90" y="75" width="12" height="10" fill="#6A1B9A"/>
+  <rect x="110" y="77" width="12" height="8" fill="#6A1B9A"/><rect x="130" y="79" width="12" height="6" fill="#6A1B9A"/>
+  <rect x="150" y="80" width="12" height="5" fill="#6A1B9A"/><rect x="170" y="81" width="12" height="4" fill="#6A1B9A"/>
+  
+  <text x="230" y="50" font-size="11" fill="#333">PACF: 截尾（p阶后=0）</text>
+  <rect x="230" y="55" width="200" height="60" fill="#E8F5E9" rx="4"/>
+  <line x1="240" y1="85" x2="420" y2="85" stroke="#999" stroke-width="0.5"/>
+  <rect x="250" y="65" width="12" height="20" fill="#2E7D32"/><rect x="270" y="70" width="12" height="15" fill="#2E7D32"/>
+  <rect x="290" y="83" width="12" height="2" fill="#999"/><rect x="310" y="83" width="12" height="2" fill="#999"/>
+  <rect x="330" y="84" width="12" height="1" fill="#999"/><rect x="350" y="84" width="12" height="1" fill="#999"/>
+  <text x="295" y="110" font-size="9" fill="#C62828">← p阶后全部≈0</text>
+  
+  <!-- MA模型 -->
+  <text x="10" y="145" font-size="13" fill="#6A1B9A" font-weight="bold">MA(q) 模型</text>
+  
+  <text x="10" y="170" font-size="11" fill="#333">ACF: 截尾（q阶后=0）</text>
+  <rect x="10" y="175" width="200" height="60" fill="#E8F5E9" rx="4"/>
+  <line x1="20" y1="205" x2="200" y2="205" stroke="#999" stroke-width="0.5"/>
+  <rect x="30" y="185" width="12" height="20" fill="#2E7D32"/><rect x="50" y="190" width="12" height="15" fill="#2E7D32"/>
+  <rect x="70" y="195" width="12" height="10" fill="#2E7D32"/>
+  <rect x="90" y="203" width="12" height="2" fill="#999"/><rect x="110" y="203" width="12" height="2" fill="#999"/>
+  <rect x="130" y="204" width="12" height="1" fill="#999"/>
+  <text x="95" y="230" font-size="9" fill="#C62828">← q阶后全部≈0</text>
+  
+  <text x="230" y="170" font-size="11" fill="#333">PACF: 拖尾（缓慢衰减）</text>
+  <rect x="230" y="175" width="200" height="60" fill="#F3E5F5" rx="4"/>
+  <line x1="240" y1="205" x2="420" y2="205" stroke="#999" stroke-width="0.5"/>
+  <rect x="250" y="185" width="12" height="20" fill="#6A1B9A"/><rect x="270" y="189" width="12" height="16" fill="#6A1B9A"/>
+  <rect x="290" y="192" width="12" height="13" fill="#6A1B9A"/><rect x="310" y="195" width="12" height="10" fill="#6A1B9A"/>
+  <rect x="330" y="197" width="12" height="8" fill="#6A1B9A"/><rect x="350" y="199" width="12" height="6" fill="#6A1B9A"/>
+
+  <!-- ARMA模型 -->
+  <text x="10" y="265" font-size="13" fill="#6A1B9A" font-weight="bold">ARMA(p,q) 模型</text>
+  
+  <text x="10" y="290" font-size="11" fill="#333">ACF: 拖尾</text>
+  <rect x="10" y="295" width="200" height="40" fill="#FFF3E0" rx="4"/>
+  <line x1="20" y1="315" x2="200" y2="315" stroke="#999" stroke-width="0.5"/>
+  <rect x="30" y="300" width="12" height="15" fill="#E65100"/><rect x="50" y="303" width="12" height="12" fill="#E65100"/>
+  <rect x="70" y="305" width="12" height="10" fill="#E65100"/><rect x="90" y="307" width="12" height="8" fill="#E65100"/>
+  <rect x="110" y="309" width="12" height="6" fill="#E65100"/><rect x="130" y="310" width="12" height="5" fill="#E65100"/>
+  
+  <text x="230" y="290" font-size="11" fill="#333">PACF: 也拖尾</text>
+  <rect x="230" y="295" width="200" height="40" fill="#FFF3E0" rx="4"/>
+  <line x1="240" y1="315" x2="420" y2="315" stroke="#999" stroke-width="0.5"/>
+  <rect x="250" y="300" width="12" height="15" fill="#E65100"/><rect x="270" y="303" width="12" height="12" fill="#E65100"/>
+  <rect x="290" y="306" width="12" height="9" fill="#E65100"/><rect x="310" y="308" width="12" height="7" fill="#E65100"/>
+  <rect x="330" y="310" width="12" height="5" fill="#E65100"/><rect x="350" y="311" width="12" height="4" fill="#E65100"/>
+  
+  <!-- 右侧总结 -->
+  <rect x="470" y="30" width="220" height="300" fill="#FAFAFA" rx="6" stroke="#CE93D8"/>
+  <text x="580" y="55" font-size="13" fill="#6A1B9A" text-anchor="middle" font-weight="bold">识别口诀</text>
+  <text x="490" y="85" font-size="12" fill="#333">AR(p)：</text><text x="490" y="100" font-size="11" fill="#6A1B9A">  ACF拖尾 + PACF截尾</text>
+  <text x="490" y="135" font-size="12" fill="#333">MA(q)：</text><text x="490" y="150" font-size="11" fill="#6A1B9A">  ACF截尾 + PACF拖尾</text>
+  <text x="490" y="185" font-size="12" fill="#333">ARMA：</text><text x="490" y="200" font-size="11" fill="#6A1B9A">  都拖尾</text>
+  <line x1="490" y1="220" x2="670" y2="220" stroke="#CE93D8" stroke-width="1"/>
+  <text x="490" y="245" font-size="11" fill="#C62828" font-weight="bold">速记：</text>
+  <text x="490" y="265" font-size="11" fill="#333">AR → PACF截</text>
+  <text x="490" y="285" font-size="11" fill="#333">MA → ACF截</text>
+  <text x="490" y="305" font-size="11" fill="#333">ARMA → 全拖</text>
+</svg>
+<div class="fig-caption">图2：ACF/PACF图形对比 + 识别口诀</div>
+</div>
+
+<p><b>截尾</b> = 某阶后全部落入置信区间（突然变成≈0）<br>
+<b>拖尾</b> = 缓慢衰减或震荡衰减，但始终不为零</p>
+
+<h3>2.4 三种模型到底在说什么？</h3>
+
+<div class="card">
+<table>
+  <tr><th>模型</th><th>公式</th><th>核心思想</th><th>直觉</th></tr>
+  <tr><td><b>AR(p)</b></td><td class="left">Yₜ = c + φ₁Yₜ₋₁ + … + φₚYₜ₋ₚ + εₜ</td><td class="left">用过去的<b>自己</b>预测现在</td><td class="left">今天股价受昨天、前天股价影响——动态惯性</td></tr>
+  <tr><td><b>MA(q)</b></td><td class="left">Yₜ = μ + εₜ + θ₁εₜ₋₁ + … + θqεₜ₋q</td><td class="left">用过去的<b>误差</b>预测现在</td><td class="left">上周的意外冲击还在影响今天——冲击持续效应</td></tr>
+  <tr><td><b>ARMA(p,q)</b></td><td class="left">两者结合</td><td class="left">既受历史自身影响，又受历史冲击影响</td><td class="left">两种机制兼有</td></tr>
+  <tr><td><b>ARIMA(p,d,q)</b></td><td class="left">先差分d次变平稳，再建ARMA</td><td class="left">不平稳序列的处理方式</td><td class="left">股价本身非平稳→取收益率（差分）→平稳→建模</td></tr>
+</table>
+</div>
+
+<p><b>平稳性补充：</b></p>
+<ul>
+  <li>MA模型 → <b>一定平稳</b>，不用再检验</li>
+  <li>AR模型 → 需要看特征根（是否都在单位圆外）</li>
+  <li>ARMA → 检验其中AR部分</li>
+</ul>
+
+<h3>2.5 定阶：p和q具体是几？</h3>
+
+<ul>
+  <li><b>方法一</b>：看ACF/PACF图，几阶后进入置信区间 → 就是几阶</li>
+  <li><b>方法二</b>：信息准则，在候选模型中选AIC/BIC最小的</li>
+</ul>
+
+<div class="formula">
+  AIC = ln(σ̂²) + 2k/n<br>
+  BIC = ln(σ̂²) + k·ln(n)/n<br><br>
+  BIC惩罚更重（n&gt;7时 ln(n)&gt;2），倾向更简洁的模型<br>
+  AIC与BIC不一致时，<b>优先参考BIC</b>（避免过拟合）
+</div>
+
+<p class="bridge">→ 模型选好了、阶数定好了、参数估计完了。接下来要回答：模型拟合得好不好？</p>
+
+<hr>
+
+<!-- ===== 第三步 ===== -->
+<h2 class="line2">第三步：残差是白噪声吗？（模型拟合好不好？）</h2>
+
+<h3>3.1 为什么要检验残差？</h3>
+
+<p>建完模型后提取残差 ε̂ₜ = Yₜ − Ŷₜ。如果模型把"确定部分"（自相关结构）都提取干净了，剩下的残差应该是<b>纯随机的</b>——也就是白噪声。</p>
+
+<p>如果残差不是白噪声（还有自相关），说明模型没提取干净，需要调整阶数重来。</p>
+
+<h3>3.2 白噪声三条件</h3>
+
+<div class="formula">
+  ① 均值恒定：E(εₜ) = μ（通常为0）<br>
+  ② 方差恒定：Var(εₜ) = σ²（同方差）<br>
+  ③ 完全无自相关：Cov(εₜ, εₛ) = 0, t≠s
+</div>
+
+<p class="explain">白噪声 = 宽平稳 + 无自相关。比宽平稳更严格（宽平稳允许有自相关，白噪声不允许）。</p>
+<p class="explain">严格程度排序：严格平稳 &gt; 白噪声 &gt; 宽平稳</p>
+
+<h3>3.3 怎么检验？</h3>
+
+<div class="card">
+<p><b>① ACF图观察法</b>：画残差的ACF图，所有ACF都在置信区间内 → 白噪声</p>
+
+<p style="margin-top:8px;"><b>② Box-Pierce检验（Q_BP）</b></p>
+<p class="indent">统计量：Q_BP = n · Σρ̂ₖ² ~ χ²(m)</p>
+
+<p style="margin-top:8px;"><b>③ Ljung-Box检验（Q_LB）★ BP的改进版，更准</b></p>
+<div class="formula">
+  Q_LB = n(n+2) · Σ[ρ̂ₖ²/(n−k)] ~ χ²(m)
+</div>
+
+<p><span class="tag tag-h0">H₀：残差是白噪声</span></p>
+<div class="vs-row">
+  <div class="vs-box vs-good"><b>不拒绝H₀</b>（p &gt; 5%）→ 残差是白噪声 → <b>模型OK ✓</b></div>
+  <div class="vs-box vs-bad"><b>拒绝H₀</b>（p &lt; 5%）→ 残差不是白噪声 → 调整模型阶数重来</div>
+</div>
+</div>
+
+<p class="warn">⚠ 白噪声检验的H₀方向特殊：H₀是"好消息"（是白噪声），<b>不拒绝H₀</b>才是好结果！和大多数检验相反。</p>
+
+<h3>3.4 白噪声的三大应用场景（考试爱出辨析题）</h3>
+
+<div class="card">
+<table>
+  <tr><th>对什么做白噪声检验</th><th>问的问题</th><th>是白噪声</th><th>不是白噪声</th></tr>
+  <tr><td class="left">① 对<b>平稳序列</b>做</td><td class="left">序列能预测吗？</td><td class="left">完全随机，不值得建模</td><td class="left">有自相关，可以建模 ✓</td></tr>
+  <tr><td class="left">② 对<b>模型残差</b>做</td><td class="left">模型拟合好吗？</td><td class="left">信息提取干净 ✓</td><td class="left">还有信息没提取，调整模型</td></tr>
+  <tr><td class="left">③ 对<b>ε²</b>做</td><td class="left">波动率恒定吗？</td><td class="left">方差恒定，无ARCH效应 ✓</td><td class="left">有ARCH效应，需建GARCH</td></tr>
+</table>
+</div>
+
+<p class="explain">同一个工具用在不同对象上，问的问题不同，"好消息"的方向也不同。第③种就是下一步要做的。</p>
+
+<p class="bridge">→ 残差是白噪声了（均值方程OK），但还没完——金融数据有个特殊现象：波动聚集。</p>
+
+<hr>
+
+<!-- ===== 第四步 ===== -->
+<h2 class="line2">第四步：波动率恒定吗？（需不需要给方差建模？）</h2>
+
+<h3>4.1 什么是波动聚集？</h3>
+
+<p>金融数据有个显著特征：<b>大波动之后往往跟着大波动，小波动之后跟着小波动</b>。虽然残差的均值为零、无自相关（看起来像白噪声），但<b>方差不恒定</b>——波动率在变化。</p>
+
+<!-- 波动聚集图 -->
+<div class="fig">
+<svg width="550" height="130" viewBox="0 0 550 130">
+  <rect x="0" y="0" width="550" height="125" fill="#FFF3E0" rx="6"/>
+  <text x="275" y="18" font-size="12" fill="#E65100" text-anchor="middle" font-weight="bold">波动聚集现象：大波动后跟大波动，小波动后跟小波动</text>
+  <line x1="20" y1="65" x2="530" y2="65" stroke="#999" stroke-width="0.5" stroke-dasharray="3,2"/>
+  <!-- 小波动段 -->
+  <polyline points="25,62 35,68 45,60 55,70 65,63 75,67 85,61 95,69 105,64 115,66" fill="none" stroke="#E65100" stroke-width="1.5"/>
+  <!-- 大波动段 -->
+  <polyline points="120,55 135,80 150,40 165,90 180,35 195,85 210,30 225,88 240,38 255,82 270,42" fill="none" stroke="#E65100" stroke-width="2"/>
+  <!-- 小波动段 -->
+  <polyline points="275,60 290,70 305,58 320,72 335,62 350,68 365,60 380,70" fill="none" stroke="#E65100" stroke-width="1.5"/>
+  <!-- 又大波动 -->
+  <polyline points="385,50 400,85 415,35 430,90 445,32 460,88 475,40 490,82 505,45 520,78" fill="none" stroke="#E65100" stroke-width="2"/>
+  
+  <text x="70" y="105" font-size="10" fill="#666" text-anchor="middle">小波动</text>
+  <text x="195" y="105" font-size="10" fill="#C62828" text-anchor="middle" font-weight="bold">大波动</text>
+  <text x="330" y="105" font-size="10" fill="#666" text-anchor="middle">小波动</text>
+  <text x="455" y="105" font-size="10" fill="#C62828" text-anchor="middle" font-weight="bold">大波动</text>
+</svg>
+<div class="fig-caption">图3：金融序列的波动聚集——残差均值为零但方差在变</div>
+</div>
+
+<p>这意味着方差本身也是可以预测的——用过去的波动预测未来的波动。ARCH/GARCH就是给方差建的模型。</p>
+
+<p class="bridge">→ 先检验有没有这种现象（ARCH效应），有才建模。</p>
+
+<h3>4.2 ARCH-LM检验</h3>
+
+<div class="card">
+<p><b>检验什么：</b>残差的平方 ε̂²ₜ 有没有自相关。如果ε̂²ₜ有自相关 = 波动率可预测 = 有ARCH效应。</p>
+<p><b>做法：</b>ε̂²ₜ 对自身滞后项做自回归 → nR² ~ χ²(q)</p>
+<p><span class="tag tag-h0">H₀：不存在ARCH效应（所有αᵢ = 0）</span></p>
+<div class="vs-row">
+  <div class="vs-box vs-good"><b>不拒绝H₀</b> → 无ARCH效应 → 方差恒定 → <b>建模完成 ✓</b></div>
+  <div class="vs-box vs-bad"><b>拒绝H₀</b> → 有ARCH效应 → 波动率可预测 → 需要建GARCH模型</div>
+</div>
+<p class="explain">也可以对ε̂²ₜ做LB白噪声检验：ε̂²ₜ不是白噪声 → 有ARCH效应。</p>
+</div>
+
+<h3>4.3 ARCH模型</h3>
+
+<p>ARCH的思路：把时变的方差σ²ₜ也当作一个可以被预测的变量来建模——用过去的残差平方（冲击大小）预测未来的方差。</p>
+
+<div class="formula">
+  <b>ARCH(q)方差方程：</b><br>
+  σ²ₜ = α₀ + α₁ε²ₜ₋₁ + α₂ε²ₜ₋₂ + … + αqε²ₜ₋q<br><br>
+  含义：今天的波动率 = 一个基准水平(α₀) + 过去q天冲击大小的加权和<br>
+  昨天冲击大 → 今天方差大 → 今天大概率还是大波动
+</div>
+
+<p class="bridge">→ 但ARCH有个问题：要精确刻画波动率，可能需要很多滞后项（q很大）→ 参数太多。怎么简化？</p>
+
+<h3>4.4 GARCH模型（ARCH的升级版）</h3>
+
+<p>GARCH在ARCH基础上加了一项：<b>方差自身的滞后值</b>。这样只需要少量参数就能捕捉长期的波动持续性。</p>
+
+<div class="formula">
+  <b>GARCH(p,q)方差方程：</b><br>
+  σ²ₜ = ω + α₁ε²ₜ₋₁ + … + αqε²ₜ₋q + β₁σ²ₜ₋₁ + … + βpσ²ₜ₋p<br><br>
+  ω = 长期均值水平<br>
+  αᵢε²ₜ₋ᵢ = 过去冲击的影响（ARCH项 ≈ MA的思路）<br>
+  βⱼσ²ₜ₋ⱼ = 过去波动率的影响（GARCH项 ≈ AR的思路）<br><br>
+  <b>本质：ARMA用在方差上</b>——就像均值方程用ARMA，方差方程也用类似结构
+</div>
+
+<h4>ARCH vs GARCH 怎么区分？</h4>
+<div class="card">
+<table>
+  <tr><th></th><th>ARCH(q)</th><th>GARCH(p,q)</th></tr>
+  <tr><td class="left"><b>方差方程</b></td><td class="left">只有 ε²项（过去冲击）</td><td class="left">同时有 ε²项 + σ²项（过去冲击 + 过去方差）</td></tr>
+  <tr><td class="left"><b>读参数</b></td><td class="left">q = ε²滞后项个数</td><td class="left">p = σ²滞后项个数，q = ε²滞后项个数</td></tr>
+  <tr><td class="left"><b>判断方法</b></td><td class="left">方差方程里没有σ²ₜ₋ⱼ → ARCH</td><td class="left">方差方程里有σ²ₜ₋ⱼ → GARCH</td></tr>
+</table>
+<p class="explain">记忆：GARCH(p,q) 中 p对应σ²（方差自回归），q对应ε²（冲击项）。看求和符号上界直接读出p和q。</p>
+</div>
+
+<h4>GARCH(1,1)参数约束（考试必写）</h4>
+
+<div class="formula">
+  <b>σ²ₜ = ω + αε²ₜ₋₁ + βσ²ₜ₋₁</b><br><br>
+  参数约束：<br>
+  ω &gt; 0（基准方差为正）<br>
+  α ≥ 0，β ≥ 0（权重非负）<br>
+  <b>α + β &lt; 1</b>（弱平稳条件——严格小于！不是≤）<br><br>
+  α + β 越接近1 → 波动持续性越强（冲击衰减越慢）
+</div>
+
+<p class="warn">⚠ α + β &lt; 1 是严格不等号！判断题考过"α+β≤1"——错！必须严格小于。</p>
+
+<hr>
+
+<!-- ===== 完整流程 ===== -->
+<h2 class="line2">完整流程图</h2>
+
+<div class="fig">
+<svg width="850" height="320" viewBox="0 0 850 320">
+  <!-- Step 1 -->
+  <rect x="10" y="20" width="150" height="70" rx="8" fill="#6A1B9A"/>
+  <text x="85" y="48" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">① 平稳吗？</text>
+  <text x="85" y="65" font-size="10" fill="#E1BEE7" text-anchor="middle">ADF检验</text>
+  <text x="85" y="78" font-size="9" fill="#E1BEE7" text-anchor="middle">H₀:非平稳</text>
+  
+  <!-- 不平稳分支 -->
+  <line x1="85" y1="90" x2="85" y2="120" stroke="#C62828" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="30" y="120" width="110" height="35" rx="5" fill="#FF5722"/>
+  <text x="85" y="142" font-size="11" fill="#fff" text-anchor="middle">差分 → I(d)</text>
+  <line x1="140" y1="137" x2="165" y2="55" stroke="#FF5722" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow)"/>
+  <text x="55" y="112" font-size="9" fill="#C62828">不拒绝</text>
+  
+  <!-- 平稳 → Step 2 -->
+  <line x1="160" y1="55" x2="200" y2="55" stroke="#6A1B9A" stroke-width="1.5"/>
+  <text x="180" y="47" font-size="9" fill="#2E7D32">拒绝✓</text>
+  
+  <rect x="200" y="20" width="150" height="70" rx="8" fill="#6A1B9A"/>
+  <text x="275" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">② 什么类型？</text>
+  <text x="275" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">ACF/PACF</text>
+  <text x="275" y="73" font-size="9" fill="#E1BEE7" text-anchor="middle">AIC/BIC定阶</text>
+  
+  <!-- Step 2 → 建模 -->
+  <line x1="350" y1="55" x2="390" y2="55" stroke="#6A1B9A" stroke-width="1.5"/>
+  
+  <rect x="390" y="25" width="120" height="60" rx="8" fill="#7B1FA2" stroke="#E1BEE7"/>
+  <text x="450" y="48" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">建ARMA</text>
+  <text x="450" y="65" font-size="10" fill="#E1BEE7" text-anchor="middle">均值方程</text>
+  
+  <!-- 建模 → 残差 -->
+  <line x1="510" y1="55" x2="540" y2="55" stroke="#6A1B9A" stroke-width="1.5"/>
+  
+  <!-- Step 3 -->
+  <rect x="540" y="20" width="150" height="70" rx="8" fill="#6A1B9A"/>
+  <text x="615" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">③ 残差OK吗？</text>
+  <text x="615" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">LB白噪声检验</text>
+  <text x="615" y="73" font-size="9" fill="#E1BEE7" text-anchor="middle">H₀:是白噪声</text>
+  
+  <!-- 不是白噪声 → 回去 -->
+  <line x1="615" y1="90" x2="615" y2="120" stroke="#C62828" stroke-width="1.5"/>
+  <rect x="560" y="120" width="110" height="35" rx="5" fill="#FF5722"/>
+  <text x="615" y="142" font-size="11" fill="#fff" text-anchor="middle">调整阶数</text>
+  <line x1="560" y1="137" x2="275" y2="90" stroke="#FF5722" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="590" y="112" font-size="9" fill="#C62828">拒绝</text>
+  
+  <!-- 是白噪声 → Step 4 -->
+  <line x1="690" y1="55" x2="720" y2="55" stroke="#6A1B9A" stroke-width="1.5"/>
+  <text x="708" y="47" font-size="9" fill="#2E7D32">不拒绝✓</text>
+  
+  <!-- Step 4 -->
+  <rect x="720" y="20" width="120" height="70" rx="8" fill="#6A1B9A"/>
+  <text x="780" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">④ 波动恒定？</text>
+  <text x="780" y="58" font-size="10" fill="#E1BEE7" text-anchor="middle">ARCH-LM</text>
+  <text x="780" y="73" font-size="9" fill="#E1BEE7" text-anchor="middle">H₀:无ARCH</text>
+  
+  <!-- 无ARCH → 完成 -->
+  <rect x="730" y="195" width="100" height="40" rx="8" fill="#4CAF50"/>
+  <text x="780" y="220" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">完成 ✓</text>
+  <line x1="755" y1="90" x2="755" y2="195" stroke="#4CAF50" stroke-width="1.5"/>
+  <text x="738" y="115" font-size="9" fill="#2E7D32">不拒绝✓</text>
+  
+  <!-- 有ARCH → GARCH -->
+  <line x1="805" y1="90" x2="805" y2="195" stroke="#FF9800" stroke-width="1.5"/>
+  <text x="812" y="115" font-size="9" fill="#C62828">拒绝</text>
+  <rect x="750" y="255" width="100" height="55" rx="8" fill="#FF9800"/>
+  <text x="800" y="275" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">GARCH</text>
+  <text x="800" y="290" font-size="9" fill="#fff" text-anchor="middle">方差方程</text>
+  <text x="800" y="302" font-size="8" fill="#fff" text-anchor="middle">α+β&lt;1</text>
+  <line x1="805" y1="195" x2="805" y2="255" stroke="#FF9800" stroke-width="1.5"/>
+  
+  <rect x="610" y="265" width="110" height="40" rx="8" fill="#4CAF50"/>
+  <text x="665" y="282" font-size="11" fill="#fff" text-anchor="middle" font-weight="bold">完成 ✓</text>
+  <text x="665" y="296" font-size="9" fill="#fff" text-anchor="middle">均值+方差</text>
+  <line x1="750" y1="285" x2="720" y2="285" stroke="#4CAF50" stroke-width="1.5"/>
+</svg>
+<div class="fig-caption">图4：时间序列建模完整流程——四步走</div>
+</div>
+
+</body>
+</html>
